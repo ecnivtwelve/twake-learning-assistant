@@ -3,5 +3,13 @@
   "activities": "Activities",
   "questions": "Questions",
   "sources": "Sources",
-  "insights": "Insights"
+  "insights": "Insights",
+  "subjects": "Subjects",
+  "level": "Level",
+  "classes_and_groups": "Classes and groups",
+  "periods": "Periods",
+  "types": "Types",
+  "tags": "Tags",
+  "new": "New",
+  "activities_filter": "Activities"
 }

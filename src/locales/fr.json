@@ -3,5 +3,13 @@
   "activities": "Entraînements",
   "questions": "Questions",
   "sources": "Sources",
-  "insights": "Analyse"
+  "insights": "Analyse",
+  "subjects": "Matières",
+  "level": "Niveau",
+  "classes_and_groups": "Classes et groupes",
+  "periods": "Périodes",
+  "types": "Types",
+  "tags": "Tags",
+  "new": "Nouveau",
+  "activities_filter": "Activités"
 }
