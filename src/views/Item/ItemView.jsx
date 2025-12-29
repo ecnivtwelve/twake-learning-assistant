@@ -1,5 +1,4 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useI18n } from 'twake-i18n'
 
 import Button from 'cozy-ui/transpiled/react/Buttons'
@@ -10,9 +9,8 @@ import Typography from 'cozy-ui/transpiled/react/Typography'
 import FilterChip from '@/components/FilterChip/FilterChip'
 import TabTitle from '@/components/TabTitle/TabTitle'
 
-const ActivitiesTab = () => {
+const ItemView = () => {
   const { t } = useI18n()
-  const navigate = useNavigate()
 
   const [filters] = React.useState({
     subjects: {
@@ -32,16 +30,16 @@ const ActivitiesTab = () => {
   return (
     <>
       <TabTitle
+        backEnabled
         trailing={
           <Button
             variant="primary"
             label={t('new')}
             startIcon={<Icon icon={PlusIcon} />}
-            onClick={() => navigate('/item/new')}
           />
         }
       >
-        <Typography variant="h3">{t('activities')}</Typography>
+        <Typography variant="h3">{t('activity')}</Typography>
 
         <div className="u-flex u-mt-1">
           {Object.entries(filters).map(([key, filter]) => (
@@ -53,4 +51,4 @@ const ActivitiesTab = () => {
   )
 }
 
-export default ActivitiesTab
+export default ItemView
