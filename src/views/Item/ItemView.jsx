@@ -14,15 +14,15 @@ const ItemView = () => {
 
   const [filters] = React.useState({
     subjects: {
-      label: t('subjects'),
+      label: t('types'),
       values: []
     },
     level: {
-      label: t('level'),
+      label: t('sources'),
       values: []
     },
-    class: {
-      label: t('classes_and_groups'),
+    notion: {
+      label: t('notions'),
       values: []
     }
   })
