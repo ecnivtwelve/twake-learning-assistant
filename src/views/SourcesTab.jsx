@@ -2,12 +2,22 @@ import React from 'react'
 import { useI18n } from 'twake-i18n'
 
 import Button from 'cozy-ui/transpiled/react/Buttons'
+import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
+import IconButton from 'cozy-ui/transpiled/react/IconButton'
+import DotsIcon from 'cozy-ui/transpiled/react/Icons/Dots'
+import SchoolIcon from 'cozy-ui/transpiled/react/Icons/School'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
+import List from 'cozy-ui/transpiled/react/List'
+import ListItem from 'cozy-ui/transpiled/react/ListItem'
+import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
+import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryAction'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import FilterChip from '@/components/FilterChip/FilterChip'
 import TabTitle from '@/components/TabTitle/TabTitle'
+import TableItemText from '@/components/TableItem/TableItemText'
+import sources from '@/utils/data/sources.json'
 
 const SourcesTab = () => {
   const { t } = useI18n()
@@ -46,6 +56,37 @@ const SourcesTab = () => {
           ))}
         </div>
       </TabTitle>
+
+      <List>
+        <ListItem size="small" dense>
+          <ListItemIcon className="u-w-2-half"></ListItemIcon>
+          <TableItemText value="Nom" type="primary" />
+          <TableItemText value="Mise à jour" type="secondary" />
+          <TableItemText value="Tags" type="secondary" />
+          <div className="u-w-1-half" />
+        </ListItem>
+
+        <Divider />
+
+        {sources.map((source, i) => (
+          <React.Fragment key={i}>
+            <ListItem button>
+              <ListItemIcon className="u-w-2-half">
+                <Icon icon={SchoolIcon} size={22} />
+              </ListItemIcon>
+              <TableItemText value={source.nom} type="primary" />
+              <TableItemText value={source.mise_a_jour} type="secondary" />
+              <TableItemText value={source.tags} type="chip" />
+              <ListItemSecondaryAction className="u-pr-1">
+                <IconButton>
+                  <Icon icon={DotsIcon} />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <Divider />
+          </React.Fragment>
+        ))}
+      </List>
     </>
   )
 }
