@@ -74,9 +74,13 @@ const QuestionsTab = () => {
           <React.Fragment key={i}>
             <ListItem button>
               <ListItemIcon className="u-w-2-half">
-                <Icon icon={HelpIcon} size={20} />
+                <Icon icon={HelpIcon} size={22} />
               </ListItemIcon>
-              <TableItemText value={question.question} type="primary" />
+              <TableItemText
+                value={question.question}
+                secondary={question.reponse}
+                type="primary"
+              />
               <TableItemText value={question.source} type="secondary" />
               <TableItemText value={question.tags} type="chip" />
               <TableItemText
