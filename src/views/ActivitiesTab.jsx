@@ -75,7 +75,7 @@ const ActivitiesTab = () => {
 
         {activities.map((activity, i) => (
           <React.Fragment key={i}>
-            <ListItem button>
+            <ListItem button onClick={() => navigate(`/item/${activity.id}`)}>
               <ListItemIcon className="u-w-2-half">
                 <ActivityIcon size={32} />
               </ListItemIcon>

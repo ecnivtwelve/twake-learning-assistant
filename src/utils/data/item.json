@@ -1,0 +1,177 @@
+[
+  {
+    "question": "Quelle expression Winston Churchill a-t-il utilisée pour décrire la division de l'Europe ?",
+    "sources": "Histoire-Géographie-EMC",
+    "notions": [
+      "Guerre froide"
+    ],
+    "reponses": [
+      {
+        "texte": "La ligne de démarcation",
+        "correct": false
+      },
+      {
+        "texte": "La frontière de marbre",
+        "correct": false
+      },
+      {
+        "texte": "Le rideau de fer",
+        "correct": true
+      },
+      {
+        "texte": "Le mur de la honte",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "question": "Quelles sont les deux entités qui encadrent militairement les blocs Est et Ouest ?",
+    "sources": "Histoire-Géographie-EMC",
+    "notions": [
+      "Guerre froide"
+    ],
+    "reponses": [
+      {
+        "texte": "L'ONU et la SDN",
+        "correct": false
+      },
+      {
+        "texte": "L'OTAN et le Pacte de Varsovie",
+        "correct": true
+      },
+      {
+        "texte": "La CEE et le CAEM",
+        "correct": false
+      },
+      {
+        "texte": "Le Plan Marshall et le Kominform",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "question": "Quelles nations ont divisé Berlin en zones d'occupation après la Seconde Guerre mondiale ?",
+    "sources": "Histoire-Géographie-EMC",
+    "notions": [
+      "Berlin"
+    ],
+    "reponses": [
+      {
+        "texte": "États-Unis, Royaume-Uni, Chine et URSS",
+        "correct": false
+      },
+      {
+        "texte": "France, Italie, Belgique et URSS",
+        "correct": false
+      },
+      {
+        "texte": "États-Unis, Allemagne, France et URSS",
+        "correct": false
+      },
+      {
+        "texte": "États-Unis, Royaume-Uni, France et URSS",
+        "correct": true
+      }
+    ]
+  },
+  {
+    "question": "Quelles sont les deux grandes puissances qui s'opposent durant la Guerre froide ?",
+    "sources": "Histoire-Géographie-EMC",
+    "notions": [
+      "Notions"
+    ],
+    "reponses": [
+      {
+        "texte": "Les États-Unis et l'URSS",
+        "correct": true
+      },
+      {
+        "texte": "La France et l'Allemagne",
+        "correct": false
+      },
+      {
+        "texte": "Le Royaume-Uni et la Chine",
+        "correct": false
+      },
+      {
+        "texte": "Les États-Unis et le Japon",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "question": "Quand est-ce que l'URSS se dote de l'arme nucléaire ?",
+    "sources": "Histoire-Géographie-EMC",
+    "notions": [
+      "URSS"
+    ],
+    "reponses": [
+      {
+        "texte": "En 1945",
+        "correct": false
+      },
+      {
+        "texte": "En 1949",
+        "correct": true
+      },
+      {
+        "texte": "En 1953",
+        "correct": false
+      },
+      {
+        "texte": "En 1962",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "question": "Que signifierait une attaque nucléaire lancée depuis Cuba contre les États-Unis ?",
+    "sources": "Histoire-Géographie-EMC",
+    "notions": [
+      "Crise des missiles"
+    ],
+    "reponses": [
+      {
+        "texte": "L'équivalent d'une attaque de l'URSS",
+        "correct": true
+      },
+      {
+        "texte": "Une action isolée de Fidel Castro",
+        "correct": false
+      },
+      {
+        "texte": "Le début de la décolonisation",
+        "correct": false
+      },
+      {
+        "texte": "Un simple incident diplomatique",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "question": "Quel principe est reconnu comme le plus suprême post-1945 pour protéger les individus ?",
+    "sources": "Histoire-Géographie-EMC",
+    "notions": [
+      "Droits de l'homme"
+    ],
+    "reponses": [
+      {
+        "texte": "La souveraineté absolue des États",
+        "correct": false
+      },
+      {
+        "texte": "Le droit du plus fort",
+        "correct": false
+      },
+      {
+        "texte": "Les droits de l'homme",
+        "correct": true
+      },
+      {
+        "texte": "Le protectionnisme économique",
+        "correct": false
+      }
+    ]
+  }
+]
