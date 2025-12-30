@@ -6,11 +6,12 @@ import ListItemText from 'cozy-ui/transpiled/react/ListItemText'
 
 const TYPE_CONFIGS = {
   primary: {
-    widthClass: 'u-w-5'
+    widthClass: 'u-w-5 u-w-4-s',
+    typography: { noWrap: true }
   },
   secondary: {
-    widthClass: 'u-w-1',
-    typography: { color: 'textSecondary' }
+    widthClass: 'u-w-1 u-w-half-s',
+    typography: { color: 'textSecondary', noWrap: true }
   },
   chip: {
     widthClass: 'u-w-1',
