@@ -82,7 +82,7 @@ const ActivitiesTab = () => {
               <TableItemText value={activity.titre} type="primary" />
               <TableItemText value={activity.date} type="secondary" />
               <TableItemText value={activity.questions} type="secondary" />
-              <TableItemText value={activity.classe} type="chip" />
+              <TableItemText value={[activity.classe]} type="chip" />
               <TableItemText
                 value={Math.round(activity.score * 100)}
                 type="colouredValue"

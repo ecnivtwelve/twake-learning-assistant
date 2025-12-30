@@ -14,7 +14,8 @@ const TYPE_CONFIGS = {
   },
   chip: {
     widthClass: 'u-w-1',
-    renderValue: value => <Chip label={value} />
+    renderValue: value =>
+      value.map((v, i) => <Chip key={i} label={v} className="u-mr-half" />)
   },
   colouredValue: {
     widthClass: 'u-w-1',
