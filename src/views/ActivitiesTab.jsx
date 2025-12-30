@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { useI18n } from 'twake-i18n'
 
 import Button from 'cozy-ui/transpiled/react/Buttons'
-import Chip from 'cozy-ui/transpiled/react/Chips'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import IconButton from 'cozy-ui/transpiled/react/IconButton'
@@ -13,13 +12,12 @@ import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryAction'
-import ListItemText from 'cozy-ui/transpiled/react/ListItemText'
-import ListSubheader from 'cozy-ui/transpiled/react/ListSubheader'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import ActivityIcon from '@/assets/icons/ActivityIcon'
 import FilterChip from '@/components/FilterChip/FilterChip'
 import TabTitle from '@/components/TabTitle/TabTitle'
+import TableItemText from '@/components/TableItem/TableItemText'
 import activities from '@/utils/data/activities.json'
 
 const ActivitiesTab = () => {
@@ -65,64 +63,29 @@ const ActivitiesTab = () => {
       <List>
         <ListItem size="small" dense>
           <ListItemIcon className="u-w-2-half"></ListItemIcon>
-          <ListItemText primary="Entraînements" className="u-w-5" />
-          <ListItemText
-            primary="Mise à jour"
-            className="u-w-1"
-            primaryTypographyProps={{ color: 'textSecondary' }}
-          />
-          <ListItemText
-            primary="Questions"
-            className="u-w-1"
-            primaryTypographyProps={{ color: 'textSecondary' }}
-          />
-
-          <ListItemText
-            primary="Transmis"
-            className="u-w-1"
-            primaryTypographyProps={{ color: 'textSecondary' }}
-          />
-          <ListItemText
-            primary="Maîtrise"
-            className="u-w-1"
-            primaryTypographyProps={{ color: 'textSecondary' }}
-          />
-          <ListItemSecondaryAction className="u-pr-1">
-            <IconButton disabled></IconButton>
-          </ListItemSecondaryAction>
+          <TableItemText value="Entraînements" type="primary" />
+          <TableItemText value="Mise à jour" type="secondary" />
+          <TableItemText value="Questions" type="secondary" />
+          <TableItemText value="Transmis" type="secondary" />
+          <TableItemText value="Maîtrise" type="secondary" />
+          <div className="u-w-1-half" />
         </ListItem>
 
         <Divider />
 
         {activities.map((activity, i) => (
-          <>
-            <ListItem button key={i}>
+          <React.Fragment key={i}>
+            <ListItem button>
               <ListItemIcon className="u-w-2-half">
                 <ActivityIcon size={32} />
               </ListItemIcon>
-              <ListItemText primary={activity.titre} className="u-w-5" />
-              <ListItemText
-                primary={activity.date}
-                className="u-w-1"
-                primaryTypographyProps={{ color: 'textSecondary' }}
-              />
-              <ListItemText
-                primary={activity.questions}
-                className="u-w-1"
-                primaryTypographyProps={{ color: 'textSecondary' }}
-              />
-              <ListItemText className="u-w-1">
-                <Chip label={activity.classe} />
-              </ListItemText>
-              <ListItemText
-                primary={activity.score * 100 + '%'}
-                className="u-w-1"
-                primaryTypographyProps={{
-                  style: {
-                    color: activity.score < 0.7 ? '#CB8100' : '#09AE1C',
-                    fontWeight: 600
-                  }
-                }}
+              <TableItemText value={activity.titre} type="primary" />
+              <TableItemText value={activity.date} type="secondary" />
+              <TableItemText value={activity.questions} type="secondary" />
+              <TableItemText value={activity.classe} type="chip" />
+              <TableItemText
+                value={Math.round(activity.score * 100)}
+                type="colouredValue"
               />
               <ListItemSecondaryAction className="u-pr-1">
                 <IconButton>
@@ -131,7 +94,7 @@ const ActivitiesTab = () => {
               </ListItemSecondaryAction>
             </ListItem>
             <Divider />
-          </>
+          </React.Fragment>
         ))}
       </List>
     </>
