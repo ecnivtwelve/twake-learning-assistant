@@ -35,21 +35,29 @@ const TYPE_CONFIGS = {
   }
 }
 
-const TableItemText = ({ value, type, className }) => {
+const TableItemText = ({
+  value,
+  type,
+  className,
+  typographyProps,
+  ...restProps
+}) => {
   const config = TYPE_CONFIGS[type] || {}
 
   const content = config.renderValue ? config.renderValue(value) : value
 
-  const typographyProps = {
+  const primaryTypographyProps = {
     ...config.typography,
-    ...(config.getTypography ? config.getTypography(value) : {})
+    ...(config.getTypography ? config.getTypography(value) : {}),
+    ...typographyProps
   }
 
   return (
     <ListItemText
       primary={content}
       className={cx(config.widthClass, className)}
-      primaryTypographyProps={typographyProps}
+      primaryTypographyProps={primaryTypographyProps}
+      {...restProps}
     />
   )
 }
