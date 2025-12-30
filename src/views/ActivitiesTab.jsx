@@ -4,6 +4,7 @@ import { useI18n } from 'twake-i18n'
 
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Chip from 'cozy-ui/transpiled/react/Chips'
+import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import IconButton from 'cozy-ui/transpiled/react/IconButton'
 import DotsIcon from 'cozy-ui/transpiled/react/Icons/Dots'
@@ -20,7 +21,6 @@ import ActivityIcon from '@/assets/icons/ActivityIcon'
 import FilterChip from '@/components/FilterChip/FilterChip'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import activities from '@/utils/data/activities.json'
-import Divider from 'cozy-ui/transpiled/react/Divider'
 
 const ActivitiesTab = () => {
   const { t } = useI18n()
@@ -62,7 +62,38 @@ const ActivitiesTab = () => {
         </div>
       </TabTitle>
 
-      <List subheader={<ListSubheader>Subheader title</ListSubheader>}>
+      <List>
+        <ListItem size="small" dense>
+          <ListItemIcon className="u-w-2-half"></ListItemIcon>
+          <ListItemText primary="Entraînements" className="u-w-5" />
+          <ListItemText
+            primary="Mise à jour"
+            className="u-w-1"
+            primaryTypographyProps={{ color: 'textSecondary' }}
+          />
+          <ListItemText
+            primary="Questions"
+            className="u-w-1"
+            primaryTypographyProps={{ color: 'textSecondary' }}
+          />
+
+          <ListItemText
+            primary="Transmis"
+            className="u-w-1"
+            primaryTypographyProps={{ color: 'textSecondary' }}
+          />
+          <ListItemText
+            primary="Maîtrise"
+            className="u-w-1"
+            primaryTypographyProps={{ color: 'textSecondary' }}
+          />
+          <ListItemSecondaryAction className="u-pr-1">
+            <IconButton disabled></IconButton>
+          </ListItemSecondaryAction>
+        </ListItem>
+
+        <Divider />
+
         {activities.map((activity, i) => (
           <>
             <ListItem button key={i}>
