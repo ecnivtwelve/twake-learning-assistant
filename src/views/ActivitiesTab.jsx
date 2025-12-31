@@ -12,6 +12,8 @@ import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryAction'
+import ListItemText from 'cozy-ui/transpiled/react/ListItemText'
+import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import ActivityIcon from '@/assets/icons/ActivityIcon'
@@ -23,6 +25,9 @@ import activities from '@/utils/data/activities.json'
 const ActivitiesTab = () => {
   const { t } = useI18n()
   const navigate = useNavigate()
+
+  const allClasses = [...new Set(activities.map(activity => activity.classe))]
+  const [selectedClass, setSelectedClass] = React.useState(null)
 
   const [filters] = React.useState({
     subjects: {
@@ -37,6 +42,13 @@ const ActivitiesTab = () => {
       label: t('classes_and_groups'),
       values: []
     }
+  })
+
+  const filteredActivities = activities.filter(activity => {
+    if (selectedClass) {
+      return activity.classe === selectedClass
+    }
+    return true
   })
 
   return (
@@ -55,7 +67,19 @@ const ActivitiesTab = () => {
 
         <div className="u-flex u-mt-1">
           {Object.entries(filters).map(([key, filter]) => (
-            <FilterChip key={key} label={filter.label} />
+            <FilterChip
+              key={key}
+              label={
+                key == 'class' && selectedClass ? selectedClass : filter.label
+              }
+            >
+              {key == 'class' &&
+                allClasses.map(value => (
+                  <MenuItem key={value} onClick={() => setSelectedClass(value)}>
+                    <ListItemText primary={value} />
+                  </MenuItem>
+                ))}
+            </FilterChip>
           ))}
         </div>
       </TabTitle>
@@ -73,7 +97,7 @@ const ActivitiesTab = () => {
 
         <Divider />
 
-        {activities.map((activity, i) => (
+        {filteredActivities.map((activity, i) => (
           <React.Fragment key={i}>
             <ListItem button onClick={() => navigate(`/item/${activity.id}`)}>
               <ListItemIcon className="u-w-2-half">
