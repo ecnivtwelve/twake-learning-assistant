@@ -16,7 +16,7 @@ import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryAction'
 import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
-import { renameActivity } from '../../queries/actions/renameActivity'
+import { renameActivity } from '../../queries/actions/activities/renameActivity'
 
 // import ActivityPreview from '@/components/ActivityPreview/ActivityPreview'
 import FilterChip from '@/components/FilterChip/FilterChip'

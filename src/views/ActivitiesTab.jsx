@@ -17,8 +17,8 @@ import Typography from 'cozy-ui/transpiled/react/Typography'
 import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
 import ActivityItem from '../components/ActivityItem/ActivityItem'
-import { deleteActivity } from '../queries/actions/deleteActivity'
-import { newActivity } from '../queries/actions/newActivity'
+import { deleteActivity } from '../queries/actions/activities/deleteActivity'
+import { newActivity } from '../queries/actions/activities/newActivity'
 
 import ActivityIcon from '@/assets/icons/ActivityIcon'
 import FilterChip from '@/components/FilterChip/FilterChip'
