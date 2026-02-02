@@ -28,7 +28,7 @@ const QuestionsTab = () => {
       values: []
     },
     sources: {
-      label: t('sources'),
+      label: t('tags.sources'),
       values: []
     },
     tags: {

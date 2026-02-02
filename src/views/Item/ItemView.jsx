@@ -36,7 +36,7 @@ const ItemView = () => {
       values: []
     },
     level: {
-      label: t('sources'),
+      label: t('tags.sources'),
       values: []
     },
     notion: {
