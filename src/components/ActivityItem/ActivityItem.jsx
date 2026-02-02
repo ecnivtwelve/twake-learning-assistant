@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useI18n } from 'twake-i18n'
+import { formatLocallyDistanceToNow, useI18n } from 'twake-i18n'
 
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import IconButton from 'cozy-ui/transpiled/react/IconButton'
@@ -37,7 +37,9 @@ const ActivityItem = ({ activity, deleteActivity }) => {
         type="primary"
       />
       <TableItemText
-        value={f(new Date(activity.cozyMetadata.updatedAt), 'dd MMM yyyy')}
+        value={formatLocallyDistanceToNow(
+          new Date(activity.cozyMetadata.updatedAt)
+        )}
         type="secondary"
       />
       <TableItemText value={0} type="secondary" />
