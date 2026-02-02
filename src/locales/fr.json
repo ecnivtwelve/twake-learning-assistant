@@ -13,5 +13,6 @@
   "tags": "Tags",
   "new": "Nouveau",
   "activities_filter": "Activités",
-  "notions": "Notions"
+  "notions": "Notions",
+  "activity_name_placeholder": "Donner un nom à l’entrainement"
 }

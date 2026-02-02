@@ -13,5 +13,6 @@
   "tags": "Tags",
   "new": "New",
   "activities_filter": "Activities",
-  "notions": "Notions"
+  "notions": "Notions",
+  "activity_name_placeholder": "Give a name to the activity"
 }

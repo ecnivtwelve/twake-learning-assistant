@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import React from 'react'
 import { useI18n } from 'twake-i18n'
 
@@ -12,17 +13,18 @@ import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryAction'
-import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import ActivityPreview from '@/components/ActivityPreview/ActivityPreview'
 import FilterChip from '@/components/FilterChip/FilterChip'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
+import styles from '@/styles/item-view.styl'
 import item from '@/utils/data/item.json'
 
 const ItemView = () => {
   const { t } = useI18n()
 
+  const [activityName, setActivityName] = React.useState(t('activity'))
   const [selectedActivity, setSelectedActivity] = React.useState(null)
 
   const [filters] = React.useState({
@@ -52,7 +54,16 @@ const ItemView = () => {
           />
         }
       >
-        <Typography variant="h3">{t('activity')}</Typography>
+        <input
+          className={classNames(
+            'MuiTypography-h3 MuiTypography-colorTextPrimary u-p-0',
+            styles.itemNameInput
+          )}
+          type="text"
+          placeholder={t('activity_name_placeholder')}
+          value={activityName}
+          onChange={e => setActivityName(e.target.value)}
+        />
 
         <div className="u-flex u-mt-1">
           {Object.entries(filters).map(([key, filter]) => (
