@@ -1,30 +1,23 @@
 import classNames from 'classnames'
-import React, { forwardRef, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useI18n } from 'twake-i18n'
 
 import { useClient, useQuery } from 'cozy-client'
+import log from 'cozy-logger'
 import ActionsBar from 'cozy-ui/transpiled/react/ActionsBar'
-import {
-  makeActions,
-  modify,
-  emailTo,
-  download,
-  smsTo,
-  call
-} from 'cozy-ui/transpiled/react/ActionsMenu/Actions'
-import ActionsMenuItem from 'cozy-ui/transpiled/react/ActionsMenu/ActionsMenuItem'
+import { makeActions } from 'cozy-ui/transpiled/react/ActionsMenu/Actions'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Checkbox from 'cozy-ui/transpiled/react/Checkbox'
+import CircularProgress from 'cozy-ui/transpiled/react/CircularProgress'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
-import IconButton from 'cozy-ui/transpiled/react/IconButton'
-import DotsIcon from 'cozy-ui/transpiled/react/Icons/Dots'
+import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import TrashIcon from 'cozy-ui/transpiled/react/Icons/Trash'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
-import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryAction'
+import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
 import { renameActivity } from '../../queries/actions/activities/renameActivity'
@@ -36,7 +29,11 @@ import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
 import { buildActivityItemQuery } from '@/queries'
 import { detachQuestions } from '@/queries/actions/questions/detachQuestion'
-import { newQuestion } from '@/queries/actions/questions/newQuestion'
+import {
+  newQuestion,
+  newQuestionsBatch
+} from '@/queries/actions/questions/newQuestion'
+import { extractJSONObject, generateFlashCards } from '@/queries/rag/openrag'
 import styles from '@/styles/item-view.styl'
 
 const ItemView = () => {
@@ -110,32 +107,84 @@ const ItemView = () => {
 
   const actions = makeActions([deleteSelected])
 
+  const [isGenerating, setIsGenerating] = useState(false)
+
+  const ragGenerate = async () => {
+    try {
+      setIsGenerating(true)
+      const data = await generateFlashCards(
+        activity,
+        'Numérique et sciences informatiques',
+        16,
+        activity.title,
+        5,
+        false
+      )
+      const json = extractJSONObject(data.choices[0].message.content)
+      if (json.cards && json.cards.length > 0 && json.cards[0].answer) {
+        newQuestionsBatch(
+          client,
+          activity,
+          json.cards.map(card => {
+            return {
+              label: card.text,
+              answer: card.answer
+            }
+          })
+        )
+      } else {
+        log.error(json)
+        showAlert({
+          message: t('questions.generate.error'),
+          severity: 'error'
+        })
+      }
+    } catch (error) {
+      log.error(error)
+      showAlert({
+        message: t('questions.generate.error'),
+        severity: 'error'
+      })
+    }
+    setIsGenerating(false)
+  }
+
   return (
     <div className="u-flex u-flex-column u-h-100">
       <TabTitle
         backEnabled
         trailing={
-          <Button
-            variant="primary"
-            label={t('new')}
-            startIcon={<Icon icon={PlusIcon} />}
-            onClick={() =>
-              newQuestion(client, activity, '')
-                .then(question => {
-                  setNewQuestionId(question._id)
-                  return showAlert({
-                    message: t('questions.alerts.created'),
-                    severity: 'success'
+          <>
+            <Button
+              variant="secondary"
+              label={t('generate')}
+              startIcon={<Icon icon={NewIcon} />}
+              onClick={() => ragGenerate()}
+              className="u-mr-1"
+            />
+
+            <Button
+              variant="primary"
+              label={t('new')}
+              startIcon={<Icon icon={PlusIcon} />}
+              onClick={() =>
+                newQuestion(client, activity, '')
+                  .then(question => {
+                    setNewQuestionId(question._id)
+                    return showAlert({
+                      message: t('questions.alerts.created'),
+                      severity: 'success'
+                    })
                   })
-                })
-                .catch(() => {
-                  return showAlert({
-                    message: t('questions.alerts.error'),
-                    severity: 'error'
+                  .catch(() => {
+                    return showAlert({
+                      message: t('questions.alerts.error'),
+                      severity: 'error'
+                    })
                   })
-                })
-            }
-          />
+              }
+            />
+          </>
         }
       >
         <input
@@ -200,17 +249,9 @@ const ItemView = () => {
               }}
             />
             <TableItemText value="Question" type="primary" />
-            <TableItemText value="Sources" type="secondary" />
+            <TableItemText value="Réponse" type="secondary" />
             <TableItemText value="Notions" type="secondary" />
-            {selectedQuestions.length === 0 ? (
-              <div className="u-w-1-half" />
-            ) : (
-              <ListItemSecondaryAction className="u-pr-1">
-                <IconButton>
-                  <Icon icon={DotsIcon} />
-                </IconButton>
-              </ListItemSecondaryAction>
-            )}
+            <div className="u-w-2-half u-p-1" />
           </ListItem>
 
           <Divider />
@@ -241,6 +282,16 @@ const ItemView = () => {
               <Divider />
             </React.Fragment>
           ))}
+
+          {isGenerating && (
+            <ListItem>
+              <ListItemIcon className="u-pl-half">
+                <CircularProgress size={24} />
+              </ListItemIcon>
+              <TableItemText value="Génération en cours..." type="primary" />
+              <div className="u-w-2-half u-p-1" />
+            </ListItem>
+          )}
         </List>
 
         {/* openedQuestion && <ActivityPreview activity={openedQuestion} /> */}

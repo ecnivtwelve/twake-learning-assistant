@@ -2,6 +2,7 @@
   "title": "Assistant d'apprentissage",
   "delete": "Supprimer",
   "new": "Nouveau",
+  "generate": "Générer",
   "tags": {
     "subjects": "Matières",
     "level": "Niveau",

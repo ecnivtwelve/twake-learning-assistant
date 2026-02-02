@@ -1,3 +1,5 @@
+import { buildActivityItemQuery } from '@/queries'
+
 export const newQuestion = async (client, activity, label) => {
   const response = await client.save({
     _type: 'io.cozy.learnings.questions',
@@ -11,4 +13,27 @@ export const newQuestion = async (client, activity, label) => {
   }
 
   return response.data
+}
+
+export const newQuestionsBatch = async (client, activity, questions) => {
+  const questionsList = []
+
+  for (const question of questions) {
+    const response = await client.save({
+      _type: 'io.cozy.learnings.questions',
+      label: question.label,
+      answer: question.answer
+    })
+    questionsList.push(response.data)
+  }
+
+  console.log(questionsList)
+
+  await activity.questions.add(questionsList)
+
+  if (!questionsList || questionsList.length === 0) {
+    throw new Error('Failed to create questions')
+  }
+
+  return questionsList
 }

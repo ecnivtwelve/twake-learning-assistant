@@ -1,6 +1,7 @@
 import React from 'react'
-import { useI18n } from 'twake-i18n'
+import { formatLocallyDistanceToNow, useI18n } from 'twake-i18n'
 
+import log from 'cozy-logger'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
@@ -17,10 +18,25 @@ import Typography from 'cozy-ui/transpiled/react/Typography'
 import FilterChip from '@/components/FilterChip/FilterChip'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
-import sources from '@/utils/data/sources.json'
+import { OPENRAG_URL } from '@/consts/consts'
+import { fetchPartition } from '@/queries/rag/openrag'
+
+const PARTITION = 'vince-test-test1'
 
 const SourcesTab = () => {
   const { t } = useI18n()
+
+  const [partitionData, setPartitionData] = React.useState([])
+
+  React.useEffect(() => {
+    fetchPartition(PARTITION)
+      .then(data => {
+        return setPartitionData(data.files)
+      })
+      .catch(err => {
+        log.error(err)
+      })
+  }, [])
 
   const [filters] = React.useState({
     types: {
@@ -49,6 +65,9 @@ const SourcesTab = () => {
         }
       >
         <Typography variant="h3">{t('sources.title')}</Typography>
+        <Typography>
+          depuis {PARTITION} sur {OPENRAG_URL}
+        </Typography>
 
         <div className="u-flex u-mt-1">
           {Object.entries(filters).map(([key, filter]) => (
@@ -68,24 +87,30 @@ const SourcesTab = () => {
 
         <Divider />
 
-        {sources.map((source, i) => (
-          <React.Fragment key={i}>
-            <ListItem button>
-              <ListItemIcon className="u-w-2-half">
-                <Icon icon={SchoolIcon} size={22} />
-              </ListItemIcon>
-              <TableItemText value={source.nom} type="primary" />
-              <TableItemText value={source.mise_a_jour} type="secondary" />
-              <TableItemText value={source.tags} type="chip" />
-              <ListItemSecondaryAction className="u-pr-1">
-                <IconButton>
-                  <Icon icon={DotsIcon} />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-          </React.Fragment>
-        ))}
+        {partitionData &&
+          partitionData.map((source, i) => (
+            <React.Fragment key={i}>
+              <ListItem button>
+                <ListItemIcon className="u-w-2-half">
+                  <Icon icon={SchoolIcon} size={22} />
+                </ListItemIcon>
+                <TableItemText value={source.description} type="primary" />
+                <TableItemText
+                  value={formatLocallyDistanceToNow(
+                    new Date(source.created_at)
+                  )}
+                  type="secondary"
+                />
+                <TableItemText value={[source.author]} type="chip" />
+                <ListItemSecondaryAction className="u-pr-1">
+                  <IconButton>
+                    <Icon icon={DotsIcon} />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+              <Divider />
+            </React.Fragment>
+          ))}
       </List>
     </>
   )

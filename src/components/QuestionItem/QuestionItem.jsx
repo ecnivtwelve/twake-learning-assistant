@@ -81,12 +81,12 @@ const QuestionItem = ({
           onBlur={() => changeLabel(questionLabel)}
           placeholder={t('questions.placeholder')}
           className={classNames(
-            'MuiListItemText-primary MuiTypography-body1 u-w-5 u-w-4-s',
+            'MuiListItemText-primary MuiTypography-body1 u-w-100',
             styles.itemNameInput
           )}
         />
       </TableItemText>
-      <TableItemText value={[]} type="chip" />
+      <TableItemText value={question.answer ?? ''} type="secondary" />
       <TableItemText value={[]} type="chip" />
       <ListItemSecondaryAction className="u-pr-1">
         <IconButton
