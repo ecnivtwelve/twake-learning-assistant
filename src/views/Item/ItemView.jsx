@@ -27,6 +27,8 @@ const ItemView = () => {
   const [activityName, setActivityName] = React.useState(t('activity'))
   const [selectedActivity, setSelectedActivity] = React.useState(null)
 
+  const activity = React.useMemo(() => item, [])
+
   const [filters] = React.useState({
     subjects: {
       label: t('types'),
@@ -41,6 +43,17 @@ const ItemView = () => {
       values: []
     }
   })
+
+  const openActivity = React.useCallback(
+    activity => {
+      if (activity == selectedActivity) {
+        setSelectedActivity(null)
+      } else {
+        setSelectedActivity(activity)
+      }
+    },
+    [selectedActivity]
+  )
 
   return (
     <div className="u-flex u-flex-column u-h-100">
@@ -86,9 +99,9 @@ const ItemView = () => {
 
           <Divider />
 
-          {item.map((source, i) => (
-            <React.Fragment key={i}>
-              <ListItem button onClick={() => setSelectedActivity(source)}>
+          {activity.map((source, i) => (
+            <React.Fragment key={source.id ?? i}>
+              <ListItem button onClick={() => openActivity(source)}>
                 <ListItemIcon className="u-w-2-half">
                   <Icon icon={HelpIcon} size={22} />
                 </ListItemIcon>
