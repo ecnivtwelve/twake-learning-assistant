@@ -3,6 +3,7 @@ import React from 'react'
 import { useI18n } from 'twake-i18n'
 
 import Button from 'cozy-ui/transpiled/react/Buttons'
+import Checkbox from 'cozy-ui/transpiled/react/Checkbox'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import IconButton from 'cozy-ui/transpiled/react/IconButton'
@@ -55,6 +56,8 @@ const ItemView = () => {
     [selectedActivity]
   )
 
+  const [selectedQuestions, setSelectedQuestions] = React.useState([])
+
   return (
     <div className="u-flex u-flex-column u-h-100">
       <TabTitle
@@ -85,29 +88,64 @@ const ItemView = () => {
         </div>
       </TabTitle>
 
-      <Divider />
-
       <div className="u-flex u-flex-col u-h-100">
         <List className="u-w-100">
           <ListItem size="small" dense>
-            <ListItemIcon className="u-w-2-half"></ListItemIcon>
+            <Checkbox
+              checked={selectedQuestions.length > 0}
+              mixed={
+                selectedQuestions.length > 0 &&
+                selectedQuestions.length < activity.length
+              }
+              onChange={() => {
+                if (selectedQuestions.length === activity.length) {
+                  setSelectedQuestions([])
+                } else {
+                  setSelectedQuestions(activity.map(q => q.id))
+                }
+              }}
+            />
             <TableItemText value="Question" type="primary" />
             <TableItemText value="Sources" type="secondary" />
             <TableItemText value="Notions" type="secondary" />
-            <div className="u-w-1-half" />
+            {selectedQuestions.length === 0 ? (
+              <div className="u-w-1-half" />
+            ) : (
+              <ListItemSecondaryAction className="u-pr-1">
+                <IconButton>
+                  <Icon icon={DotsIcon} />
+                </IconButton>
+              </ListItemSecondaryAction>
+            )}
           </ListItem>
 
           <Divider />
 
-          {activity.map((source, i) => (
-            <React.Fragment key={source.id ?? i}>
-              <ListItem button onClick={() => openActivity(source)}>
-                <ListItemIcon className="u-w-2-half">
-                  <Icon icon={HelpIcon} size={22} />
-                </ListItemIcon>
-                <TableItemText value={source.question} type="primary" />
-                <TableItemText value={[source.sources]} type="chip" />
-                <TableItemText value={source.notions} type="chip" />
+          {activity.map((question, i) => (
+            <React.Fragment key={question.id ?? i}>
+              <ListItem
+                button
+                onClick={() => openActivity(question)}
+                className={classNames(
+                  selectedQuestions.includes(question.id)
+                    ? styles.listItemSelected
+                    : null
+                )}
+              >
+                <Checkbox
+                  checked={selectedQuestions.includes(question.id)}
+                  onClick={e => e.stopPropagation()}
+                  onChange={() => {
+                    setSelectedQuestions(
+                      selectedQuestions.includes(question.id)
+                        ? selectedQuestions.filter(id => id !== question.id)
+                        : [...selectedQuestions, question.id]
+                    )
+                  }}
+                />
+                <TableItemText value={question.question} type="primary" />
+                <TableItemText value={[question.sources]} type="chip" />
+                <TableItemText value={question.notions} type="chip" />
                 <ListItemSecondaryAction className="u-pr-1">
                   <IconButton>
                     <Icon icon={DotsIcon} />
