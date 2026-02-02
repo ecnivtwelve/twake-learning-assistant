@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useI18n } from 'twake-i18n'
 
@@ -20,16 +20,15 @@ import ActivityIcon from '@/assets/icons/ActivityIcon'
 import FilterChip from '@/components/FilterChip/FilterChip'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
-import activities from '@/utils/data/activities.json'
+import activitiesData from '@/utils/data/activities.json'
 
 const ActivitiesTab = () => {
   const { t } = useI18n()
   const navigate = useNavigate()
 
-  const allClasses = [...new Set(activities.map(activity => activity.classe))]
-  const [selectedClass, setSelectedClass] = React.useState(null)
+  const activities = useMemo(() => activitiesData, [])
 
-  const [filters] = React.useState({
+  const [filters, setFilters] = React.useState({
     subjects: {
       label: t('subjects'),
       values: []
@@ -40,16 +39,30 @@ const ActivitiesTab = () => {
     },
     class: {
       label: t('classes_and_groups'),
-      values: []
+      values: useMemo(
+        () => [...new Set(activities.map(activity => activity.classe))],
+        [activities]
+      ),
+      selected: null
     }
   })
 
   const filteredActivities = activities.filter(activity => {
-    if (selectedClass) {
-      return activity.classe === selectedClass
+    if (filters.class.selected) {
+      return activity.classe === filters.class.selected
     }
     return true
   })
+
+  const selectClass = React.useCallback(value => {
+    setFilters(prev => ({
+      ...prev,
+      class: {
+        ...prev.class,
+        selected: prev.class.selected === value ? null : value
+      }
+    }))
+  }, [])
 
   return (
     <>
@@ -70,21 +83,14 @@ const ActivitiesTab = () => {
             <FilterChip
               key={key}
               label={
-                key == 'class' && selectedClass ? selectedClass : filter.label
+                key == 'class' && filter.selected
+                  ? filter.selected
+                  : filter.label
               }
             >
               {key == 'class' &&
-                allClasses.map(value => (
-                  <MenuItem
-                    key={value}
-                    onClick={() => {
-                      if (value == selectedClass) {
-                        setSelectedClass(null)
-                      } else {
-                        setSelectedClass(value)
-                      }
-                    }}
-                  >
+                filter.values.map(value => (
+                  <MenuItem key={value} onClick={() => selectClass(value)}>
                     <ListItemText primary={value} />
                   </MenuItem>
                 ))}
@@ -107,7 +113,7 @@ const ActivitiesTab = () => {
         <Divider />
 
         {filteredActivities.map((activity, i) => (
-          <React.Fragment key={i}>
+          <React.Fragment key={activity.id ?? i}>
             <ListItem button onClick={() => navigate(`/item/${activity.id}`)}>
               <ListItemIcon className="u-w-2-half">
                 <ActivityIcon size={32} />
