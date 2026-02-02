@@ -1,9 +1,3 @@
-export const detachQuestions = async (
-  client,
-  t,
-  showAlert,
-  activity,
-  questions
-) => {
+export const detachQuestions = async (activity, questions) => {
   return activity.questions.remove(questions)
 }

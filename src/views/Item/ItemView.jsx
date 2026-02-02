@@ -1,9 +1,19 @@
 import classNames from 'classnames'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { forwardRef, useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useI18n } from 'twake-i18n'
 
 import { useClient, useQuery } from 'cozy-client'
+import ActionsBar from 'cozy-ui/transpiled/react/ActionsBar'
+import {
+  makeActions,
+  modify,
+  emailTo,
+  download,
+  smsTo,
+  call
+} from 'cozy-ui/transpiled/react/ActionsMenu/Actions'
+import ActionsMenuItem from 'cozy-ui/transpiled/react/ActionsMenu/ActionsMenuItem'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Checkbox from 'cozy-ui/transpiled/react/Checkbox'
 import Divider from 'cozy-ui/transpiled/react/Divider'
@@ -11,6 +21,7 @@ import Icon from 'cozy-ui/transpiled/react/Icon'
 import IconButton from 'cozy-ui/transpiled/react/IconButton'
 import DotsIcon from 'cozy-ui/transpiled/react/Icons/Dots'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
+import TrashIcon from 'cozy-ui/transpiled/react/Icons/Trash'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryAction'
@@ -85,6 +96,20 @@ const ItemView = () => {
 
   const [newQuestionId, setNewQuestionId] = useState(null)
 
+  const deleteSelected = () => ({
+    name: 'deleteSelected',
+    icon: TrashIcon,
+    action: async () => {
+      const questionsIds = selectedQuestions.map(q => {
+        return { _id: q }
+      })
+      await detachQuestions(activity, questionsIds)
+    },
+    label: t('delete')
+  })
+
+  const actions = makeActions([deleteSelected])
+
   return (
     <div className="u-flex u-flex-column u-h-100">
       <TabTitle
@@ -149,6 +174,14 @@ const ItemView = () => {
         </div>
       </TabTitle>
 
+      {selectedQuestions.length > 0 && (
+        <ActionsBar
+          actions={actions}
+          docs={selectedQuestions}
+          onClose={() => setSelectedQuestions([])}
+        />
+      )}
+
       <div className="u-flex u-flex-col u-h-100">
         <List className="u-w-100">
           <ListItem size="small" dense>
@@ -190,9 +223,7 @@ const ItemView = () => {
                 selectedQuestions={selectedQuestions}
                 setSelectedQuestions={setSelectedQuestions}
                 deleteQuestion={() =>
-                  detachQuestions(client, t, showAlert, activity, [
-                    { _id: question._id }
-                  ])
+                  detachQuestions(activity, [{ _id: question._id }])
                     .then(() => {
                       return showAlert({
                         message: t('questions.alerts.deleted'),
