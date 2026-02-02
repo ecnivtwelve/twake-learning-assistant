@@ -1,5 +1,6 @@
 {
   "title": "Assistant d'apprentissage",
+  "delete": "Supprimer",
   "new": "Nouveau",
   "tags": {
     "subjects": "Matières",
@@ -14,16 +15,32 @@
   },
   "activity": {
     "title": "Entraînement",
-    "placeholder": "Donner un nom à l’entrainement"
+    "untitled": "Sans titre",
+    "placeholder": "Donner un nom à l’entrainement",
+    "alerts": {
+      "rename": {
+        "error": "Impossible de modifier le nom de l'entrainement"
+      }
+    }
   },
   "activities": {
     "title": "Entraînements",
+    "empty": {
+      "title": "Aucun entraînement",
+      "message": "Créez votre premier entraînement pour commencer"
+    },
     "table": {
       "activities": "Entraînements",
       "update": "Mise à jour",
       "questions": "Questions",
       "classes": "Classes",
-      "level": "Maîtrise"
+      "level": "Maîtrise",
+      "empty": "Aucun(e)"
+    },
+    "alerts": {
+      "created": "Entraînement créé",
+      "error": "Erreur lors de la création de l'entrainement",
+      "deleted": "Entraînement supprimé"
     }
   },
   "questions": {

@@ -1,34 +1,53 @@
 import classNames from 'classnames'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useI18n } from 'twake-i18n'
 
+import { useClient, useQuery } from 'cozy-client'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Checkbox from 'cozy-ui/transpiled/react/Checkbox'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import IconButton from 'cozy-ui/transpiled/react/IconButton'
 import DotsIcon from 'cozy-ui/transpiled/react/Icons/Dots'
-import HelpIcon from 'cozy-ui/transpiled/react/Icons/HelpOutlined'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
-import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryAction'
+import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
+
+import { renameActivity } from '../../queries/actions/renameActivity'
 
 import ActivityPreview from '@/components/ActivityPreview/ActivityPreview'
 import FilterChip from '@/components/FilterChip/FilterChip'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
+import { buildActivityItemQuery } from '@/queries'
 import styles from '@/styles/item-view.styl'
-import item from '@/utils/data/item.json'
 
 const ItemView = () => {
   const { t } = useI18n()
+  const client = useClient()
+  const { showAlert } = useAlert()
+  const location = useLocation()
+  const activityId = location.pathname.split('/').pop()
 
-  const [activityName, setActivityName] = React.useState(t('activity.title'))
-  const [selectedActivity, setSelectedActivity] = React.useState(null)
+  const activityItemQuery = buildActivityItemQuery(activityId)
+  const { data: activity } = useQuery(
+    activityItemQuery.definition,
+    activityItemQuery.options
+  )
 
-  const activity = React.useMemo(() => item, [])
+  const [activityTitle, setActivityTitle] = useState()
+
+  const titleInputRef = React.useRef()
+
+  useEffect(() => {
+    setActivityTitle(activity?.title)
+    if (activity?.title.trim() === '') {
+      titleInputRef.current.focus()
+    }
+  }, [activity])
 
   const [filters] = React.useState({
     subjects: {
@@ -45,15 +64,17 @@ const ItemView = () => {
     }
   })
 
-  const openActivity = React.useCallback(
-    activity => {
-      if (activity == selectedActivity) {
-        setSelectedActivity(null)
+  const [openedQuestion, setOpenedQuestion] = React.useState(null)
+
+  const openQuestion = React.useCallback(
+    question => {
+      if (question == openedQuestion) {
+        setOpenedQuestion(null)
       } else {
-        setSelectedActivity(activity)
+        setOpenedQuestion(question)
       }
     },
-    [selectedActivity]
+    [openedQuestion]
   )
 
   const [selectedQuestions, setSelectedQuestions] = React.useState([])
@@ -75,10 +96,14 @@ const ItemView = () => {
             'MuiTypography-h3 MuiTypography-colorTextPrimary u-p-0',
             styles.itemNameInput
           )}
+          ref={titleInputRef}
           type="text"
-          placeholder={t('activity_tab.placeholder')}
-          value={activityName}
-          onChange={e => setActivityName(e.target.value)}
+          placeholder={t('activity.placeholder')}
+          value={activityTitle}
+          onChange={e => setActivityTitle(e.target.value)}
+          onBlur={e =>
+            renameActivity(client, t, showAlert, activity, e.target.value)
+          }
         />
 
         <div className="u-flex u-mt-1">
@@ -121,43 +146,44 @@ const ItemView = () => {
 
           <Divider />
 
-          {activity.map((question, i) => (
-            <React.Fragment key={question.id ?? i}>
-              <ListItem
-                button
-                onClick={() => openActivity(question)}
-                className={classNames(
-                  selectedQuestions.includes(question.id)
-                    ? styles.listItemSelected
-                    : null
-                )}
-              >
-                <Checkbox
-                  checked={selectedQuestions.includes(question.id)}
-                  onClick={e => e.stopPropagation()}
-                  onChange={() => {
-                    setSelectedQuestions(
-                      selectedQuestions.includes(question.id)
-                        ? selectedQuestions.filter(id => id !== question.id)
-                        : [...selectedQuestions, question.id]
-                    )
-                  }}
-                />
-                <TableItemText value={question.question} type="primary" />
-                <TableItemText value={[question.sources]} type="chip" />
-                <TableItemText value={question.notions} type="chip" />
-                <ListItemSecondaryAction className="u-pr-1">
-                  <IconButton>
-                    <Icon icon={DotsIcon} />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-              <Divider />
-            </React.Fragment>
-          ))}
+          {1 == 2 &&
+            activity.map((question, i) => (
+              <React.Fragment key={question.id ?? i}>
+                <ListItem
+                  button
+                  onClick={() => openActivity(question)}
+                  className={classNames(
+                    selectedQuestions.includes(question.id)
+                      ? styles.listItemSelected
+                      : null
+                  )}
+                >
+                  <Checkbox
+                    checked={selectedQuestions.includes(question.id)}
+                    onClick={e => e.stopPropagation()}
+                    onChange={() => {
+                      setSelectedQuestions(
+                        selectedQuestions.includes(question.id)
+                          ? selectedQuestions.filter(id => id !== question.id)
+                          : [...selectedQuestions, question.id]
+                      )
+                    }}
+                  />
+                  <TableItemText value={question.question} type="primary" />
+                  <TableItemText value={[question.sources]} type="chip" />
+                  <TableItemText value={question.notions} type="chip" />
+                  <ListItemSecondaryAction className="u-pr-1">
+                    <IconButton>
+                      <Icon icon={DotsIcon} />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+                <Divider />
+              </React.Fragment>
+            ))}
         </List>
 
-        {selectedActivity && <ActivityPreview activity={selectedActivity} />}
+        {openedQuestion && <ActivityPreview activity={openedQuestion} />}
       </div>
     </div>
   )

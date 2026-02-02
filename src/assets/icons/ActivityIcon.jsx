@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react'
 
-const ActivityIcon = (props) => (
+const ActivityIcon = props => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={props.size || 32}
@@ -15,6 +15,6 @@ const ActivityIcon = (props) => (
       d="M21.505 14.369c1.385.646 1.385 2.616 0 3.262l-8.944 4.174A1.8 1.8 0 0 1 10 20.174v-8.348a1.8 1.8 0 0 1 2.561-1.63z"
     />
   </svg>
-);
+)
 
-export default ActivityIcon;
+export default ActivityIcon

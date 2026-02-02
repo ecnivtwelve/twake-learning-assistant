@@ -4,6 +4,7 @@ import { I18n } from 'twake-i18n'
 import { BarProvider } from 'cozy-bar'
 import { CozyProvider } from 'cozy-client'
 import { WebviewIntentProvider } from 'cozy-intent'
+import AlertProvider from 'cozy-ui/transpiled/react/providers/Alert'
 import { BreakpointsProvider } from 'cozy-ui/transpiled/react/providers/Breakpoints'
 import CozyTheme from 'cozy-ui/transpiled/react/providers/CozyTheme'
 
@@ -13,9 +14,11 @@ const AppProviders = ({ client, lang, polyglot, children }) => {
       <CozyProvider client={client}>
         <BarProvider>
           <I18n lang={lang} polyglot={polyglot}>
-            <CozyTheme>
-              <BreakpointsProvider>{children}</BreakpointsProvider>
-            </CozyTheme>
+            <AlertProvider>
+              <CozyTheme>
+                <BreakpointsProvider>{children}</BreakpointsProvider>
+              </CozyTheme>
+            </AlertProvider>
           </I18n>
         </BarProvider>
       </CozyProvider>

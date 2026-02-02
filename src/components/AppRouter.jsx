@@ -1,13 +1,14 @@
 import React from 'react'
 import { Navigate, RouterProvider, createHashRouter } from 'react-router-dom'
 
+import AppItemLayout from './AppItemLayout'
+
 import AppLayout from '@/components/AppLayout'
 import ActivitiesTab from '@/views/ActivitiesTab'
 import InsightsTab from '@/views/InsightsTab'
 import ItemView from '@/views/Item/ItemView'
 import QuestionsTab from '@/views/QuestionsTab'
 import SourcesTab from '@/views/SourcesTab'
-import AppItemLayout from './AppItemLayout'
 
 const routes = [
   {

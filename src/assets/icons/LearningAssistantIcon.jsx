@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react'
 
-const LearningAssistantIcon = (props) => (
+const LearningAssistantIcon = props => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={props.size || 32}
@@ -35,6 +35,6 @@ const LearningAssistantIcon = (props) => (
       d="m17.844 18.964-1.897.93-1.893-.934 1.893-2.705z"
     ></path>
   </svg>
-);
+)
 
-export default LearningAssistantIcon;
+export default LearningAssistantIcon

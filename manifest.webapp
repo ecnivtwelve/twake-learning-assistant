@@ -25,6 +25,11 @@
       "type": "io.cozy.files",
       "verbs": ["ALL"]
     },
+    "learnings": {
+      "description": "Required",
+      "type": "io.cozy.learnings",
+      "verbs": ["ALL"]
+    },
     "apps": {
       "description": "Required by the cozy-bar to display the icons of the apps",
       "type": "io.cozy.apps",
