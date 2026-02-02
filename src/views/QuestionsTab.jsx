@@ -24,7 +24,7 @@ const QuestionsTab = () => {
 
   const [filters] = React.useState({
     types: {
-      label: t('types'),
+      label: t('tags.types'),
       values: []
     },
     sources: {
@@ -32,7 +32,7 @@ const QuestionsTab = () => {
       values: []
     },
     tags: {
-      label: t('tags'),
+      label: t('tags.tags'),
       values: []
     }
   })
@@ -48,7 +48,7 @@ const QuestionsTab = () => {
           />
         }
       >
-        <Typography variant="h3">{t('questions')}</Typography>
+        <Typography variant="h3">{t('questions.title')}</Typography>
 
         <div className="u-flex u-mt-1">
           {Object.entries(filters).map(([key, filter]) => (
@@ -60,10 +60,13 @@ const QuestionsTab = () => {
       <List>
         <ListItem size="small" dense>
           <ListItemIcon className="u-w-2-half"></ListItemIcon>
-          <TableItemText value="Questions" type="primary" />
-          <TableItemText value="Source" type="secondary" />
-          <TableItemText value="Tags" type="secondary" />
-          <TableItemText value="Maîtrise" type="secondary" />
+          <TableItemText
+            value={t('questions.table.questions')}
+            type="primary"
+          />
+          <TableItemText value={t('questions.table.source')} type="secondary" />
+          <TableItemText value={t('questions.table.tags')} type="secondary" />
+          <TableItemText value={t('questions.table.level')} type="secondary" />
           <div className="u-w-1-half" />
         </ListItem>
 

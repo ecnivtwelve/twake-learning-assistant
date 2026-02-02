@@ -1,18 +1,48 @@
 {
   "title": "Learning Assistant",
-  "activities": "Activities",
-  "activity": "Activity",
-  "questions": "Questions",
-  "sources": "Sources",
-  "insights": "Insights",
-  "subjects": "Subjects",
-  "level": "Level",
-  "classes_and_groups": "Classes and groups",
-  "periods": "Periods",
-  "types": "Types",
-  "tags": "Tags",
   "new": "New",
-  "activities_filter": "Activities",
-  "notions": "Notions",
-  "activity_name_placeholder": "Give a name to the activity"
+  "tags": {
+    "subjects": "Subjects",
+    "level": "Level",
+    "classes_and_groups": "Classes and groups",
+    "periods": "Periods",
+    "types": "Types",
+    "tags": "Tags",
+    "activities_filter": "Activities",
+    "notions": "Notions"
+  },
+  "activity": {
+    "title": "Activity",
+    "placeholder": "Give this activity a name"
+  },
+  "activities": {
+    "title": "Activities",
+    "table": {
+      "activities": "Activity",
+      "update": "Updated",
+      "questions": "Questions",
+      "classes": "Classes",
+      "level": "Level"
+    }
+  },
+  "questions": {
+    "title": "Questions",
+    "table": {
+      "questions": "Questions",
+      "source": "Source",
+      "tags": "Tags",
+      "level": "Level"
+    }
+  },
+  "sources": {
+    "title": "Sources",
+    "table": {
+      "name": "Name",
+      "update": "Updated",
+      "tags": "Tags"
+    }
+  },
+  "insights": {
+    "title": "Analytics"
+  }
 }

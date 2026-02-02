@@ -52,7 +52,7 @@ const SidebarComponent = () => {
               onClick={() => navigate(`/${path}`)}
             >
               <NavIcon icon={icon} />
-              <NavText>{t(path)}</NavText>
+              <NavText>{t(`${path}.title`)}</NavText>
             </NavLink>
           </NavItem>
         ))}

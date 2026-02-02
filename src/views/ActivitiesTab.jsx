@@ -30,15 +30,15 @@ const ActivitiesTab = () => {
 
   const [filters, setFilters] = React.useState({
     subjects: {
-      label: t('subjects'),
+      label: t('tags.subjects'),
       values: []
     },
     level: {
-      label: t('level'),
+      label: t('tags.level'),
       values: []
     },
     class: {
-      label: t('classes_and_groups'),
+      label: t('tags.classes_and_groups'),
       values: useMemo(
         () => [...new Set(activities.map(activity => activity.classe))],
         [activities]
@@ -76,7 +76,7 @@ const ActivitiesTab = () => {
           />
         }
       >
-        <Typography variant="h3">{t('activities')}</Typography>
+        <Typography variant="h3">{t('activities.title')}</Typography>
 
         <div className="u-flex u-mt-1">
           {Object.entries(filters).map(([key, filter]) => (
@@ -102,11 +102,23 @@ const ActivitiesTab = () => {
       <List>
         <ListItem size="small" dense>
           <ListItemIcon className="u-w-2-half"></ListItemIcon>
-          <TableItemText value="Entraînements" type="primary" />
-          <TableItemText value="Mise à jour" type="secondary" />
-          <TableItemText value="Questions" type="secondary" />
-          <TableItemText value="Transmis" type="secondary" />
-          <TableItemText value="Maîtrise" type="secondary" />
+          <TableItemText
+            value={t('activities.table.activities')}
+            type="primary"
+          />
+          <TableItemText
+            value={t('activities.table.update')}
+            type="secondary"
+          />
+          <TableItemText
+            value={t('activities.table.questions')}
+            type="secondary"
+          />
+          <TableItemText
+            value={t('activities.table.classes')}
+            type="secondary"
+          />
+          <TableItemText value={t('activities.table.level')} type="secondary" />
           <div className="u-w-1-half" />
         </ListItem>
 

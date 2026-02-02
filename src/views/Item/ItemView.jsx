@@ -24,14 +24,14 @@ import item from '@/utils/data/item.json'
 const ItemView = () => {
   const { t } = useI18n()
 
-  const [activityName, setActivityName] = React.useState(t('activity'))
+  const [activityName, setActivityName] = React.useState(t('activity.title'))
   const [selectedActivity, setSelectedActivity] = React.useState(null)
 
   const activity = React.useMemo(() => item, [])
 
   const [filters] = React.useState({
     subjects: {
-      label: t('types'),
+      label: t('tags.types'),
       values: []
     },
     level: {
@@ -39,7 +39,7 @@ const ItemView = () => {
       values: []
     },
     notion: {
-      label: t('notions'),
+      label: t('tags.notions'),
       values: []
     }
   })
@@ -73,7 +73,7 @@ const ItemView = () => {
             styles.itemNameInput
           )}
           type="text"
-          placeholder={t('activity_name_placeholder')}
+          placeholder={t('activity_tab.placeholder')}
           value={activityName}
           onChange={e => setActivityName(e.target.value)}
         />

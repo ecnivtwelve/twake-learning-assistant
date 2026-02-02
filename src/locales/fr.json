@@ -1,18 +1,48 @@
 {
   "title": "Assistant d'apprentissage",
-  "activities": "Entraînements",
-  "activity": "Entraînement",
-  "questions": "Questions",
-  "sources": "Sources",
-  "insights": "Analyse",
-  "subjects": "Matières",
-  "level": "Niveau",
-  "classes_and_groups": "Classes et groupes",
-  "periods": "Périodes",
-  "types": "Types",
-  "tags": "Tags",
   "new": "Nouveau",
-  "activities_filter": "Activités",
-  "notions": "Notions",
-  "activity_name_placeholder": "Donner un nom à l’entrainement"
+  "tags": {
+    "subjects": "Matières",
+    "level": "Niveau",
+    "classes_and_groups": "Classes et groupes",
+    "periods": "Périodes",
+    "types": "Types",
+    "tags": "Tags",
+    "activities_filter": "Activités",
+    "notions": "Notions"
+  },
+  "activity": {
+    "title": "Entraînement",
+    "placeholder": "Donner un nom à l’entrainement"
+  },
+  "activities": {
+    "title": "Entraînements",
+    "table": {
+      "activities": "Entraînements",
+      "update": "Mise à jour",
+      "questions": "Questions",
+      "classes": "Classes",
+      "level": "Maîtrise"
+    }
+  },
+  "questions": {
+    "title": "Questions",
+    "table": {
+      "questions": "Questions",
+      "source": "Source",
+      "tags": "Tags",
+      "level": "Maîtrise"
+    }
+  },
+  "sources": {
+    "title": "Sources",
+    "table": {
+      "name": "Nom",
+      "update": "Mise à jour",
+      "tags": "Tags"
+    }
+  },
+  "insights": {
+    "title": "Analyse"
+  }
 }

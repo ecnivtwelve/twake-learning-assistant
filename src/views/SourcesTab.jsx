@@ -24,15 +24,15 @@ const SourcesTab = () => {
 
   const [filters] = React.useState({
     types: {
-      label: t('types'),
+      label: t('tags.types'),
       values: []
     },
     level: {
-      label: t('level'),
+      label: t('tags.level'),
       values: []
     },
     tags: {
-      label: t('tags'),
+      label: t('tags.tags'),
       values: []
     }
   })
@@ -48,7 +48,7 @@ const SourcesTab = () => {
           />
         }
       >
-        <Typography variant="h3">{t('sources')}</Typography>
+        <Typography variant="h3">{t('sources.title')}</Typography>
 
         <div className="u-flex u-mt-1">
           {Object.entries(filters).map(([key, filter]) => (
@@ -60,9 +60,9 @@ const SourcesTab = () => {
       <List>
         <ListItem size="small" dense>
           <ListItemIcon className="u-w-2-half"></ListItemIcon>
-          <TableItemText value="Nom" type="primary" />
-          <TableItemText value="Mise à jour" type="secondary" />
-          <TableItemText value="Tags" type="secondary" />
+          <TableItemText value={t('sources.table.name')} type="primary" />
+          <TableItemText value={t('sources.table.update')} type="secondary" />
+          <TableItemText value={t('sources.table.tags')} type="secondary" />
           <div className="u-w-1-half" />
         </ListItem>
 

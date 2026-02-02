@@ -11,23 +11,23 @@ const InsightsTab = () => {
 
   const [filters] = React.useState({
     subjects: {
-      label: t('subjects'),
+      label: t('tags.subjects'),
       values: []
     },
     level: {
-      label: t('level'),
+      label: t('tags.level'),
       values: []
     },
     class: {
-      label: t('classes_and_groups'),
+      label: t('tags.classes_and_groups'),
       values: []
     },
     periods: {
-      label: t('periods'),
+      label: t('tags.periods'),
       values: []
     },
     activities: {
-      label: t('activities_filter'),
+      label: t('tags.activities_filter'),
       values: []
     }
   })
@@ -35,7 +35,7 @@ const InsightsTab = () => {
   return (
     <>
       <TabTitle>
-        <Typography variant="h3">{t('insights')}</Typography>
+        <Typography variant="h3">{t('insights.title')}</Typography>
 
         <div className="u-flex u-mt-1">
           {Object.entries(filters).map(([key, filter]) => (
