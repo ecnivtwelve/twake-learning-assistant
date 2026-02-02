@@ -17,7 +17,7 @@ import ActivityIcon from '@/assets/icons/ActivityIcon'
 import TableItemText from '@/components/TableItem/TableItemText'
 
 const ActivityItem = ({ activity, deleteActivity }) => {
-  const { t, f } = useI18n()
+  const { t } = useI18n()
 
   const navigate = useNavigate()
   const [menuShown, setMenuShown] = React.useState(false)
@@ -42,7 +42,10 @@ const ActivityItem = ({ activity, deleteActivity }) => {
         )}
         type="secondary"
       />
-      <TableItemText value={0} type="secondary" />
+      <TableItemText
+        value={activity?.relationships?.questions?.data?.length ?? 0}
+        type="secondary"
+      />
       <TableItemText value={[]} type="chip" />
       <TableItemText value={Math.round(0 * 100)} type="colouredValue" />
       <ListItemSecondaryAction className="u-pr-1">
