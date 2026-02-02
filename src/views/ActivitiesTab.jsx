@@ -158,7 +158,7 @@ const ActivitiesTab = () => {
               value={t('activities.table.level')}
               type="secondary"
             />
-            <div className="u-w-1-half" />
+            <div className="u-w-2-half u-p-1" />
           </ListItem>
 
           <Divider />

@@ -83,6 +83,8 @@ const ItemView = () => {
   // const [openedQuestion, setOpenedQuestion] = React.useState(null)
   const [selectedQuestions, setSelectedQuestions] = React.useState([])
 
+  const [newQuestionId, setNewQuestionId] = useState(null)
+
   return (
     <div className="u-flex u-flex-column u-h-100">
       <TabTitle
@@ -93,12 +95,9 @@ const ItemView = () => {
             label={t('new')}
             startIcon={<Icon icon={PlusIcon} />}
             onClick={() =>
-              newQuestion(
-                client,
-                activity,
-                'Ma question ' + Math.floor(Math.random() * 1000)
-              )
-                .then(() => {
+              newQuestion(client, activity, '')
+                .then(question => {
+                  setNewQuestionId(question._id)
                   return showAlert({
                     message: t('questions.alerts.created'),
                     severity: 'success'
@@ -187,6 +186,7 @@ const ItemView = () => {
             <React.Fragment key={question.id ?? i}>
               <QuestionItem
                 question={question}
+                autoFocus={question._id === newQuestionId}
                 selectedQuestions={selectedQuestions}
                 setSelectedQuestions={setSelectedQuestions}
                 deleteQuestion={() =>

@@ -45,6 +45,7 @@
   },
   "questions": {
     "title": "Questions",
+    "placeholder": "Donner un nom à la question",
     "table": {
       "questions": "Questions",
       "source": "Source",

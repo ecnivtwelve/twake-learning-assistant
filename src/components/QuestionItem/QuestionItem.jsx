@@ -1,7 +1,8 @@
 import classNames from 'classnames'
-import React from 'react'
+import React, { useState } from 'react'
 import { useI18n } from 'twake-i18n'
 
+import { useClient } from 'cozy-client'
 import Checkbox from 'cozy-ui/transpiled/react/Checkbox'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import IconButton from 'cozy-ui/transpiled/react/IconButton'
@@ -15,17 +16,38 @@ import Menu from 'cozy-ui/transpiled/react/Menu'
 import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
 
 import TableItemText from '@/components/TableItem/TableItemText'
+import { renameQuestion } from '@/queries/actions/questions/renameQuestion'
 import styles from '@/styles/item-view.styl'
 
 const QuestionItem = ({
   question,
+  autoFocus,
   selectedQuestions,
   setSelectedQuestions,
   deleteQuestion
 }) => {
   const { t } = useI18n()
+  const client = useClient()
   const [menuShown, setMenuShown] = React.useState(false)
   const menuButtonRef = React.useRef(null)
+  const inputRef = React.useRef(null)
+
+  const [questionLabel, setQuestionLabel] = useState(question.label)
+
+  React.useEffect(() => {
+    if (autoFocus && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [autoFocus])
+
+  const changeLabel = label => {
+    if (label.trim() === '') {
+      deleteQuestion()
+      return
+    }
+
+    renameQuestion(client, question, label)
+  }
 
   return (
     <ListItem
@@ -51,7 +73,19 @@ const QuestionItem = ({
           )
         }}
       />
-      <TableItemText value={question.label} type="primary" />
+      <TableItemText type="primary">
+        <input
+          ref={inputRef}
+          value={questionLabel}
+          onChange={e => setQuestionLabel(e.target.value)}
+          onBlur={() => changeLabel(questionLabel)}
+          placeholder={t('questions.placeholder')}
+          className={classNames(
+            'MuiListItemText-primary MuiTypography-body1 u-w-5 u-w-4-s',
+            styles.itemNameInput
+          )}
+        />
+      </TableItemText>
       <TableItemText value={[]} type="chip" />
       <TableItemText value={[]} type="chip" />
       <ListItemSecondaryAction className="u-pr-1">
