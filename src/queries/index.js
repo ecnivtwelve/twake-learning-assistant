@@ -14,10 +14,18 @@ export const buildActivitiesQuery = () => ({
 })
 
 export const buildActivityItemQuery = id => ({
-  definition: () => Q('io.cozy.learnings').getById(id),
+  definition: () => Q('io.cozy.learnings').getById(id).include(['questions']),
   options: {
     as: `io.cozy.calendar.learnings/${id}`,
     fetchPolicy: defaultFetchPolicy,
     singleDocData: true
+  }
+})
+
+export const buildQuestionsQuery = () => ({
+  definition: () => Q('io.cozy.learnings.questions'),
+  options: {
+    as: 'io.cozy.learnings.questions',
+    fetchPolicy: defaultFetchPolicy
   }
 })

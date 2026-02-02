@@ -50,6 +50,11 @@
       "source": "Source",
       "tags": "Tags",
       "level": "Maîtrise"
+    },
+    "alerts": {
+      "created": "Question créée",
+      "error": "Erreur lors de la création de la question",
+      "deleted": "Question supprimée de l'activité"
     }
   },
   "sources": {

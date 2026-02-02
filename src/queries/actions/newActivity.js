@@ -1,7 +1,12 @@
 export const newActivity = async (client, t, showAlert, navigate) => {
   const response = await client.save({
     _type: 'io.cozy.learnings',
-    title: ''
+    title: '',
+    relationships: {
+      questions: {
+        data: []
+      }
+    }
   })
 
   if (response?.data) {

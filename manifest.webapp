@@ -27,7 +27,7 @@
     },
     "learnings": {
       "description": "Required",
-      "type": "io.cozy.learnings",
+      "type": "io.cozy.learnings.*",
       "verbs": ["ALL"]
     },
     "apps": {

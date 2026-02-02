@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useI18n } from 'twake-i18n'
 
@@ -18,11 +18,14 @@ import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
 import { renameActivity } from '../../queries/actions/renameActivity'
 
-import ActivityPreview from '@/components/ActivityPreview/ActivityPreview'
+// import ActivityPreview from '@/components/ActivityPreview/ActivityPreview'
 import FilterChip from '@/components/FilterChip/FilterChip'
+import QuestionItem from '@/components/QuestionItem/QuestionItem'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
 import { buildActivityItemQuery } from '@/queries'
+import { detachQuestions } from '@/queries/actions/detachQuestion'
+import { newQuestion } from '@/queries/actions/newQuestion'
 import styles from '@/styles/item-view.styl'
 
 const ItemView = () => {
@@ -30,24 +33,37 @@ const ItemView = () => {
   const client = useClient()
   const { showAlert } = useAlert()
   const location = useLocation()
-  const activityId = location.pathname.split('/').pop()
+  const activityId = useMemo(
+    () => location.pathname.split('/').pop(),
+    [location]
+  )
 
-  const activityItemQuery = buildActivityItemQuery(activityId)
+  const activityItemQuery = useMemo(
+    () => buildActivityItemQuery(activityId),
+    [activityId]
+  )
   const { data: activity } = useQuery(
     activityItemQuery.definition,
     activityItemQuery.options
   )
 
+  const questions = activity?.questions?.data || []
+
   const [activityTitle, setActivityTitle] = useState()
 
   const titleInputRef = React.useRef()
 
+  const [firstLoad, setFirstLoad] = useState(true)
+
   useEffect(() => {
-    setActivityTitle(activity?.title)
-    if (activity?.title.trim() === '') {
-      titleInputRef.current.focus()
+    if (firstLoad) {
+      setFirstLoad(false)
+      setActivityTitle(activity?.title)
+      if (activity?.title.trim() === '') {
+        titleInputRef.current.focus()
+      }
     }
-  }, [activity])
+  }, [activity, firstLoad])
 
   const [filters] = React.useState({
     subjects: {
@@ -64,19 +80,7 @@ const ItemView = () => {
     }
   })
 
-  const [openedQuestion, setOpenedQuestion] = React.useState(null)
-
-  const openQuestion = React.useCallback(
-    question => {
-      if (question == openedQuestion) {
-        setOpenedQuestion(null)
-      } else {
-        setOpenedQuestion(question)
-      }
-    },
-    [openedQuestion]
-  )
-
+  // const [openedQuestion, setOpenedQuestion] = React.useState(null)
   const [selectedQuestions, setSelectedQuestions] = React.useState([])
 
   return (
@@ -88,6 +92,25 @@ const ItemView = () => {
             variant="primary"
             label={t('new')}
             startIcon={<Icon icon={PlusIcon} />}
+            onClick={() =>
+              newQuestion(
+                client,
+                activity,
+                'Ma question ' + Math.floor(Math.random() * 1000)
+              )
+                .then(() => {
+                  return showAlert({
+                    message: t('questions.alerts.created'),
+                    severity: 'success'
+                  })
+                })
+                .catch(() => {
+                  return showAlert({
+                    message: t('questions.alerts.error'),
+                    severity: 'error'
+                  })
+                })
+            }
           />
         }
       >
@@ -100,10 +123,12 @@ const ItemView = () => {
           type="text"
           placeholder={t('activity.placeholder')}
           value={activityTitle}
-          onChange={e => setActivityTitle(e.target.value)}
-          onBlur={e =>
+          onChange={e => {
+            setActivityTitle(e.target.value)
+          }}
+          onBlur={e => {
             renameActivity(client, t, showAlert, activity, e.target.value)
-          }
+          }}
         />
 
         <div className="u-flex u-mt-1">
@@ -120,13 +145,13 @@ const ItemView = () => {
               checked={selectedQuestions.length > 0}
               mixed={
                 selectedQuestions.length > 0 &&
-                selectedQuestions.length < activity.length
+                selectedQuestions.length < questions.length
               }
               onChange={() => {
-                if (selectedQuestions.length === activity.length) {
+                if (selectedQuestions.length === questions.length) {
                   setSelectedQuestions([])
                 } else {
-                  setSelectedQuestions(activity.map(q => q.id))
+                  setSelectedQuestions(questions.map(q => q._id))
                 }
               }}
             />
@@ -146,44 +171,36 @@ const ItemView = () => {
 
           <Divider />
 
-          {1 == 2 &&
-            activity.map((question, i) => (
-              <React.Fragment key={question.id ?? i}>
-                <ListItem
-                  button
-                  onClick={() => openActivity(question)}
-                  className={classNames(
-                    selectedQuestions.includes(question.id)
-                      ? styles.listItemSelected
-                      : null
-                  )}
-                >
-                  <Checkbox
-                    checked={selectedQuestions.includes(question.id)}
-                    onClick={e => e.stopPropagation()}
-                    onChange={() => {
-                      setSelectedQuestions(
-                        selectedQuestions.includes(question.id)
-                          ? selectedQuestions.filter(id => id !== question.id)
-                          : [...selectedQuestions, question.id]
-                      )
-                    }}
-                  />
-                  <TableItemText value={question.question} type="primary" />
-                  <TableItemText value={[question.sources]} type="chip" />
-                  <TableItemText value={question.notions} type="chip" />
-                  <ListItemSecondaryAction className="u-pr-1">
-                    <IconButton>
-                      <Icon icon={DotsIcon} />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <Divider />
-              </React.Fragment>
-            ))}
+          {questions.map((question, i) => (
+            <React.Fragment key={question.id ?? i}>
+              <QuestionItem
+                question={question}
+                selectedQuestions={selectedQuestions}
+                setSelectedQuestions={setSelectedQuestions}
+                deleteQuestion={() =>
+                  detachQuestions(client, t, showAlert, activity, [
+                    { _id: question._id }
+                  ])
+                    .then(() => {
+                      return showAlert({
+                        message: t('questions.alerts.deleted'),
+                        severity: 'success'
+                      })
+                    })
+                    .catch(() => {
+                      return showAlert({
+                        message: t('questions.alerts.error'),
+                        severity: 'error'
+                      })
+                    })
+                }
+              />
+              <Divider />
+            </React.Fragment>
+          ))}
         </List>
 
-        {openedQuestion && <ActivityPreview activity={openedQuestion} />}
+        {/* openedQuestion && <ActivityPreview activity={openedQuestion} /> */}
       </div>
     </div>
   )
