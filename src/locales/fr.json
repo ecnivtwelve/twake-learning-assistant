@@ -9,7 +9,8 @@
     "types": "Types",
     "tags": "Tags",
     "activities_filter": "Activités",
-    "notions": "Notions"
+    "notions": "Notions",
+    "sources": "Sources"
   },
   "activity": {
     "title": "Entraînement",

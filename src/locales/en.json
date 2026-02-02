@@ -9,7 +9,8 @@
     "types": "Types",
     "tags": "Tags",
     "activities_filter": "Activities",
-    "notions": "Notions"
+    "notions": "Notions",
+    "sources": "Sources"
   },
   "activity": {
     "title": "Activity",
