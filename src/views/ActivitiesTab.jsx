@@ -75,7 +75,16 @@ const ActivitiesTab = () => {
             >
               {key == 'class' &&
                 allClasses.map(value => (
-                  <MenuItem key={value} onClick={() => setSelectedClass(value)}>
+                  <MenuItem
+                    key={value}
+                    onClick={() => {
+                      if (value == selectedClass) {
+                        setSelectedClass(null)
+                      } else {
+                        setSelectedClass(value)
+                      }
+                    }}
+                  >
                     <ListItemText primary={value} />
                   </MenuItem>
                 ))}
