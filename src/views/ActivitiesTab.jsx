@@ -86,7 +86,23 @@ const ActivitiesTab = () => {
             variant="primary"
             label={t('new')}
             startIcon={<Icon icon={PlusIcon} />}
-            onClick={() => newActivity(client, t, showAlert, navigate)}
+            onClick={() =>
+              newActivity(client)
+                .then(activity => {
+                  showAlert({
+                    message: t('activities.alerts.created'),
+                    severity: 'success'
+                  })
+                  navigate(`/item/${activity._id}`)
+                  return true
+                })
+                .catch(() => {
+                  showAlert({
+                    message: t('activities.alerts.error'),
+                    severity: 'error'
+                  })
+                })
+            }
           />
         }
       >
@@ -152,7 +168,19 @@ const ActivitiesTab = () => {
               <ActivityItem
                 activity={activity}
                 deleteActivity={() =>
-                  deleteActivity(client, t, showAlert, activity)
+                  deleteActivity(client, activity)
+                    .then(() => {
+                      return showAlert({
+                        message: t('activities.alerts.deleted'),
+                        severity: 'success'
+                      })
+                    })
+                    .catch(() => {
+                      return showAlert({
+                        message: t('activities.alerts.error'),
+                        severity: 'error'
+                      })
+                    })
                 }
               />
               <Divider />

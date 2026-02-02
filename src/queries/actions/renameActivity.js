@@ -1,13 +1,12 @@
-export const renameActivity = async (client, t, showAlert, activity, title) => {
+export const renameActivity = async (client, activity, title) => {
   const response = await client.save({
     ...activity,
     title
   })
 
   if (!response?.data) {
-    showAlert({
-      message: t('activity.alerts.rename.error'),
-      severity: 'error'
-    })
+    throw new Error('Failed to rename activity')
   }
+
+  return response?.data
 }

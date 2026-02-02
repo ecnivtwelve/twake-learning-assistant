@@ -1,4 +1,4 @@
-export const newActivity = async (client, t, showAlert, navigate) => {
+export const newActivity = async client => {
   const response = await client.save({
     _type: 'io.cozy.learnings',
     title: '',
@@ -9,16 +9,9 @@ export const newActivity = async (client, t, showAlert, navigate) => {
     }
   })
 
-  if (response?.data) {
-    showAlert({
-      message: t('activities.alerts.created'),
-      severity: 'success'
-    })
-    navigate(`/item/${response.data._id}`)
-  } else {
-    showAlert({
-      message: t('activities.alerts.error'),
-      severity: 'error'
-    })
+  if (!response?.data) {
+    throw new Error('Failed to create activity')
   }
+
+  return response.data
 }

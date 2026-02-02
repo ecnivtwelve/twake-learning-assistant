@@ -24,8 +24,8 @@ import QuestionItem from '@/components/QuestionItem/QuestionItem'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
 import { buildActivityItemQuery } from '@/queries'
-import { detachQuestions } from '@/queries/actions/detachQuestion'
-import { newQuestion } from '@/queries/actions/newQuestion'
+import { detachQuestions } from '@/queries/actions/questions/detachQuestion'
+import { newQuestion } from '@/queries/actions/questions/newQuestion'
 import styles from '@/styles/item-view.styl'
 
 const ItemView = () => {
@@ -56,12 +56,12 @@ const ItemView = () => {
   const [firstLoad, setFirstLoad] = useState(true)
 
   useEffect(() => {
-    if (firstLoad) {
-      setFirstLoad(false)
+    if (firstLoad && activity) {
       setActivityTitle(activity?.title)
       if (activity?.title.trim() === '') {
         titleInputRef.current.focus()
       }
+      setFirstLoad(false)
     }
   }, [activity, firstLoad])
 
@@ -127,7 +127,19 @@ const ItemView = () => {
             setActivityTitle(e.target.value)
           }}
           onBlur={e => {
-            renameActivity(client, t, showAlert, activity, e.target.value)
+            renameActivity(client, activity, e.target.value)
+              .then(() => {
+                return showAlert({
+                  message: t('activities.alerts.updated'),
+                  severity: 'success'
+                })
+              })
+              .catch(() => {
+                return showAlert({
+                  message: t('activities.alerts.error'),
+                  severity: 'error'
+                })
+              })
           }}
         />
 
