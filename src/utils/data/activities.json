@@ -1,5 +1,6 @@
 [
   {
+    "id": "1",
     "titre": "Les idéologies politiques sous la guerre froide",
     "date": "14 juin 2024",
     "questions": 32,
@@ -7,6 +8,7 @@
     "score": 0.62
   },
   {
+    "id": "2",
     "titre": "Le fonctionnement de la démocratie Athénienne",
     "date": "10 juin 2024",
     "questions": 28,
@@ -14,6 +16,7 @@
     "score": 0.86
   },
   {
+    "id": "3",
     "titre": "Les grandes découvertes au XVe et XVIe siècles",
     "date": "9 juin 2024",
     "questions": 33,
@@ -21,6 +24,7 @@
     "score": 0.92
   },
   {
+    "id": "4",
     "titre": "Réviser le cours sur la décolonisation en vue du devoir",
     "date": "25 mai 2024",
     "questions": 19,
@@ -28,6 +32,7 @@
     "score": 0.9
   },
   {
+    "id": "5",
     "titre": "Les principaux artistes de la Renaissance et leurs œuvres...",
     "date": "24 mai 2024",
     "questions": 32,
@@ -35,6 +40,7 @@
     "score": 0.62
   },
   {
+    "id": "6",
     "titre": "Réviser le cours sur Mai 68",
     "date": "12 mai 2024",
     "questions": 28,
@@ -42,6 +48,7 @@
     "score": 0.86
   },
   {
+    "id": "7",
     "titre": "Entrainement autour de la civilisation Égyptienne",
     "date": "8 mai 2024",
     "questions": 33,
@@ -49,6 +56,7 @@
     "score": 0.92
   },
   {
+    "id": "8",
     "titre": "Revoir le cours sur la Réforme protestante",
     "date": "28 avr. 2024",
     "questions": 19,
@@ -56,6 +64,7 @@
     "score": 0.9
   },
   {
+    "id": "9",
     "titre": "La France sous occupation Nazie",
     "date": "15 avr. 2024",
     "questions": 32,

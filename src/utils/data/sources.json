@@ -1,5 +1,6 @@
 [
   {
+    "id": "1",
     "nom": "Simplifier des fractions",
     "mise_a_jour": "12 mars 2024",
     "tags": [
@@ -8,6 +9,7 @@
     ]
   },
   {
+    "id": "2",
     "nom": "Écrire des quotients sous la forme d'une fraction",
     "mise_a_jour": "12 mars 2024",
     "tags": [
@@ -16,6 +18,7 @@
     ]
   },
   {
+    "id": "3",
     "nom": "Résoudre des divisions",
     "mise_a_jour": "12 mars 2024",
     "tags": [
@@ -24,6 +27,7 @@
     ]
   },
   {
+    "id": "4",
     "nom": "Diviser les nombres suivants",
     "mise_a_jour": "12 mars 2024",
     "tags": [
@@ -32,6 +36,7 @@
     ]
   },
   {
+    "id": "5",
     "nom": "Simplifier des fractions",
     "mise_a_jour": "12 mars 2024",
     "tags": [
@@ -40,6 +45,7 @@
     ]
   },
   {
+    "id": "6",
     "nom": "Écrire des quotients sous la forme d'une fraction",
     "mise_a_jour": "12 mars 2024",
     "tags": [
@@ -48,6 +54,7 @@
     ]
   },
   {
+    "id": "7",
     "nom": "Résoudre des divisions",
     "mise_a_jour": "12 mars 2024",
     "tags": [
@@ -56,6 +63,7 @@
     ]
   },
   {
+    "id": "8",
     "nom": "Diviser les nombres suivants",
     "mise_a_jour": "12 mars 2024",
     "tags": [
@@ -64,6 +72,7 @@
     ]
   },
   {
+    "id": "9",
     "nom": "Simplifier des fractions",
     "mise_a_jour": "12 mars 2024",
     "tags": [

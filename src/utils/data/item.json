@@ -1,5 +1,6 @@
 [
   {
+    "id": "1",
     "question": "Quelle expression Winston Churchill a-t-il utilisée pour décrire la division de l'Europe ?",
     "sources": "Histoire-Géographie-EMC",
     "notions": [
@@ -25,6 +26,7 @@
     ]
   },
   {
+    "id": "2",
     "question": "Quelles sont les deux entités qui encadrent militairement les blocs Est et Ouest ?",
     "sources": "Histoire-Géographie-EMC",
     "notions": [
@@ -50,6 +52,7 @@
     ]
   },
   {
+    "id": "3",
     "question": "Quelles nations ont divisé Berlin en zones d'occupation après la Seconde Guerre mondiale ?",
     "sources": "Histoire-Géographie-EMC",
     "notions": [
@@ -75,6 +78,7 @@
     ]
   },
   {
+    "id": "4",
     "question": "Quelles sont les deux grandes puissances qui s'opposent durant la Guerre froide ?",
     "sources": "Histoire-Géographie-EMC",
     "notions": [
@@ -100,6 +104,7 @@
     ]
   },
   {
+    "id": "5",
     "question": "Quand est-ce que l'URSS se dote de l'arme nucléaire ?",
     "sources": "Histoire-Géographie-EMC",
     "notions": [
@@ -125,6 +130,7 @@
     ]
   },
   {
+    "id": "6",
     "question": "Que signifierait une attaque nucléaire lancée depuis Cuba contre les États-Unis ?",
     "sources": "Histoire-Géographie-EMC",
     "notions": [
@@ -150,6 +156,7 @@
     ]
   },
   {
+    "id": "7",
     "question": "Quel principe est reconnu comme le plus suprême post-1945 pour protéger les individus ?",
     "sources": "Histoire-Géographie-EMC",
     "notions": [
