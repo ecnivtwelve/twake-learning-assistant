@@ -142,7 +142,7 @@ const ItemQuestionList = ({
             </motion.div>
           )}
 
-          {questions.length == 0 && !isGenerating && !isLoading(
+          {questions.length == 0 && !isGenerating && !isLoading && (
             <Empty
               icon={<ActivityIcon size={96} />}
               title={t('activity.empty.title')}
