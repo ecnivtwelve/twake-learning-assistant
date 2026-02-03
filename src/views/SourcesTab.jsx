@@ -1,26 +1,31 @@
 import React from 'react'
-import { formatLocallyDistanceToNow, useI18n } from 'twake-i18n'
+import { useI18n } from 'twake-i18n'
 
 import log from 'cozy-logger'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import CircularProgress from 'cozy-ui/transpiled/react/CircularProgress'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
-import IconButton from 'cozy-ui/transpiled/react/IconButton'
-import DotsIcon from 'cozy-ui/transpiled/react/Icons/Dots'
+import ErrorIcon from 'cozy-ui/transpiled/react/Icons/Attention'
+import CheckIcon from 'cozy-ui/transpiled/react/Icons/Check'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
-import SchoolIcon from 'cozy-ui/transpiled/react/Icons/School'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
-import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryAction'
+import ListItemSkeleton from 'cozy-ui/transpiled/react/Skeletons/ListItemSkeleton'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import FilterChip from '@/components/FilterChip/FilterChip'
+import SourceItem from '@/components/SourceItem/SourceItem'
+import AddSourceDialog from '@/components/Sources/AddSourceDialog'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
 import { OPENRAG_URL } from '@/consts/consts'
-import { fetchPartition } from '@/queries/rag/openrag'
+import {
+  deleteFile,
+  fetchPartition,
+  fetchPartitionTask
+} from '@/queries/rag/openrag'
 
 const PARTITION = 'vince-test-test1'
 
@@ -30,8 +35,12 @@ const SourcesTab = () => {
   const [partitionData, setPartitionData] = React.useState([])
   const [loadingSources, setLoadingSources] = React.useState(true)
 
-  React.useEffect(() => {
-    fetchPartition(PARTITION)
+  const [activeTasks, setActiveTasks] = React.useState([])
+  const [taskDetails, setTaskDetails] = React.useState({})
+  const [isAddingTask, setIsAddingTask] = React.useState(false)
+
+  const fetchSources = () => {
+    return fetchPartition(PARTITION)
       .then(data => {
         setLoadingSources(false)
         return setPartitionData(data.files)
@@ -39,8 +48,50 @@ const SourcesTab = () => {
       .catch(err => {
         log.error(err)
       })
+  }
+
+  React.useEffect(() => {
+    fetchSources()
   }, [])
 
+  React.useEffect(() => {
+    if (activeTasks.length === 0) return
+
+    const interval = setInterval(() => {
+      activeTasks.forEach(task => {
+        fetchPartitionTask(task.id)
+          .then(async result => {
+            if (result.task_state === 'COMPLETED') {
+              setTaskDetails(prev => ({
+                ...prev,
+                [task.id]: result
+              }))
+              setActiveTasks(prev => prev.filter(t => t.id !== task.id))
+
+              setTimeout(async () => {
+                await fetchSources()
+                setTaskDetails(prev => {
+                  const newState = { ...prev }
+                  delete newState[task.id]
+                  return newState
+                })
+              }, 2000)
+            } else {
+              setTaskDetails(prev => ({
+                ...prev,
+                [task.id]: result
+              }))
+            }
+            return null
+          })
+          .catch(err => log.error(err))
+      })
+    }, 2000)
+
+    return () => clearInterval(interval)
+  }, [activeTasks])
+
+  /* Existing filter state */
   const [filters] = React.useState({
     types: {
       label: t('tags.types'),
@@ -56,6 +107,48 @@ const SourcesTab = () => {
     }
   })
 
+  const statusInfo = {
+    CHUNKING: {
+      label: t('sources.status.chunking'),
+      icon: <CircularProgress size={20} />
+    },
+    SERIALIZING: {
+      label: t('sources.status.serializing'),
+      icon: <CircularProgress size={20} />
+    },
+    COMPLETED: {
+      label: t('sources.status.completed'),
+      icon: <Icon icon={CheckIcon} size={20} />
+    },
+    FAILED: {
+      label: t('sources.status.failed'),
+      icon: <Icon icon={ErrorIcon} size={20} />
+    }
+  }
+
+  const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false)
+
+  const deleteSource = async source => {
+    setPartitionData(prev =>
+      prev.filter(item => item.file_id !== source.file_id)
+    )
+
+    try {
+      const result = await deleteFile(PARTITION, source.file_id)
+      if (result.task_id) {
+        setActiveTasks(prev => [
+          ...prev,
+          { id: result.task_id, type: 'DELETE' }
+        ])
+      } else {
+        fetchSources()
+      }
+    } catch (err) {
+      log.error(err)
+      fetchSources()
+    }
+  }
+
   return (
     <>
       <TabTitle
@@ -64,6 +157,7 @@ const SourcesTab = () => {
             variant="primary"
             label={t('new')}
             startIcon={<Icon icon={PlusIcon} />}
+            onClick={() => setIsAddDialogOpen(true)}
           />
         }
       >
@@ -79,6 +173,16 @@ const SourcesTab = () => {
         </div>
       </TabTitle>
 
+      <AddSourceDialog
+        open={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        partition={PARTITION}
+        addTask={task =>
+          setActiveTasks([...activeTasks, { id: task, type: 'ADD' }])
+        }
+        setIsAddingTask={setIsAddingTask}
+      />
+
       <List>
         <ListItem size="small" dense>
           <ListItemIcon className="u-w-2-half"></ListItemIcon>
@@ -91,31 +195,49 @@ const SourcesTab = () => {
 
         <Divider />
 
-        {partitionData &&
-          partitionData.map((source, i) => (
-            <React.Fragment key={i}>
-              <ListItem button>
-                <ListItemIcon className="u-w-2-half">
-                  <Icon icon={SchoolIcon} size={22} />
-                </ListItemIcon>
-                <TableItemText value={source.description} type="primary" />
-                <TableItemText value={source.filename} type="secondary" />
-                <TableItemText
-                  value={formatLocallyDistanceToNow(
-                    new Date(source.created_at)
-                  )}
-                  type="secondary"
-                />
-                <TableItemText value={source.author} type="secondary" />
-                <ListItemSecondaryAction className="u-pr-1">
-                  <IconButton>
-                    <Icon icon={DotsIcon} />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-              <Divider />
-            </React.Fragment>
-          ))}
+        {(() => {
+          const allPartitionData = [...partitionData]
+          Object.values(taskDetails).forEach(task => {
+            if (task.details && task.details.metadata) {
+              allPartitionData.push({
+                ...task.details.metadata,
+                status: task.task_state,
+                file_id: task.details.file_id
+              })
+            }
+          })
+
+          const addTasksPending = activeTasks.filter(
+            t =>
+              t.type === 'ADD' &&
+              (!taskDetails[t.id] || !taskDetails[t.id].details?.metadata)
+          ).length
+          const skeletonsToShow = (isAddingTask ? 1 : 0) + addTasksPending
+
+          return (
+            <>
+              {allPartitionData.map(source => (
+                <React.Fragment key={source.file_id}>
+                  <SourceItem
+                    source={source}
+                    statusInfo={statusInfo}
+                    deleteSource={() => deleteSource(source)}
+                  />
+                  <Divider />
+                </React.Fragment>
+              ))}
+
+              {Array.from({ length: skeletonsToShow }).map((_, i) => (
+                <React.Fragment key={`skeleton-${i}`}>
+                  <ListItem size="small" dense disableGutters>
+                    <ListItemSkeleton />
+                  </ListItem>
+                  <Divider />
+                </React.Fragment>
+              ))}
+            </>
+          )
+        })()}
 
         {loadingSources && (
           <ListItem>

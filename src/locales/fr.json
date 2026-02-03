@@ -81,6 +81,12 @@
       "filename": "Fichier",
       "update": "Mise à jour",
       "tags": "Tags"
+    },
+    "status": {
+      "chunking": "Compréhension",
+      "serializing": "Traitement",
+      "completed": "Terminé",
+      "failed": "Échoué"
     }
   },
   "insights": {

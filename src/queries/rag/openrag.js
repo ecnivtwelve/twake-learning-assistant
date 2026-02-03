@@ -26,6 +26,25 @@ export async function fetchPartition(partition) {
     })
 }
 
+export async function fetchPartitionTask(taskId) {
+  const myHeaders = new Headers()
+  myHeaders.append('Accept', 'application/json')
+  myHeaders.append('Authorization', 'Bearer ' + AUTH_TOKEN)
+
+  const requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+  }
+
+  return fetch(`${OPENRAG_URL}/indexer/task/${taskId}`, requestOptions)
+    .then(response => response.text())
+    .then(result => JSON.parse(result))
+    .catch(error => {
+      throw new Error(error)
+    })
+}
+
 export async function generateFlashCards(
   partition,
   subject,
@@ -93,4 +112,26 @@ export function extractJSONObject(input) {
     log.error('Parsing failed:', error.message)
     return null
   }
+}
+
+export async function deleteFile(partition, fileId) {
+  const myHeaders = new Headers()
+  myHeaders.append('Accept', 'application/json')
+  myHeaders.append('Authorization', 'Bearer ' + AUTH_TOKEN)
+
+  const requestOptions = {
+    method: 'DELETE',
+    headers: myHeaders,
+    redirect: 'follow'
+  }
+
+  return fetch(
+    `${OPENRAG_URL}/indexer/partition/${partition}/file/${fileId}`,
+    requestOptions
+  )
+    .then(response => response.text())
+    .then(result => (result ? JSON.parse(result) : {}))
+    .catch(error => {
+      throw new Error(error)
+    })
 }
