@@ -37,10 +37,11 @@ const QuestionItem = ({
   const [questionLabel, setQuestionLabel] = useState(question.label)
 
   React.useEffect(() => {
-    if (autoFocus && inputRef.current) {
+    if (autoFocus && isOpened && inputRef.current) {
       inputRef.current.focus()
+      inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
-  }, [autoFocus])
+  }, [autoFocus, isOpened])
 
   const changeLabel = label => {
     if (label.trim() === '') {

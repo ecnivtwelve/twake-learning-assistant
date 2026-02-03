@@ -9,7 +9,7 @@ import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 import { detachQuestions } from '@/queries/actions/questions/detachQuestion'
 import { newQuestion } from '@/queries/actions/questions/newQuestion'
 
-export const useQuestionActions = (activity, questions) => {
+export const useQuestionActions = activity => {
   const { t } = useI18n()
   const client = useClient()
   const { showAlert } = useAlert()

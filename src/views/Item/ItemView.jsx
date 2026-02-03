@@ -45,7 +45,10 @@ const ItemView = () => {
 
   const isLoading = fetchStatus === 'loading'
 
-  const questions = activity?.questions?.data || []
+  const questions = useMemo(
+    () => activity?.questions?.data || [],
+    [activity?.questions?.data]
+  )
 
   const [activityTitle, setActivityTitle] = useState()
   const [firstLoad, setFirstLoad] = useState(true)
@@ -104,9 +107,18 @@ const ItemView = () => {
     deleteQuestion,
     actions,
     newQuestionId
-  } = useQuestionActions(activity, questions)
+  } = useQuestionActions(activity)
 
   const [openedQuestion, setOpenedQuestion] = React.useState(null)
+
+  useEffect(() => {
+    if (newQuestionId) {
+      const newQuestion = questions.find(q => q._id === newQuestionId)
+      if (newQuestion) {
+        setOpenedQuestion(newQuestion)
+      }
+    }
+  }, [newQuestionId, questions])
 
   return (
     <div className="u-flex u-flex-column u-h-100">

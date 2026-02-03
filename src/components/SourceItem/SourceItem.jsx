@@ -22,7 +22,7 @@ const SourceItem = ({ source, statusInfo, deleteSource }) => {
   const menuButtonRef = React.useRef(null)
 
   return (
-    <ListItem button>
+    <ListItem button disableRipple>
       <ListItemIcon className="u-w-2-half">
         <Icon icon={SchoolIcon} size={22} />
       </ListItemIcon>
