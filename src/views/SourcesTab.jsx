@@ -3,6 +3,7 @@ import { formatLocallyDistanceToNow, useI18n } from 'twake-i18n'
 
 import log from 'cozy-logger'
 import Button from 'cozy-ui/transpiled/react/Buttons'
+import CircularProgress from 'cozy-ui/transpiled/react/CircularProgress'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import IconButton from 'cozy-ui/transpiled/react/IconButton'
@@ -27,10 +28,12 @@ const SourcesTab = () => {
   const { t } = useI18n()
 
   const [partitionData, setPartitionData] = React.useState([])
+  const [loadingSources, setLoadingSources] = React.useState(true)
 
   React.useEffect(() => {
     fetchPartition(PARTITION)
       .then(data => {
+        setLoadingSources(false)
         return setPartitionData(data.files)
       })
       .catch(err => {
@@ -111,6 +114,15 @@ const SourcesTab = () => {
               <Divider />
             </React.Fragment>
           ))}
+
+        {loadingSources && (
+          <ListItem>
+            <ListItemIcon className="u-w-2-half">
+              <CircularProgress size={24} />
+            </ListItemIcon>
+            <TableItemText value="Chargement en cours" type="primary" />
+          </ListItem>
+        )}
       </List>
     </>
   )
