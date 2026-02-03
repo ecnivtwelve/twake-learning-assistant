@@ -3,6 +3,7 @@
   "delete": "Supprimer",
   "new": "Nouveau",
   "generate": "Générer",
+  "cancel": "Annuler",
   "tags": {
     "subjects": "Matières",
     "level": "Niveau",
@@ -41,7 +42,8 @@
     "alerts": {
       "created": "Entraînement créé",
       "error": "Erreur lors de la création de l'entrainement",
-      "deleted": "Entraînement supprimé"
+      "deleted": "Entraînement supprimé",
+      "updated": "Entraînement mis à jour"
     }
   },
   "questions": {
@@ -57,6 +59,10 @@
       "created": "Question créée",
       "error": "Erreur lors de la création de la question",
       "deleted": "Question supprimée de l'activité"
+    },
+    "generate": {
+      "success": "Questions générées",
+      "error": "Erreur lors de la génération des questions"
     }
   },
   "sources": {
