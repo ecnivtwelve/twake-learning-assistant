@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { AnimatePresence, motion, stagger } from 'motion/react'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useI18n } from 'twake-i18n'
@@ -18,6 +19,7 @@ import TrashIcon from 'cozy-ui/transpiled/react/Icons/Trash'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
+import Typography from 'cozy-ui/transpiled/react/Typography'
 import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
 import { renameActivity } from '../../queries/actions/activities/renameActivity'
@@ -127,7 +129,7 @@ const ItemView = () => {
         16,
         activity.title,
         5,
-        true
+        false
       )
       const json = extractJSONObject(data.choices[0].message.content)
       if (json.cards && json.cards.length > 0 && json.cards[0].answer) {
@@ -267,7 +269,17 @@ const ItemView = () => {
           <Divider />
 
           {questions.map((question, i) => (
-            <React.Fragment key={question.id ?? i}>
+            <motion.div
+              key={question.id ?? i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: i < 16 ? i * 0.05 : 0,
+                duration: 0.5,
+                type: 'spring',
+                bounce: 0.3
+              }}
+            >
               <QuestionItem
                 question={question}
                 autoFocus={question._id === newQuestionId}
@@ -292,17 +304,45 @@ const ItemView = () => {
                 }
               />
               <Divider />
-            </React.Fragment>
+            </motion.div>
           ))}
 
-          {isGenerating && (
-            <ListItem>
-              <ListItemIcon className="u-pl-half">
-                <CircularProgress size={24} />
-              </ListItemIcon>
-              <TableItemText value="Génération en cours..." type="primary" />
-              <div className="u-w-2-half u-p-1" />
-            </ListItem>
+          {isGenerating && questions.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, type: 'spring', bounce: 0.3 }}
+            >
+              <ListItem>
+                <ListItemIcon className="u-pl-half">
+                  <CircularProgress size={24} />
+                </ListItemIcon>
+                <TableItemText value="Génération en cours..." type="primary" />
+                <div className="u-w-2-half u-p-1" />
+              </ListItem>
+            </motion.div>
+          )}
+
+          {isGenerating && questions.length == 0 && (
+            <motion.div
+              className="u-flex u-flex-column u-flex-items-center u-flex-justify-center u-mt-2"
+              initial={{ opacity: 0, scale: 0.97, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.5, type: 'spring', bounce: 0.3 }}
+            >
+              <CircularProgress size={56} />
+              <Typography variant="h3" align="center" className="u-mt-1-half">
+                Génération des flashcards...
+              </Typography>
+              <Typography
+                variant="body1"
+                color="textSecondary"
+                align="center"
+                className="u-mt-half"
+              >
+                Cela peut prendre jusqu'a 30 secondes, veuillez patienter.
+              </Typography>
+            </motion.div>
           )}
         </List>
 
