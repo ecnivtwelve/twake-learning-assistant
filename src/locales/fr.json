@@ -78,6 +78,7 @@
     "title": "Sources",
     "table": {
       "name": "Nom",
+      "filename": "Fichier",
       "update": "Mise à jour",
       "tags": "Tags"
     }

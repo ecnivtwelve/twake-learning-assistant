@@ -80,13 +80,16 @@ const QuestionItem = ({
         <input
           ref={inputRef}
           value={questionLabel}
+          disabled={!isOpened}
           onChange={e => setQuestionLabel(e.target.value)}
           onBlur={() => changeLabel(questionLabel)}
           placeholder={t('questions.placeholder')}
           className={classNames(
             'MuiListItemText-primary MuiTypography-body1 u-w-100',
-            styles.itemNameInput
+            styles.itemNameInput,
+            !isOpened ? styles.itemNameInputDisabled : null
           )}
+          onClick={e => e.stopPropagation()}
         />
       </TableItemText>
       <TableItemText value={question.answer ?? ''} type="secondary" />

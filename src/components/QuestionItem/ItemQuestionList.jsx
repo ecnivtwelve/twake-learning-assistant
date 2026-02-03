@@ -5,16 +5,13 @@ import { useI18n } from 'twake-i18n'
 import ActionsBar from 'cozy-ui/transpiled/react/ActionsBar'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Checkbox from 'cozy-ui/transpiled/react/Checkbox'
-import CircularProgress from 'cozy-ui/transpiled/react/CircularProgress'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Empty from 'cozy-ui/transpiled/react/Empty'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
-import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import ListItemSkeleton from 'cozy-ui/transpiled/react/Skeletons/ListItemSkeleton'
-import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import ActivityIcon from '@/assets/icons/ActivityIcon'
 import QuestionItem from '@/components/QuestionItem/QuestionItem'
@@ -100,7 +97,7 @@ const ItemQuestionList = ({
                     duration: 0.7,
                     type: 'spring',
                     bounce: 0.3,
-                    delay: 0.5
+                    delay: 0.2
                   }
                 }}
               >

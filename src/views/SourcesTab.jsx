@@ -83,6 +83,7 @@ const SourcesTab = () => {
         <ListItem size="small" dense>
           <ListItemIcon className="u-w-2-half"></ListItemIcon>
           <TableItemText value={t('sources.table.name')} type="primary" />
+          <TableItemText value={t('sources.table.filename')} type="secondary" />
           <TableItemText value={t('sources.table.update')} type="secondary" />
           <TableItemText value={t('sources.table.tags')} type="secondary" />
           <div className="u-w-1-half" />
@@ -98,13 +99,14 @@ const SourcesTab = () => {
                   <Icon icon={SchoolIcon} size={22} />
                 </ListItemIcon>
                 <TableItemText value={source.description} type="primary" />
+                <TableItemText value={source.filename} type="secondary" />
                 <TableItemText
                   value={formatLocallyDistanceToNow(
                     new Date(source.created_at)
                   )}
                   type="secondary"
                 />
-                <TableItemText value={[source.author]} type="chip" />
+                <TableItemText value={source.author} type="secondary" />
                 <ListItemSecondaryAction className="u-pr-1">
                   <IconButton>
                     <Icon icon={DotsIcon} />
