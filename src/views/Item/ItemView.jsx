@@ -140,7 +140,7 @@ const ItemView = () => {
       <ItemGenerationDialog
         open={customizeGenerationDialog}
         onClose={() => setCustomizeGenerationDialog(false)}
-        onGenerate={ragGenerate}
+        onGenerate={() => ragGenerate(questions.map(q => q.label))}
         numberOfQuestions={numberOfQuestions}
         setNumberOfQuestions={setNumberOfQuestions}
       />

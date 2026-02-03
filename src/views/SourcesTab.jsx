@@ -20,14 +20,12 @@ import SourceItem from '@/components/SourceItem/SourceItem'
 import AddSourceDialog from '@/components/Sources/AddSourceDialog'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
-import { OPENRAG_URL } from '@/consts/consts'
+import { OPENRAG_URL, PARTITION } from '@/consts/consts'
 import {
   deleteFile,
   fetchPartition,
   fetchPartitionTask
 } from '@/queries/rag/openrag'
-
-const PARTITION = 'vince-test-test1'
 
 const SourcesTab = () => {
   const { t } = useI18n()

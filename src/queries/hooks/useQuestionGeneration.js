@@ -17,7 +17,7 @@ export const useQuestionGeneration = activity => {
     useState(false)
   const [numberOfQuestions, setNumberOfQuestions] = useState(5)
 
-  const ragGenerate = async () => {
+  const ragGenerate = async (previousQuestions = []) => {
     try {
       setIsGenerating(true)
       const data = await generateFlashCards(
@@ -26,6 +26,7 @@ export const useQuestionGeneration = activity => {
         16,
         activity.title,
         numberOfQuestions,
+        previousQuestions,
         false
       )
       const json = extractJSONObject(data.choices[0].message.content)
