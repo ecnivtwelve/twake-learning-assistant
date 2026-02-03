@@ -22,6 +22,20 @@ const ItemHeader = ({
 }) => {
   const { t } = useI18n()
   const titleInputRef = React.useRef()
+  const hasAutoFocusedRef = React.useRef(false)
+
+  React.useEffect(() => {
+    if (
+      !isLoading &&
+      activityTitle !== undefined &&
+      !hasAutoFocusedRef.current
+    ) {
+      if (!activityTitle) {
+        titleInputRef.current?.focus()
+      }
+      hasAutoFocusedRef.current = true
+    }
+  }, [isLoading, activityTitle])
 
   return (
     <TabTitle
