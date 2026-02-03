@@ -41,6 +41,9 @@ const SourcesTab = () => {
     return fetchPartition(PARTITION)
       .then(data => {
         setLoadingSources(false)
+        if (data.files.length === 0) {
+          return setPartitionData([])
+        }
         return setPartitionData(data.files)
       })
       .catch(err => {
