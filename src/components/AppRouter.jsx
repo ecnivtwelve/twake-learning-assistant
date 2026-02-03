@@ -1,6 +1,7 @@
 import React from 'react'
 import { Navigate, RouterProvider, createHashRouter } from 'react-router-dom'
 
+import LayoutTransitioner from './Animation/LayoutTransitioner'
 import AppItemLayout from './AppItemLayout'
 
 import AppLayout from '@/components/AppLayout'
@@ -12,36 +13,22 @@ import SourcesTab from '@/views/SourcesTab'
 
 const routes = [
   {
-    element: <AppLayout />,
+    path: '/',
+    element: <LayoutTransitioner />,
     children: [
       {
-        path: 'activities',
-        element: <ActivitiesTab />
+        element: <AppLayout />,
+        children: [
+          { path: 'activities', element: <ActivitiesTab /> },
+          { path: 'insights', element: <InsightsTab /> },
+          { path: 'questions', element: <QuestionsTab /> },
+          { path: 'sources', element: <SourcesTab /> },
+          { path: '', element: <Navigate replace to="/activities" /> }
+        ]
       },
       {
-        path: 'insights',
-        element: <InsightsTab />
-      },
-      {
-        path: 'questions',
-        element: <QuestionsTab />
-      },
-      {
-        path: 'sources',
-        element: <SourcesTab />
-      },
-      {
-        path: '',
-        element: <Navigate replace to="/activities" />
-      }
-    ]
-  },
-  {
-    element: <AppItemLayout />,
-    children: [
-      {
-        path: 'item/:id',
-        element: <ItemView />
+        element: <AppItemLayout />,
+        children: [{ path: 'item/:id', element: <ItemView /> }]
       }
     ]
   }
