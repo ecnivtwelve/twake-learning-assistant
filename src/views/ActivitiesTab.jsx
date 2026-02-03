@@ -49,22 +49,12 @@ const ActivitiesTab = () => {
     },
     class: {
       label: t('tags.classes_and_groups'),
-      values: useMemo(
-        () => [...new Set(activities?.map(activity => activity.classe))],
-        [activities]
-      ),
+      values: [],
       selected: null
     }
   })
 
-  const filteredActivities =
-    activities?.length > 0 &&
-    activities.filter(activity => {
-      if (filters.class.selected) {
-        return activity.classe === filters.class.selected
-      }
-      return true
-    })
+  const filteredActivities = activities
 
   const selectClass = React.useCallback(value => {
     setFilters(prev => ({
@@ -118,17 +108,9 @@ const ActivitiesTab = () => {
                   : filter.label
               }
             >
-              {key == 'class' && filter.values.length > 0 ? (
-                filter.values.map(value => (
-                  <MenuItem key={value} onClick={() => selectClass(value)}>
-                    <ListItemText primary={value} />
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem disabled>
-                  <ListItemText primary={t('activities.table.empty')} />
-                </MenuItem>
-              )}
+              <MenuItem disabled>
+                <ListItemText primary={t('activities.table.empty')} />
+              </MenuItem>
             </FilterChip>
           ))}
         </div>
