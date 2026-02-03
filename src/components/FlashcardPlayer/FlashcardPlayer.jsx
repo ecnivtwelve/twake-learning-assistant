@@ -38,7 +38,7 @@ export default function FlashcardPlayer({ flashcard }) {
               variant="body2"
               color="textSecondary"
               align="center"
-              className="u-mt-half"
+              className="u-mt-1"
             >
               {hint}
             </Typography>
