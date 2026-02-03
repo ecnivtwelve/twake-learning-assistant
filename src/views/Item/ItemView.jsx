@@ -130,6 +130,7 @@ const ItemView = () => {
           openedQuestion={openedQuestion}
           setOpenedQuestion={setOpenedQuestion}
           isGenerating={isGenerating}
+          isLoading={fetchStatus === 'loading'}
           actions={actions}
           newQuestionId={newQuestionId}
           onDeleteQuestion={deleteQuestion}

@@ -26,6 +26,7 @@ const ItemQuestionList = ({
   openedQuestion,
   setOpenedQuestion,
   isGenerating,
+  isLoading,
   actions,
   newQuestionId,
   onDeleteQuestion,
@@ -141,20 +142,22 @@ const ItemQuestionList = ({
             </motion.div>
           )}
 
-          <Empty
-            icon={<ActivityIcon size={96} />}
-            title={t('activity.empty.title')}
-            text={t('activity.empty.message')}
-            centered
-          >
-            <Button
-              variant="primary"
-              label={t('activity.empty.generate')}
-              startIcon={<Icon icon={NewIcon} />}
-              onClick={() => generateQuestions()}
-              className="u-mt-1"
-            />
-          </Empty>
+          {questions.length == 0 && !isGenerating && !isLoading(
+            <Empty
+              icon={<ActivityIcon size={96} />}
+              title={t('activity.empty.title')}
+              text={t('activity.empty.message')}
+              centered
+            >
+              <Button
+                variant="primary"
+                label={t('activity.empty.generate')}
+                startIcon={<Icon icon={NewIcon} />}
+                onClick={() => generateQuestions()}
+                className="u-mt-1"
+              />
+            </Empty>
+          )}
         </List>
       </div>
     </>
