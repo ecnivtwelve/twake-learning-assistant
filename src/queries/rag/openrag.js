@@ -135,3 +135,45 @@ export async function deleteFile(partition, fileId) {
       throw new Error(error)
     })
 }
+
+const generateFileHash = async file => {
+  const buffer = await file.arrayBuffer()
+  const hashBuffer = await window.crypto.subtle.digest('SHA-1', buffer)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  return hashHex.substring(0, 10)
+}
+
+export async function uploadFile(partition, file, author, description) {
+  const fileId = await generateFileHash(file)
+
+  const myHeaders = new Headers()
+  myHeaders.append('Accept', 'application/json')
+  myHeaders.append('Authorization', 'Bearer ' + AUTH_TOKEN)
+
+  const formdata = new FormData()
+  formdata.append(
+    'metadata',
+    JSON.stringify({
+      mimetype: file.type,
+      author: author,
+      description: description
+    })
+  )
+  formdata.append('file', file, file.name)
+
+  const requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: formdata,
+    redirect: 'follow'
+  }
+
+  const url = `${OPENRAG_URL}/indexer/partition/${partition}/file/${fileId}`
+
+  return fetch(url, requestOptions)
+    .then(response => response.json())
+    .catch(error => {
+      throw new Error(error)
+    })
+}

@@ -19,7 +19,7 @@ import FileIcon from 'cozy-ui/transpiled/react/Icons/File'
 import TextField from 'cozy-ui/transpiled/react/TextField'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
-import { OPENRAG_URL, AUTH_TOKEN } from '../../consts/consts'
+import { uploadFile } from '../../queries/rag/openrag'
 
 const AddSourceDialog = ({
   open,
@@ -60,14 +60,6 @@ const AddSourceDialog = ({
     }
   }
 
-  const generateFileHash = async file => {
-    const buffer = await file.arrayBuffer()
-    const hashBuffer = await window.crypto.subtle.digest('SHA-1', buffer)
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
-    return hashHex.substring(0, 10)
-  }
-
   const handleUpload = async () => {
     if (!file || !description || !author) return
 
@@ -75,34 +67,7 @@ const AddSourceDialog = ({
     setIsAddingTask(true)
     onClose()
     try {
-      const fileId = await generateFileHash(file)
-
-      const myHeaders = new Headers()
-      myHeaders.append('Accept', 'application/json')
-      myHeaders.append('Authorization', 'Bearer ' + AUTH_TOKEN)
-
-      const formdata = new FormData()
-      formdata.append(
-        'metadata',
-        JSON.stringify({
-          mimetype: file.type,
-          author: author,
-          description: description
-        })
-      )
-      formdata.append('file', file, file.name)
-
-      const requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: formdata,
-        redirect: 'follow'
-      }
-
-      const url = `${OPENRAG_URL}/indexer/partition/${partition}/file/${fileId}`
-
-      await fetch(url, requestOptions)
-        .then(response => response.json())
+      await uploadFile(partition, file, author, description)
         .then(result => {
           addTask(result.task_status_url.split('/').pop())
           setIsAddingTask(false)
