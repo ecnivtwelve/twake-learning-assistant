@@ -23,6 +23,10 @@
       "rename": {
         "error": "Impossible de modifier le nom de l'entrainement"
       }
+    },
+    "generating": {
+      "title": "Génération des flashcards...",
+      "message": "Cela peut prendre jusqu'à une minute, veuillez patienter."
     }
   },
   "activities": {

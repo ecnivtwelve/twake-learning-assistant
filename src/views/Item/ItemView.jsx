@@ -1,60 +1,26 @@
-import classNames from 'classnames'
-import { AnimatePresence, motion, stagger } from 'motion/react'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useI18n } from 'twake-i18n'
 
 import { useClient, useQuery } from 'cozy-client'
-import log from 'cozy-logger'
-import ActionsBar from 'cozy-ui/transpiled/react/ActionsBar'
-import { makeActions } from 'cozy-ui/transpiled/react/ActionsMenu/Actions'
-import Button from 'cozy-ui/transpiled/react/Buttons'
-import Checkbox from 'cozy-ui/transpiled/react/Checkbox'
-import CircularProgress from 'cozy-ui/transpiled/react/CircularProgress'
-import {
-  DialogBackButton,
-  DialogCloseButton,
-  useCozyDialog
-} from 'cozy-ui/transpiled/react/CozyDialogs'
-import Dialog, {
-  DialogTitle,
-  DialogActions
-} from 'cozy-ui/transpiled/react/Dialog'
-import Divider from 'cozy-ui/transpiled/react/Divider'
-import Icon from 'cozy-ui/transpiled/react/Icon'
-import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
-import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
-import TrashIcon from 'cozy-ui/transpiled/react/Icons/Trash'
-import List from 'cozy-ui/transpiled/react/List'
-import ListItem from 'cozy-ui/transpiled/react/ListItem'
-import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
-import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
-import TextField from 'cozy-ui/transpiled/react/TextField'
-import Typography from 'cozy-ui/transpiled/react/Typography'
 import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
 import { renameActivity } from '../../queries/actions/activities/renameActivity'
 
-// import ActivityPreview from '@/components/ActivityPreview/ActivityPreview'
-import FilterChip from '@/components/FilterChip/FilterChip'
-import FlashcardPlayer from '@/components/FlashcardPlayer/FlashcardPlayer'
-import QuestionItem from '@/components/QuestionItem/QuestionItem'
-import TabTitle from '@/components/TabTitle/TabTitle'
-import TableItemText from '@/components/TableItem/TableItemText'
+import ItemFlashcardPreview from '@/components/QuestionItem/ItemFlashcardPreview'
+import ItemGenerationDialog from '@/components/QuestionItem/ItemGenerationDialog'
+import ItemHeader from '@/components/QuestionItem/ItemHeader'
+import ItemQuestionList from '@/components/QuestionItem/ItemQuestionList'
 import { buildActivityItemQuery } from '@/queries'
-import { detachQuestions } from '@/queries/actions/questions/detachQuestion'
-import {
-  newQuestion,
-  newQuestionsBatch
-} from '@/queries/actions/questions/newQuestion'
-import { extractJSONObject, generateFlashCards } from '@/queries/rag/openrag'
-import styles from '@/styles/item-view.styl'
+import { useQuestionActions } from '@/queries/hooks/useQuestionActions'
+import { useQuestionGeneration } from '@/queries/hooks/useQuestionGeneration'
 
 const ItemView = () => {
   const { t } = useI18n()
   const client = useClient()
   const { showAlert } = useAlert()
   const location = useLocation()
+
   const activityId = useMemo(
     () => location.pathname.split('/').pop(),
     [location]
@@ -71,22 +37,34 @@ const ItemView = () => {
 
   const questions = activity?.questions?.data || []
 
+  // Activity Title Logic
   const [activityTitle, setActivityTitle] = useState()
-
-  const titleInputRef = React.useRef()
-
   const [firstLoad, setFirstLoad] = useState(true)
 
   useEffect(() => {
     if (firstLoad && activity) {
       setActivityTitle(activity?.title)
-      if (activity?.title.trim() === '') {
-        titleInputRef.current.focus()
-      }
       setFirstLoad(false)
     }
   }, [activity, firstLoad])
 
+  const handleRenameActivity = newTitle => {
+    renameActivity(client, activity, newTitle)
+      .then(() => {
+        return showAlert({
+          message: t('activities.alerts.updated'),
+          severity: 'success'
+        })
+      })
+      .catch(() => {
+        return showAlert({
+          message: t('activities.alerts.error'),
+          severity: 'error'
+        })
+      })
+  }
+
+  // Filters (Static for now, could be moved if it grows)
   const [filters] = React.useState({
     subjects: {
       label: t('tags.types'),
@@ -102,352 +80,61 @@ const ItemView = () => {
     }
   })
 
-  const [openedQuestion, setOpenedQuestion] = React.useState(null)
-  const [selectedQuestions, setSelectedQuestions] = React.useState([])
-
-  const [newQuestionId, setNewQuestionId] = useState(null)
-
-  const deleteSelected = () => ({
-    name: 'deleteSelected',
-    icon: TrashIcon,
-    action: async () => {
-      const questionsIds = selectedQuestions.map(q => {
-        return { _id: q }
-      })
-      await detachQuestions(activity, questionsIds)
-    },
-    label: t('delete')
-  })
-
-  const actions = makeActions([deleteSelected])
-
-  const openQuestion = question => {
-    if (openedQuestion?._id === question._id) {
-      setOpenedQuestion(null)
-    } else {
-      setOpenedQuestion(question)
-    }
-  }
-
-  const [customizeGenerationDialog, setCustomizeGenerationDialog] =
-    useState(false)
-
-  const [numberOfQuestions, setNumberOfQuestions] = useState(5)
-  const numberOfQuestionsOptions = [
-    {
-      value: 5,
-      label: '5 questions'
-    },
-    {
-      value: 10,
-      label: '10 questions'
-    },
-    {
-      value: 15,
-      label: '15 questions'
-    },
-    {
-      value: 20,
-      label: '20 questions'
-    }
-  ]
-
-  const [isGenerating, setIsGenerating] = useState(false)
-
-  const ragGenerate = async () => {
-    try {
-      setIsGenerating(true)
-      const data = await generateFlashCards(
-        activity,
-        'Numérique et sciences informatiques',
-        16,
-        activity.title,
-        numberOfQuestions,
-        false
-      )
-      const json = extractJSONObject(data.choices[0].message.content)
-      if (json.cards && json.cards.length > 0 && json.cards[0].answer) {
-        newQuestionsBatch(
-          client,
-          activity,
-          json.cards.map(card => {
-            return {
-              label: card.text,
-              answer: card.answer,
-              hint: card.hint
-            }
-          })
-        )
-
-        showAlert({
-          message: t('questions.generate.success'),
-          severity: 'success'
-        })
-      } else {
-        log.error(json)
-        showAlert({
-          message: t('questions.generate.error'),
-          severity: 'error'
-        })
-      }
-    } catch (error) {
-      log.error(error)
-      showAlert({
-        message: t('questions.generate.error'),
-        severity: 'error'
-      })
-    }
-    setIsGenerating(false)
-  }
+  // Hooks
+  const {
+    isGenerating,
+    ragGenerate,
+    customizeGenerationDialog,
+    setCustomizeGenerationDialog,
+    numberOfQuestions,
+    setNumberOfQuestions
+  } = useQuestionGeneration(activity)
 
   const {
-    dialogProps,
-    dialogTitleProps,
-    listItemProps,
-    dividerProps,
-    dialogActionsProps
-  } = useCozyDialog({
-    size: 'medium',
-    open: customizeGenerationDialog,
-    onClose: () => setCustomizeGenerationDialog(false),
-    disableEnforceFocus: true
-  })
+    selectedQuestions,
+    setSelectedQuestions,
+    createQuestion,
+    deleteQuestion,
+    actions,
+    newQuestionId
+  } = useQuestionActions(activity, questions)
+
+  // UI State
+  const [openedQuestion, setOpenedQuestion] = React.useState(null)
 
   return (
     <div className="u-flex u-flex-column u-h-100">
-      <TabTitle
-        backEnabled
-        trailing={
-          <>
-            <Button
-              variant="secondary"
-              label={t('generate')}
-              startIcon={<Icon icon={NewIcon} />}
-              onClick={() => setCustomizeGenerationDialog(true)}
-              className="u-mr-1"
-            />
+      <ItemHeader
+        activityTitle={activityTitle}
+        setActivityTitle={setActivityTitle}
+        onRenameActivity={handleRenameActivity}
+        onOpenGenerationDialog={() => setCustomizeGenerationDialog(true)}
+        onCreateQuestion={createQuestion}
+        filters={filters}
+      />
 
-            <Button
-              variant="primary"
-              label={t('new')}
-              startIcon={<Icon icon={PlusIcon} />}
-              onClick={() =>
-                newQuestion(client, activity, '')
-                  .then(question => {
-                    setNewQuestionId(question._id)
-                    return showAlert({
-                      message: t('questions.alerts.created'),
-                      severity: 'success'
-                    })
-                  })
-                  .catch(() => {
-                    return showAlert({
-                      message: t('questions.alerts.error'),
-                      severity: 'error'
-                    })
-                  })
-              }
-            />
-          </>
-        }
-      >
-        <input
-          className={classNames(
-            'MuiTypography-h3 MuiTypography-colorTextPrimary u-p-0',
-            styles.itemNameInput
-          )}
-          ref={titleInputRef}
-          type="text"
-          placeholder={t('activity.placeholder')}
-          value={activityTitle}
-          onChange={e => {
-            setActivityTitle(e.target.value)
-          }}
-          onBlur={e => {
-            renameActivity(client, activity, e.target.value)
-              .then(() => {
-                return showAlert({
-                  message: t('activities.alerts.updated'),
-                  severity: 'success'
-                })
-              })
-              .catch(() => {
-                return showAlert({
-                  message: t('activities.alerts.error'),
-                  severity: 'error'
-                })
-              })
-          }}
-        />
-
-        <div className="u-flex u-mt-1">
-          {Object.entries(filters).map(([key, filter]) => (
-            <FilterChip key={key} label={filter.label} />
-          ))}
-        </div>
-      </TabTitle>
-
-      <Dialog {...dialogProps}>
-        <DialogCloseButton
-          onClick={() => setCustomizeGenerationDialog(false)}
-        />
-        <DialogTitle {...dialogTitleProps}>Générer des questions</DialogTitle>
-        <Divider {...dividerProps} />
-        <div className="u-m-1">
-          <TextField
-            select
-            options={numberOfQuestionsOptions}
-            value={numberOfQuestions}
-            onChange={e => setNumberOfQuestions(e.target.value)}
-            label="Nombre de questions"
-            variant="outlined"
-            fullWidth
-          >
-            {numberOfQuestionsOptions.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
-        <Divider {...dividerProps} />
-        <DialogActions {...dialogActionsProps}>
-          <Button
-            variant="secondary"
-            label={t('cancel')}
-            onClick={() => setCustomizeGenerationDialog(false)}
-          />
-          <Button
-            variant="primary"
-            label={t('generate')}
-            startIcon={<Icon icon={NewIcon} />}
-            onClick={() => {
-              setCustomizeGenerationDialog(false)
-              ragGenerate()
-            }}
-          />
-        </DialogActions>
-      </Dialog>
-
-      {selectedQuestions.length > 0 && (
-        <ActionsBar
-          actions={actions}
-          docs={selectedQuestions}
-          onClose={() => setSelectedQuestions([])}
-        />
-      )}
+      <ItemGenerationDialog
+        open={customizeGenerationDialog}
+        onClose={() => setCustomizeGenerationDialog(false)}
+        onGenerate={ragGenerate}
+        numberOfQuestions={numberOfQuestions}
+        setNumberOfQuestions={setNumberOfQuestions}
+      />
 
       <div className="u-flex u-flex-col u-h-100">
-        <List className="u-w-100">
-          <ListItem size="small" dense>
-            <Checkbox
-              checked={selectedQuestions.length > 0}
-              mixed={
-                selectedQuestions.length > 0 &&
-                selectedQuestions.length < questions.length
-              }
-              onChange={() => {
-                if (selectedQuestions.length === questions.length) {
-                  setSelectedQuestions([])
-                } else {
-                  setSelectedQuestions(questions.map(q => q._id))
-                }
-              }}
-            />
-            <TableItemText value="Question" type="primary" />
-            <TableItemText value="Réponse" type="secondary" />
-            <TableItemText value="Indice" type="secondary" />
-            <div className="u-w-2-half u-p-1" />
-          </ListItem>
+        <ItemQuestionList
+          questions={questions}
+          selectedQuestions={selectedQuestions}
+          setSelectedQuestions={setSelectedQuestions}
+          openedQuestion={openedQuestion}
+          setOpenedQuestion={setOpenedQuestion}
+          isGenerating={isGenerating}
+          actions={actions}
+          newQuestionId={newQuestionId}
+          onDeleteQuestion={deleteQuestion}
+        />
 
-          <Divider />
-
-          {questions.map((question, i) => (
-            <motion.div
-              key={question.id ?? i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: i < 16 ? i * 0.05 : 0,
-                duration: 0.5,
-                type: 'spring',
-                bounce: 0.3
-              }}
-            >
-              <QuestionItem
-                question={question}
-                autoFocus={question._id === newQuestionId}
-                selectedQuestions={selectedQuestions}
-                setSelectedQuestions={setSelectedQuestions}
-                onOpen={q => openQuestion(q)}
-                isOpened={openedQuestion?._id === question._id}
-                deleteQuestion={() =>
-                  detachQuestions(activity, [{ _id: question._id }])
-                    .then(() => {
-                      return showAlert({
-                        message: t('questions.alerts.deleted'),
-                        severity: 'success'
-                      })
-                    })
-                    .catch(() => {
-                      return showAlert({
-                        message: t('questions.alerts.error'),
-                        severity: 'error'
-                      })
-                    })
-                }
-              />
-              <Divider />
-            </motion.div>
-          ))}
-
-          {isGenerating && questions.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, type: 'spring', bounce: 0.3 }}
-            >
-              <ListItem>
-                <ListItemIcon className="u-pl-half">
-                  <CircularProgress size={24} />
-                </ListItemIcon>
-                <TableItemText value="Génération en cours..." type="primary" />
-                <div className="u-w-2-half u-p-1" />
-              </ListItem>
-            </motion.div>
-          )}
-
-          {isGenerating && questions.length == 0 && (
-            <motion.div
-              className="u-flex u-flex-column u-flex-items-center u-flex-justify-center u-mt-2"
-              initial={{ opacity: 0, scale: 0.97, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.5, type: 'spring', bounce: 0.3 }}
-            >
-              <CircularProgress size={56} />
-              <Typography variant="h3" align="center" className="u-mt-1-half">
-                Génération des flashcards...
-              </Typography>
-              <Typography
-                variant="body1"
-                color="textSecondary"
-                align="center"
-                className="u-mt-half"
-              >
-                Cela peut prendre jusqu'a 30 secondes, veuillez patienter.
-              </Typography>
-            </motion.div>
-          )}
-        </List>
-
-        {openedQuestion && (
-          <div
-            className="u-p-2 u-flex u-flex-column u-flex-items-center"
-            style={{ width: '24rem', borderLeft: '1px solid #4242441f' }}
-          >
-            <FlashcardPlayer flashcard={openedQuestion} />
-          </div>
-        )}
+        <ItemFlashcardPreview openedQuestion={openedQuestion} />
       </div>
     </div>
   )
