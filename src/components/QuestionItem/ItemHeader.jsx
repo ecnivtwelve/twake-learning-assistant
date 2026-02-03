@@ -17,7 +17,8 @@ const ItemHeader = ({
   onRenameActivity,
   onOpenGenerationDialog,
   onCreateQuestion,
-  filters
+  filters,
+  isLoading
 }) => {
   const { t } = useI18n()
   const titleInputRef = React.useRef()
@@ -51,7 +52,7 @@ const ItemHeader = ({
         )}
         ref={titleInputRef}
         type="text"
-        placeholder={t('activity.placeholder')}
+        placeholder={!isLoading && t('activity.placeholder')}
         value={activityTitle}
         onChange={e => {
           setActivityTitle(e.target.value)

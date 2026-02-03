@@ -30,7 +30,7 @@ const ItemView = () => {
     () => buildActivityItemQuery(activityId),
     [activityId]
   )
-  const { data: activity } = useQuery(
+  const { data: activity, fetchStatus } = useQuery(
     activityItemQuery.definition,
     activityItemQuery.options
   )
@@ -111,6 +111,7 @@ const ItemView = () => {
         onOpenGenerationDialog={() => setCustomizeGenerationDialog(true)}
         onCreateQuestion={createQuestion}
         filters={filters}
+        isLoading={fetchStatus === 'loading'}
       />
 
       <ItemGenerationDialog
