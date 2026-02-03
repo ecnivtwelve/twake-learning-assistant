@@ -24,7 +24,9 @@ const QuestionItem = ({
   autoFocus,
   selectedQuestions,
   setSelectedQuestions,
-  deleteQuestion
+  deleteQuestion,
+  onOpen,
+  isOpened
 }) => {
   const { t } = useI18n()
   const client = useClient()
@@ -54,9 +56,10 @@ const QuestionItem = ({
       disableRipple
       button
       onClick={() => {
-        return
+        onOpen(question)
       }}
       className={classNames(
+        isOpened ? styles.listItemOpened : null,
         selectedQuestions.includes(question._id)
           ? styles.listItemSelected
           : null
@@ -87,7 +90,7 @@ const QuestionItem = ({
         />
       </TableItemText>
       <TableItemText value={question.answer ?? ''} type="secondary" />
-      <TableItemText value={[]} type="chip" />
+      <TableItemText value={question.hint ?? ''} type="secondary" />
       <ListItemSecondaryAction className="u-pr-1">
         <IconButton
           ref={menuButtonRef}

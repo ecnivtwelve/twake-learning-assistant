@@ -1,9 +1,11 @@
 import { buildActivityItemQuery } from '@/queries'
 
-export const newQuestion = async (client, activity, label) => {
+export const newQuestion = async (client, activity, label, answer, hint) => {
   const response = await client.save({
     _type: 'io.cozy.learnings.questions',
-    label: label
+    label: label,
+    answer: answer,
+    hint: hint
   })
 
   await activity.questions.add(response.data)
@@ -22,12 +24,11 @@ export const newQuestionsBatch = async (client, activity, questions) => {
     const response = await client.save({
       _type: 'io.cozy.learnings.questions',
       label: question.label,
-      answer: question.answer
+      answer: question.answer,
+      hint: question.hint
     })
     questionsList.push(response.data)
   }
-
-  console.log(questionsList)
 
   await activity.questions.add(questionsList)
 

@@ -8,7 +8,7 @@ const defaultFetchPolicy = CozyClient.fetchPolicies.olderThan(
 export const buildActivitiesQuery = () => ({
   definition: () => Q('io.cozy.learnings'),
   options: {
-    as: 'io.cozy.calendar.learnings',
+    as: 'io.cozy.calendar.learnings/*',
     fetchPolicy: defaultFetchPolicy
   }
 })
@@ -25,7 +25,7 @@ export const buildActivityItemQuery = id => ({
 export const buildQuestionsQuery = () => ({
   definition: () => Q('io.cozy.learnings.questions'),
   options: {
-    as: 'io.cozy.learnings.questions',
+    as: 'io.cozy.learnings.questions/*',
     fetchPolicy: defaultFetchPolicy
   }
 })

@@ -24,6 +24,7 @@ import { renameActivity } from '../../queries/actions/activities/renameActivity'
 
 // import ActivityPreview from '@/components/ActivityPreview/ActivityPreview'
 import FilterChip from '@/components/FilterChip/FilterChip'
+import FlashcardPlayer from '@/components/FlashcardPlayer/FlashcardPlayer'
 import QuestionItem from '@/components/QuestionItem/QuestionItem'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
@@ -88,7 +89,7 @@ const ItemView = () => {
     }
   })
 
-  // const [openedQuestion, setOpenedQuestion] = React.useState(null)
+  const [openedQuestion, setOpenedQuestion] = React.useState(null)
   const [selectedQuestions, setSelectedQuestions] = React.useState([])
 
   const [newQuestionId, setNewQuestionId] = useState(null)
@@ -107,6 +108,14 @@ const ItemView = () => {
 
   const actions = makeActions([deleteSelected])
 
+  const openQuestion = question => {
+    if (openedQuestion?._id === question._id) {
+      setOpenedQuestion(null)
+    } else {
+      setOpenedQuestion(question)
+    }
+  }
+
   const [isGenerating, setIsGenerating] = useState(false)
 
   const ragGenerate = async () => {
@@ -118,7 +127,7 @@ const ItemView = () => {
         16,
         activity.title,
         5,
-        false
+        true
       )
       const json = extractJSONObject(data.choices[0].message.content)
       if (json.cards && json.cards.length > 0 && json.cards[0].answer) {
@@ -128,7 +137,8 @@ const ItemView = () => {
           json.cards.map(card => {
             return {
               label: card.text,
-              answer: card.answer
+              answer: card.answer,
+              hint: card.hint
             }
           })
         )
@@ -250,7 +260,7 @@ const ItemView = () => {
             />
             <TableItemText value="Question" type="primary" />
             <TableItemText value="Réponse" type="secondary" />
-            <TableItemText value="Notions" type="secondary" />
+            <TableItemText value="Indice" type="secondary" />
             <div className="u-w-2-half u-p-1" />
           </ListItem>
 
@@ -263,6 +273,8 @@ const ItemView = () => {
                 autoFocus={question._id === newQuestionId}
                 selectedQuestions={selectedQuestions}
                 setSelectedQuestions={setSelectedQuestions}
+                onOpen={q => openQuestion(q)}
+                isOpened={openedQuestion?._id === question._id}
                 deleteQuestion={() =>
                   detachQuestions(activity, [{ _id: question._id }])
                     .then(() => {
@@ -294,7 +306,14 @@ const ItemView = () => {
           )}
         </List>
 
-        {/* openedQuestion && <ActivityPreview activity={openedQuestion} /> */}
+        {openedQuestion && (
+          <div
+            className="u-p-2 u-flex u-flex-column u-flex-items-center"
+            style={{ width: '24rem', borderLeft: '1px solid #4242441f' }}
+          >
+            <FlashcardPlayer flashcard={openedQuestion} />
+          </div>
+        )}
       </div>
     </div>
   )
