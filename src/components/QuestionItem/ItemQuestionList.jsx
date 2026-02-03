@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import React from 'react'
 import { useI18n } from 'twake-i18n'
 
@@ -13,6 +13,7 @@ import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
+import ListItemSkeleton from 'cozy-ui/transpiled/react/Skeletons/ListItemSkeleton'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import ActivityIcon from '@/assets/icons/ActivityIcon'
@@ -26,6 +27,7 @@ const ItemQuestionList = ({
   openedQuestion,
   setOpenedQuestion,
   isGenerating,
+  numberOfQuestions,
   isLoading,
   actions,
   newQuestionId,
@@ -77,87 +79,100 @@ const ItemQuestionList = ({
 
           <Divider />
 
-          {questions.map((question, i) => (
-            <motion.div
-              key={question.id ?? i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: i < 16 ? i * 0.03 : 0,
-                duration: 0.5,
-                ease: [0.3, 0, 0, 1]
-              }}
-            >
-              <QuestionItem
-                question={question}
-                autoFocus={question._id === newQuestionId}
-                selectedQuestions={selectedQuestions}
-                setSelectedQuestions={setSelectedQuestions}
-                onOpen={q => openQuestion(q)}
-                isOpened={openedQuestion?._id === question._id}
-                deleteQuestion={() => onDeleteQuestion(question._id)}
-              />
-              <Divider />
-            </motion.div>
-          ))}
-
-          {isGenerating && questions.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, type: 'spring', bounce: 0.3 }}
-            >
-              <ListItem>
-                <ListItemIcon className="u-pl-half">
-                  <CircularProgress size={24} />
-                </ListItemIcon>
-                <TableItemText
-                  value={t('activity.generating.title')}
-                  type="primary"
-                />
-                <div className="u-w-2-half u-p-1" />
-              </ListItem>
-            </motion.div>
-          )}
-
-          {isGenerating && questions.length == 0 && (
-            <motion.div
-              className="u-flex u-flex-column u-flex-items-center u-flex-justify-center u-mt-2"
-              initial={{ opacity: 0, scale: 0.97, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.5, type: 'spring', bounce: 0.3 }}
-            >
-              <CircularProgress size={56} />
-              <Typography variant="h3" align="center" className="u-mt-1-half">
-                {t('activity.generating.title')}
-              </Typography>
-              <Typography
-                variant="body1"
-                color="textSecondary"
-                align="center"
-                className="u-mt-half"
+          <AnimatePresence>
+            {questions.length == 0 && !isGenerating && !isLoading && (
+              <motion.div
+                className="u-flex u-flex-column u-flex-items-center u-flex-justify-center u-mt-2"
+                style={{
+                  position: 'absolute',
+                  width: '100%'
+                }}
+                initial={{
+                  opacity: 0,
+                  scale: 0.97,
+                  y: 30
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  y: 0,
+                  transition: {
+                    duration: 0.7,
+                    type: 'spring',
+                    bounce: 0.3,
+                    delay: 0.5
+                  }
+                }}
               >
-                {t('activity.generating.message')}
-              </Typography>
-            </motion.div>
-          )}
+                <Empty
+                  icon={<ActivityIcon size={96} />}
+                  title={t('activity.empty.title')}
+                  text={t('activity.empty.message')}
+                  centered
+                >
+                  <Button
+                    variant="primary"
+                    label={t('activity.empty.generate')}
+                    startIcon={<Icon icon={NewIcon} />}
+                    onClick={() => generateQuestions()}
+                    className="u-mt-1"
+                  />
+                </Empty>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-          {questions.length == 0 && !isGenerating && !isLoading && (
-            <Empty
-              icon={<ActivityIcon size={96} />}
-              title={t('activity.empty.title')}
-              text={t('activity.empty.message')}
-              centered
-            >
-              <Button
-                variant="primary"
-                label={t('activity.empty.generate')}
-                startIcon={<Icon icon={NewIcon} />}
-                onClick={() => generateQuestions()}
-                className="u-mt-1"
-              />
-            </Empty>
-          )}
+          <AnimatePresence>
+            {questions.map((question, i) => (
+              <motion.div
+                key={question.id ?? i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: i < 16 ? i * 0.05 : 0,
+                  duration: 0.5,
+                  ease: [0.3, 0, 0, 1]
+                }}
+              >
+                <QuestionItem
+                  question={question}
+                  autoFocus={question._id === newQuestionId}
+                  selectedQuestions={selectedQuestions}
+                  setSelectedQuestions={setSelectedQuestions}
+                  onOpen={q => openQuestion(q)}
+                  isOpened={openedQuestion?._id === question._id}
+                  deleteQuestion={() => onDeleteQuestion(question._id)}
+                />
+                <Divider />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+          <AnimatePresence>
+            {isGenerating &&
+              Array.from({ length: numberOfQuestions }).map((_, i) => (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{
+                    delay: i < 16 ? i * 0.05 : 0,
+                    duration: 0.5,
+                    ease: [0.3, 0, 0, 1]
+                  }}
+                  key={i}
+                >
+                  <ListItem
+                    size="small"
+                    dense
+                    disableGutters
+                    className="u-ph-half u-pv-half"
+                  >
+                    <ListItemSkeleton />
+                  </ListItem>
+                  <Divider />
+                </motion.div>
+              ))}
+          </AnimatePresence>
         </List>
       </div>
     </>

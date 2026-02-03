@@ -37,7 +37,7 @@ export const useQuestionGeneration = activity => {
             return {
               label: card.text,
               answer: card.answer,
-              hint: card.hint
+              hint: card.tip
             }
           })
         )

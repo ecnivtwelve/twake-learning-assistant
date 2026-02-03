@@ -34,6 +34,14 @@ export default function FlashcardPlayer({ flashcard }) {
             <Typography variant="h3" align="center">
               {question}
             </Typography>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              align="center"
+              className="u-mt-half"
+            >
+              {hint}
+            </Typography>
           </>
         ) : (
           <>
