@@ -133,6 +133,7 @@ const ItemView = () => {
           actions={actions}
           newQuestionId={newQuestionId}
           onDeleteQuestion={deleteQuestion}
+          generateQuestions={() => setCustomizeGenerationDialog(true)}
         />
 
         <ItemFlashcardPreview openedQuestion={openedQuestion} />

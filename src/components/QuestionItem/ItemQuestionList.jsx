@@ -3,14 +3,19 @@ import React from 'react'
 import { useI18n } from 'twake-i18n'
 
 import ActionsBar from 'cozy-ui/transpiled/react/ActionsBar'
+import Button from 'cozy-ui/transpiled/react/Buttons'
 import Checkbox from 'cozy-ui/transpiled/react/Checkbox'
 import CircularProgress from 'cozy-ui/transpiled/react/CircularProgress'
 import Divider from 'cozy-ui/transpiled/react/Divider'
+import Empty from 'cozy-ui/transpiled/react/Empty'
+import Icon from 'cozy-ui/transpiled/react/Icon'
+import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
+import ActivityIcon from '@/assets/icons/ActivityIcon'
 import QuestionItem from '@/components/QuestionItem/QuestionItem'
 import TableItemText from '@/components/TableItem/TableItemText'
 
@@ -23,7 +28,8 @@ const ItemQuestionList = ({
   isGenerating,
   actions,
   newQuestionId,
-  onDeleteQuestion
+  onDeleteQuestion,
+  generateQuestions
 }) => {
   const { t } = useI18n()
 
@@ -134,6 +140,21 @@ const ItemQuestionList = ({
               </Typography>
             </motion.div>
           )}
+
+          <Empty
+            icon={<ActivityIcon size={96} />}
+            title={t('activity.empty.title')}
+            text={t('activity.empty.message')}
+            centered
+          >
+            <Button
+              variant="primary"
+              label={t('activity.empty.generate')}
+              startIcon={<Icon icon={NewIcon} />}
+              onClick={() => generateQuestions()}
+              className="u-mt-1"
+            />
+          </Empty>
         </List>
       </div>
     </>

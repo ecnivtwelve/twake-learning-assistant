@@ -27,6 +27,11 @@
     "generating": {
       "title": "Génération des flashcards...",
       "message": "Cela peut prendre jusqu'à une minute, veuillez patienter."
+    },
+    "empty": {
+      "title": "Aucune question",
+      "message": "Créez votre première question pour commencer",
+      "generate": "Générer des questions"
     }
   },
   "activities": {
