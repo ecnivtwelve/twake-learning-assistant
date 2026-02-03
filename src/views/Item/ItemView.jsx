@@ -47,7 +47,6 @@ const ItemView = () => {
 
   const questions = activity?.questions?.data || []
 
-  // Activity Title Logic
   const [activityTitle, setActivityTitle] = useState()
   const [firstLoad, setFirstLoad] = useState(true)
 
@@ -74,7 +73,6 @@ const ItemView = () => {
       })
   }
 
-  // Filters (Static for now, could be moved if it grows)
   const [filters] = React.useState({
     subjects: {
       label: t('tags.types'),
@@ -90,7 +88,6 @@ const ItemView = () => {
     }
   })
 
-  // Hooks
   const {
     isGenerating,
     ragGenerate,
@@ -109,7 +106,6 @@ const ItemView = () => {
     newQuestionId
   } = useQuestionActions(activity, questions)
 
-  // UI State
   const [openedQuestion, setOpenedQuestion] = React.useState(null)
 
   return (
