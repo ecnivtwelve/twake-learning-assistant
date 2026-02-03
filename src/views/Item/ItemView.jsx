@@ -106,7 +106,8 @@ const ItemView = () => {
     createQuestion,
     deleteQuestion,
     actions,
-    newQuestionId
+    newQuestionId,
+    resetNewQuestionId
   } = useQuestionActions(activity)
 
   const [openedQuestion, setOpenedQuestion] = React.useState(null)
@@ -116,9 +117,13 @@ const ItemView = () => {
       const newQuestion = questions.find(q => q._id === newQuestionId)
       if (newQuestion) {
         setOpenedQuestion(newQuestion)
+        const timer = setTimeout(() => {
+          resetNewQuestionId()
+        }, 100)
+        return () => clearTimeout(timer)
       }
     }
-  }, [newQuestionId, questions])
+  }, [newQuestionId, questions, resetNewQuestionId])
 
   return (
     <div className="u-flex u-flex-column u-h-100">

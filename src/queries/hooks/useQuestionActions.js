@@ -71,6 +71,7 @@ export const useQuestionActions = activity => {
     createQuestion,
     deleteQuestion,
     actions,
-    newQuestionId
+    newQuestionId,
+    resetNewQuestionId: () => setNewQuestionId(null)
   }
 }
