@@ -25,7 +25,7 @@ const TabTitle = ({ children, trailing, backEnabled = false }) => {
           </IconButton>
         )}
         <div className="u-flex u-flex-column u-flex-justify-center u-flex-grow-1">
-          {children}
+          <div className="u-w-100">{children}</div>
         </div>
       </div>
       <div className="u-flex u-flex-items-center">{trailing}</div>

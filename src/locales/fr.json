@@ -3,6 +3,7 @@
   "delete": "Supprimer",
   "new": "Nouveau",
   "generate": "Générer",
+  "add": "Ajouter",
   "cancel": "Annuler",
   "tags": {
     "subjects": "Matières",
@@ -83,7 +84,7 @@
       "tags": "Tags"
     },
     "status": {
-      "chunking": "Compréhension",
+      "chunking": "Indexation",
       "serializing": "Traitement",
       "completed": "Terminé",
       "failed": "Échoué"
@@ -91,5 +92,20 @@
   },
   "insights": {
     "title": "Analyse"
+  },
+  "subjects": {
+    "title": "Matières",
+    "select": "Sélectionner une matière",
+    "new": "Nouvelle matière",
+    "input": {
+      "name": {
+        "label": "Nom de la matière",
+        "placeholder": "Histoire-Géographie"
+      }
+    },
+    "alerts": {
+      "created": "Matière créée",
+      "error": "Erreur lors de la création de la matière"
+    }
   }
 }

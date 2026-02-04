@@ -5,6 +5,14 @@ const defaultFetchPolicy = CozyClient.fetchPolicies.olderThan(
   DEFAULT_CACHE_TIMEOUT_QUERIES
 )
 
+export const buildSubjectsQuery = () => ({
+  definition: () => Q('io.cozy.learnings.subjects'),
+  options: {
+    as: 'io.cozy.calendar.learnings/subjects/*',
+    fetchPolicy: defaultFetchPolicy
+  }
+})
+
 export const buildActivitiesQuery = () => ({
   definition: () => Q('io.cozy.learnings'),
   options: {

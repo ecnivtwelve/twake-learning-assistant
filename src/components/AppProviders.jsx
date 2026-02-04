@@ -8,6 +8,8 @@ import AlertProvider from 'cozy-ui/transpiled/react/providers/Alert'
 import { BreakpointsProvider } from 'cozy-ui/transpiled/react/providers/Breakpoints'
 import CozyTheme from 'cozy-ui/transpiled/react/providers/CozyTheme'
 
+import { SubjectProvider } from '@/context/SubjectContext'
+
 const AppProviders = ({ client, lang, polyglot, children }) => {
   return (
     <WebviewIntentProvider>
@@ -16,7 +18,9 @@ const AppProviders = ({ client, lang, polyglot, children }) => {
           <I18n lang={lang} polyglot={polyglot}>
             <AlertProvider>
               <CozyTheme>
-                <BreakpointsProvider>{children}</BreakpointsProvider>
+                <BreakpointsProvider>
+                  <SubjectProvider>{children}</SubjectProvider>
+                </BreakpointsProvider>
               </CozyTheme>
             </AlertProvider>
           </I18n>
