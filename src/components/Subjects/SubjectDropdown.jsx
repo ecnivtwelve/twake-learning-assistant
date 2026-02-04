@@ -5,9 +5,14 @@ import { useI18n } from 'twake-i18n'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
+import IconButton from 'cozy-ui/transpiled/react/IconButton'
 import DropdownIcon from 'cozy-ui/transpiled/react/Icons/Dropdown'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
+import DotsIcon from 'cozy-ui/transpiled/react/Icons/Dots'
+
+import TrashIcon from 'cozy-ui/transpiled/react/Icons/Trash'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
+import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryAction'
 import ListItemText from 'cozy-ui/transpiled/react/ListItemText'
 import Menu from 'cozy-ui/transpiled/react/Menu'
 import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
@@ -15,14 +20,44 @@ import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import NewSubjectDialog from './NewSubjectDialog'
 
+import {
+  Dialog,
+  ConfirmDialog
+} from 'cozy-ui/transpiled/react/CozyDialogs'
+
 import { useSubject } from '@/context/SubjectContext'
+import { deleteSubject } from '@/queries/actions/subjects/deleteSubject'
+import { RealTimeQueries, useClient } from 'cozy-client'
 
 const SubjectDropdown = ({ ...props }) => {
   const { t } = useI18n()
+  const client = useClient()
   const { selectedSubject, setSelectedSubject, subjects } = useSubject()
 
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [newSubjectDialogOpen, setNewSubjectDialogOpen] = React.useState(false)
+
+  const [aboutToDelete, setAboutToDelete] = React.useState(null)
+
+  const ConfirmDialogActions = () => {
+    return (
+      <>
+        <Button
+          variant="secondary"
+          label={t('cancel')}
+          onClick={() => setAboutToDelete(null)}
+        />
+        <Button
+          color="error"
+          label={t('delete')}
+          onClick={() => {
+            deleteSubject(client, aboutToDelete)
+            setAboutToDelete(null)
+          }}
+        />
+      </>
+    )
+  }
 
   return (
     <>
@@ -79,23 +114,31 @@ const SubjectDropdown = ({ ...props }) => {
           vertical: 'top',
           horizontal: 'left'
         }}
+        className="u-mt-half"
       >
-        {subjects.data?.map(subject => (
-          <MenuItem
-            key={subject.id}
-            onClick={() => {
-              setSelectedSubject(subject)
-              setAnchorEl(null)
-            }}
-            selected={selectedSubject?.id === subject.id}
-          >
-            <ListItemText primary={subject.title} />
-          </MenuItem>
-        ))}
+        {subjects.data?.map(subject => {
+          return (
+            <SubjectMenuItem
+              key={subject.id}
+              subject={subject}
+              selectedSubject={selectedSubject}
+              setSelectedSubject={setSelectedSubject}
+              setAboutToDelete={(subject) => {
+                setAboutToDelete(subject)
+                setAnchorEl(null)
+              }}
+            />
+          )
+        })}
 
-        {subjects.data?.length > 0 && <Divider />}
+        {subjects.data?.length > 0 && <Divider className="u-mv-half" />}
 
-        <MenuItem onClick={() => setNewSubjectDialogOpen(true)}>
+        <MenuItem
+          onClick={() => {
+            setNewSubjectDialogOpen(true)
+            setAnchorEl(null)
+          }}
+        >
           <ListItemIcon>
             <Icon icon={PlusIcon} />
           </ListItemIcon>
@@ -105,8 +148,78 @@ const SubjectDropdown = ({ ...props }) => {
 
       <NewSubjectDialog
         open={newSubjectDialogOpen}
-        onClose={() => setNewSubjectDialogOpen(false)}
+        onClose={() => {
+          setNewSubjectDialogOpen(false)
+        }}
       />
+
+      <ConfirmDialog
+        open={Boolean(aboutToDelete)}
+        onClose={() => setAboutToDelete(null)}
+        title={t('subjects.delete.title')}
+        content={t('subjects.delete.confirm')}
+        actions={<ConfirmDialogActions />}
+      />
+    </>
+  )
+}
+
+const SubjectMenuItem = ({ subject, selectedSubject, setSelectedSubject, setAboutToDelete }) => {
+  const { t } = useI18n();
+  const [subMenuEl, setSubMenuEl] = React.useState(null)
+
+  return (
+    <>
+      <MenuItem
+        key={subject.id}
+        onClick={() => {
+          setSelectedSubject(subject)
+          setAnchorEl(null)
+        }}
+        selected={selectedSubject?.id === subject.id}
+      >
+        <ListItemText primary={subject.title} style={{
+          maxWidth: 180,
+          marginRight: 28
+        }} />
+        <ListItemSecondaryAction>
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation()
+              setSubMenuEl(e.currentTarget)
+            }}
+          >
+            <Icon icon={DotsIcon} />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </MenuItem>
+      <Menu
+        open={Boolean(subMenuEl)}
+        anchorEl={subMenuEl}
+        onClose={() => setSubMenuEl(null)}
+        getContentAnchorEl={null}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left'
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        className="u-mt-half"
+      >
+        <MenuItem
+          onClick={() => {
+            setAboutToDelete(subject)
+            setSubMenuEl(null)
+          }}
+        >
+          <ListItemIcon>
+            <Icon icon={TrashIcon} />
+          </ListItemIcon>
+          <ListItemText primary={t('delete')} />
+        </MenuItem>
+      </Menu>
     </>
   )
 }

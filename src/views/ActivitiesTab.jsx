@@ -7,9 +7,11 @@ import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 
 import SubjectDropdown from '@/components/Subjects/SubjectDropdown'
 import TabTitle from '@/components/TabTitle/TabTitle'
+import { useSubject } from '@/context/SubjectContext'
 
 const ActivitiesTab = () => {
   const { t } = useI18n()
+  const { selectedSubject } = useSubject()
 
   return (
     <>
@@ -19,6 +21,7 @@ const ActivitiesTab = () => {
             variant="primary"
             label={t('new')}
             startIcon={<Icon icon={PlusIcon} />}
+            disabled={!selectedSubject}
           />
         }
       >

@@ -97,6 +97,10 @@
     "title": "Matières",
     "select": "Sélectionner une matière",
     "new": "Nouvelle matière",
+    "delete": {
+      "title": "Supprimer la matière",
+      "confirm": "Êtes-vous sûr de vouloir supprimer la matière ?"
+    },
     "input": {
       "name": {
         "label": "Nom de la matière",

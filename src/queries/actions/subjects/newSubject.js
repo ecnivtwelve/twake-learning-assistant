@@ -1,3 +1,7 @@
+import { deleteSubject } from './deleteSubject'
+
+import { createPartition } from '@/queries/rag/openrag'
+
 export const newSubject = async (client, title) => {
   const response = await client.save({
     _type: 'io.cozy.learnings.subjects',
@@ -8,5 +12,25 @@ export const newSubject = async (client, title) => {
     throw new Error('Failed to create subject')
   }
 
-  return response.data
+  const partitionName = 'subject-' + response.data._id
+
+  // if 201
+  const partitionCreated = await createPartition(partitionName)
+
+  if (partitionCreated.status !== 201) {
+    await deleteSubject(client, response.data, true)
+
+    throw new Error('Failed to create partition')
+  }
+
+  const response2 = await client.save({
+    ...response.data,
+    partition: partitionName
+  })
+
+  if (!response2?.data) {
+    throw new Error('Failed to create subject')
+  }
+
+  return response2.data
 }

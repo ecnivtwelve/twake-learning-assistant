@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useI18n } from 'twake-i18n'
 
 import { useClient } from 'cozy-client'
@@ -26,6 +26,12 @@ const NewSubjectDialog = ({ open, onClose }) => {
 
   const subjectInputRef = React.useRef(null)
   const [subjectName, setSubjectName] = React.useState('')
+
+  useEffect(() => {
+    if (open) {
+      setSubjectName('')
+    }
+  }, [open])
 
   const { dialogProps, dialogTitleProps, dividerProps, dialogActionsProps } =
     useCozyDialog({
@@ -69,6 +75,12 @@ const NewSubjectDialog = ({ open, onClose }) => {
           variant="outlined"
           label={t('subjects.input.name.label')}
           placeholder={t('subjects.input.name.placeholder')}
+          onKeyDown={e => {
+            if (e.key === 'Enter') {
+              saveSubject()
+              e.stopPropagation()
+            }
+          }}
         />
       </div>
       <Divider {...dividerProps} />

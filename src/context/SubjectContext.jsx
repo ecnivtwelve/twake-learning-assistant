@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-import { useQuery } from 'cozy-client'
+import { RealTimeQueries, useQuery } from 'cozy-client'
 
 import { buildSubjectsQuery } from '@/queries'
 
@@ -12,11 +12,24 @@ export const SubjectProvider = ({ children }) => {
   const subjectsQuery = buildSubjectsQuery()
   const subjects = useQuery(subjectsQuery.definition, subjectsQuery.options)
 
+  const [prevLength, setPrevLength] = useState(0)
+  const data = subjects.data || []
+
   useEffect(() => {
-    if (subjects.data?.length > 0 && !selectedSubject) {
-      setSelectedSubject(subjects.data[0])
+    const currentLength = data.length
+
+    if (currentLength > 0) {
+      if (currentLength > prevLength && prevLength !== 0) {
+        setSelectedSubject(data[data.length - 1])
+      } else if (!selectedSubject || !data.find(s => s._id === selectedSubject._id)) {
+        setSelectedSubject(data[0])
+      }
+    } else {
+      setSelectedSubject(null)
     }
-  }, [subjects.data, selectedSubject])
+
+    setPrevLength(currentLength)
+  }, [data, selectedSubject, prevLength])
 
   const value = {
     selectedSubject,
@@ -25,7 +38,12 @@ export const SubjectProvider = ({ children }) => {
   }
 
   return (
-    <SubjectContext.Provider value={value}>{children}</SubjectContext.Provider>
+    <>
+      <RealTimeQueries doctype="io.cozy.learnings.subjects" />
+      <SubjectContext.Provider value={value}>
+        {children}
+      </SubjectContext.Provider>
+    </>
   )
 }
 

@@ -4,6 +4,34 @@ import mockData from './mock.json'
 
 import { AUTH_TOKEN, OPENRAG_URL } from '@/consts/consts'
 
+export async function createPartition(partition) {
+  const myHeaders = new Headers()
+  myHeaders.append('Accept', 'application/json')
+  myHeaders.append('Authorization', 'Bearer ' + AUTH_TOKEN)
+
+  const requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    redirect: 'follow'
+  }
+
+  return fetch(`${OPENRAG_URL}/partition/${partition}`, requestOptions)
+}
+
+export async function deletePartition(partition) {
+  const myHeaders = new Headers()
+  myHeaders.append('Accept', 'application/json')
+  myHeaders.append('Authorization', 'Bearer ' + AUTH_TOKEN)
+
+  const requestOptions = {
+    method: 'DELETE',
+    headers: myHeaders,
+    redirect: 'follow'
+  }
+
+  return fetch(`${OPENRAG_URL}/partition/${partition}`, requestOptions)
+}
+
 export async function fetchPartition(partition) {
   const myHeaders = new Headers()
   myHeaders.append('Accept', 'application/json')
