@@ -1,9 +1,6 @@
 import React from 'react'
 import { Navigate, RouterProvider, createHashRouter } from 'react-router-dom'
 
-import LayoutTransitioner from './Animation/LayoutTransitioner'
-import AppItemLayout from './AppItemLayout'
-
 import AppLayout from '@/components/AppLayout'
 import ActivitiesTab from '@/views/ActivitiesTab'
 import InsightsTab from '@/views/InsightsTab'

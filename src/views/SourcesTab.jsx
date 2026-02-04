@@ -20,25 +20,32 @@ import SourceItem from '@/components/SourceItem/SourceItem'
 import AddSourceDialog from '@/components/Sources/AddSourceDialog'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
-import { OPENRAG_URL, PARTITION } from '@/consts/consts'
 import {
   deleteFile,
   fetchPartition,
   fetchPartitionTask
 } from '@/queries/rag/openrag'
+import SubjectDropdown from '@/components/Subjects/SubjectDropdown'
+import { useSubject } from '@/context/SubjectContext'
 
 const SourcesTab = () => {
   const { t } = useI18n()
 
+  const { selectedSubject } = useSubject()
+  const PARTITION = selectedSubject?.partition || null
+
   const [partitionData, setPartitionData] = React.useState([])
-  const [loadingSources, setLoadingSources] = React.useState(true)
+  const [loadingSources, setLoadingSources] = React.useState(false)
 
   const [activeTasks, setActiveTasks] = React.useState([])
   const [taskDetails, setTaskDetails] = React.useState({})
   const [isAddingTask, setIsAddingTask] = React.useState(false)
 
-  const fetchSources = () => {
-    return fetchPartition(PARTITION)
+  const fetchSources = (partition) => {
+    console.log('fetchSources', partition)
+    if (!partition) return
+    setLoadingSources(true)
+    return fetchPartition(partition)
       .then(data => {
         setLoadingSources(false)
         if (data.files.length === 0) {
@@ -52,8 +59,8 @@ const SourcesTab = () => {
   }
 
   React.useEffect(() => {
-    fetchSources()
-  }, [])
+    fetchSources(PARTITION)
+  }, [PARTITION])
 
   React.useEffect(() => {
     if (activeTasks.length === 0) return
@@ -162,16 +169,7 @@ const SourcesTab = () => {
           />
         }
       >
-        <Typography variant="h3">{t('sources.title')}</Typography>
-        <Typography>
-          depuis {PARTITION} sur {OPENRAG_URL}
-        </Typography>
-
-        <div className="u-flex u-mt-1">
-          {Object.entries(filters).map(([key, filter]) => (
-            <FilterChip key={key} label={filter.label} />
-          ))}
-        </div>
+        <SubjectDropdown />
       </TabTitle>
 
       <AddSourceDialog
@@ -191,7 +189,7 @@ const SourcesTab = () => {
           <TableItemText value={t('sources.table.filename')} type="secondary" />
           <TableItemText value={t('sources.table.update')} type="secondary" />
           <TableItemText value={t('sources.table.tags')} type="secondary" />
-          <div className="u-w-1-half" />
+          <div className="u-w-2-half" />
         </ListItem>
 
         <Divider />

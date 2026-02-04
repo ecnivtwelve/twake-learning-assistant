@@ -15,7 +15,10 @@ const AppLayout = () => {
   const location = useLocation()
 
   const getLayoutKey = () => {
-    return location.pathname
+    if (location.pathname.includes('/item')) {
+      return 'item-view'
+    }
+    return 'tabs-view'
   }
 
   return (
