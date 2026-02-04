@@ -30,10 +30,10 @@ const ExampleRouterNavLink = ({
 const NavLink = genNavLink(ExampleRouterNavLink)
 
 const NAV_ITEMS = [
-  { path: 'activities', icon: ListIcon },
-  { path: 'questions', icon: CommentIcon },
-  { path: 'sources', icon: LibraryIcon },
-  { path: 'insights', icon: StatsIcon }
+  { path: 'activities', icon: ListIcon, enabled: ['activities', 'item'] },
+  { path: 'questions', icon: CommentIcon, enabled: ['questions'] },
+  { path: 'sources', icon: LibraryIcon, enabled: ['sources'] },
+  { path: 'insights', icon: StatsIcon, enabled: ['insights'] }
 ]
 
 const SidebarComponent = () => {
@@ -45,10 +45,12 @@ const SidebarComponent = () => {
   return (
     <Sidebar>
       <Nav>
-        {NAV_ITEMS.map(({ path, icon }) => (
+        {NAV_ITEMS.map(({ path, icon, enabled }) => (
           <NavItem key={path}>
             <NavLink
-              active={currentTab.includes(path)}
+              active={enabled.some(enabledPath =>
+                currentTab.includes(enabledPath)
+              )}
               onClick={() => navigate(`/${path}`)}
             >
               <NavIcon icon={icon} />

@@ -14,10 +14,9 @@ import SourcesTab from '@/views/SourcesTab'
 const routes = [
   {
     path: '/',
-    element: <LayoutTransitioner />,
+    element: <AppLayout />,
     children: [
       {
-        element: <AppLayout />,
         children: [
           { path: 'activities', element: <ActivitiesTab /> },
           { path: 'insights', element: <InsightsTab /> },
@@ -27,7 +26,6 @@ const routes = [
         ]
       },
       {
-        element: <AppItemLayout />,
         children: [{ path: 'item/:id', element: <ItemView /> }]
       }
     ]
