@@ -16,8 +16,26 @@ const AppLayout = () => {
       <SidebarComponent />
       <BarComponent searchOptions={{ enabled: true }} />
       <BarTitle />
-      <div className={`u-w-100 ${isDesktop ? '' : 'u-pt-3'}`}>
-        <Outlet />
+      <div
+        className={`u-w-100 ${isDesktop ? '' : 'u-pt-3'}`}
+        style={{
+          padding: 16,
+          backgroundColor: 'var(--defaultBackgroundColor)'
+        }}
+      >
+        <div
+          style={{
+            height: '100%',
+            overflowY: 'auto',
+            position: 'relative',
+            backgroundColor: 'var(--paperBackgroundColor)',
+            borderRadius: '1rem',
+            display: 'flex',
+            flexDirection: 'column'
+          }}
+        >
+          <Outlet />
+        </div>
       </div>
     </>
   )

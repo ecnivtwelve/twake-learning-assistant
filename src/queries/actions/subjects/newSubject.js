@@ -3,9 +3,13 @@ import { deleteSubject } from './deleteSubject'
 import { createPartition } from '@/queries/rag/openrag'
 
 export const newSubject = async (client, title) => {
-  const response = await client.save({
-    _type: 'io.cozy.learnings.subjects',
-    title: title || 'Untitled'
+  const response = await client.create('io.cozy.learnings.subjects', {
+    title: title || 'Untitled',
+    relationships: {
+      activities: {
+        data: []
+      }
+    }
   })
 
   if (!response?.data) {

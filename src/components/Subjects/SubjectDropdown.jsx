@@ -2,14 +2,15 @@ import { AnimatePresence, motion } from 'motion/react'
 import React from 'react'
 import { useI18n } from 'twake-i18n'
 
+import { RealTimeQueries, useClient } from 'cozy-client'
 import Button from 'cozy-ui/transpiled/react/Buttons'
+import { Dialog, ConfirmDialog } from 'cozy-ui/transpiled/react/CozyDialogs'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import IconButton from 'cozy-ui/transpiled/react/IconButton'
+import DotsIcon from 'cozy-ui/transpiled/react/Icons/Dots'
 import DropdownIcon from 'cozy-ui/transpiled/react/Icons/Dropdown'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
-import DotsIcon from 'cozy-ui/transpiled/react/Icons/Dots'
-
 import TrashIcon from 'cozy-ui/transpiled/react/Icons/Trash'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryAction'
@@ -20,14 +21,8 @@ import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import NewSubjectDialog from './NewSubjectDialog'
 
-import {
-  Dialog,
-  ConfirmDialog
-} from 'cozy-ui/transpiled/react/CozyDialogs'
-
 import { useSubject } from '@/context/SubjectContext'
 import { deleteSubject } from '@/queries/actions/subjects/deleteSubject'
-import { RealTimeQueries, useClient } from 'cozy-client'
 
 const SubjectDropdown = ({ ...props }) => {
   const { t } = useI18n()
@@ -123,10 +118,11 @@ const SubjectDropdown = ({ ...props }) => {
               subject={subject}
               selectedSubject={selectedSubject}
               setSelectedSubject={setSelectedSubject}
-              setAboutToDelete={(subject) => {
+              setAboutToDelete={subject => {
                 setAboutToDelete(subject)
                 setAnchorEl(null)
               }}
+              setAnchorEl={setAnchorEl}
             />
           )
         })}
@@ -164,8 +160,14 @@ const SubjectDropdown = ({ ...props }) => {
   )
 }
 
-const SubjectMenuItem = ({ subject, selectedSubject, setSelectedSubject, setAboutToDelete }) => {
-  const { t } = useI18n();
+const SubjectMenuItem = ({
+  subject,
+  selectedSubject,
+  setSelectedSubject,
+  setAboutToDelete,
+  setAnchorEl
+}) => {
+  const { t } = useI18n()
   const [subMenuEl, setSubMenuEl] = React.useState(null)
 
   return (
@@ -178,13 +180,16 @@ const SubjectMenuItem = ({ subject, selectedSubject, setSelectedSubject, setAbou
         }}
         selected={selectedSubject?.id === subject.id}
       >
-        <ListItemText primary={subject.title} style={{
-          maxWidth: 180,
-          marginRight: 28
-        }} />
+        <ListItemText
+          primary={subject.title}
+          style={{
+            maxWidth: 180,
+            marginRight: 28
+          }}
+        />
         <ListItemSecondaryAction>
           <IconButton
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation()
               setSubMenuEl(e.currentTarget)
             }}

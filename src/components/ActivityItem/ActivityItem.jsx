@@ -28,26 +28,18 @@ const ActivityItem = ({ activity, deleteActivity }) => {
       <ListItemIcon className="u-w-2-half">
         <ActivityIcon size={32} />
       </ListItemIcon>
-      <TableItemText
-        value={
+      <ListItemText
+        primary={
           activity.title?.trim() === ''
             ? t('activity.untitled')
             : activity.title
         }
-        type="primary"
       />
-      <TableItemText
-        value={formatLocallyDistanceToNow(
+      <ListItemText
+        secondary={formatLocallyDistanceToNow(
           new Date(activity.cozyMetadata.updatedAt)
         )}
-        type="secondary"
       />
-      <TableItemText
-        value={activity?.relationships?.questions?.data?.length ?? 0}
-        type="secondary"
-      />
-      <TableItemText value={[]} type="chip" />
-      <TableItemText value={Math.round(0 * 100)} type="colouredValue" />
       <ListItemSecondaryAction className="u-pr-1">
         <IconButton
           ref={menuButtonRef}

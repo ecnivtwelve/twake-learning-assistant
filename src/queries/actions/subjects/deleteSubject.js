@@ -1,4 +1,5 @@
 import { deletePartition } from '@/queries/rag/openrag'
+import { deleteActivity } from '../activities/deleteActivity'
 
 export const deleteSubject = async (
   client,
@@ -6,6 +7,10 @@ export const deleteSubject = async (
   skipPartitionDeletion = false
 ) => {
   const partitionId = subject.partition ?? ''
+
+  subject.activities.data.forEach(activity => {
+    deleteActivity(client, activity)
+  })
 
   if (!skipPartitionDeletion && partitionId) {
     const partitionDeleted = await deletePartition(partitionId)
