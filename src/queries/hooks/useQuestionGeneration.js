@@ -8,7 +8,7 @@ import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 import { newQuestionsBatch } from '@/queries/actions/questions/newQuestion'
 import { extractJSONObject, generateFlashCards } from '@/queries/rag/openrag'
 
-export const useQuestionGeneration = activity => {
+export const useQuestionGeneration = (activity, subject) => {
   const { t } = useI18n()
   const client = useClient()
   const { showAlert } = useAlert()
@@ -21,8 +21,7 @@ export const useQuestionGeneration = activity => {
     try {
       setIsGenerating(true)
       const data = await generateFlashCards(
-        activity,
-        'Numérique et sciences informatiques',
+        subject,
         16,
         activity.title,
         numberOfQuestions,

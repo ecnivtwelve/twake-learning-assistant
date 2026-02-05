@@ -14,12 +14,14 @@ import ItemQuestionList from '@/components/QuestionItem/ItemQuestionList'
 import { buildActivityItemQuery } from '@/queries'
 import { useQuestionActions } from '@/queries/hooks/useQuestionActions'
 import { useQuestionGeneration } from '@/queries/hooks/useQuestionGeneration'
+import { useSubject } from '@/context/SubjectContext'
 
 const ItemView = () => {
   const { t } = useI18n()
   const client = useClient()
   const { showAlert } = useAlert()
   const location = useLocation()
+  const { selectedSubject } = useSubject()
 
   const activityId = useMemo(
     () => location.pathname.split('/').pop(),
@@ -98,7 +100,7 @@ const ItemView = () => {
     setCustomizeGenerationDialog,
     numberOfQuestions,
     setNumberOfQuestions
-  } = useQuestionGeneration(activity)
+  } = useQuestionGeneration(activity, selectedSubject)
 
   const {
     selectedQuestions,

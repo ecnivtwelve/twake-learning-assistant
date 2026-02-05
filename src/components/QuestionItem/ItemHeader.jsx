@@ -61,7 +61,7 @@ const ItemHeader = ({
     >
       <input
         className={classNames(
-          'MuiTypography-h3 MuiTypography-colorTextPrimary u-p-0',
+          'MuiTypography-h3 MuiTypography-colorTextPrimary u-p-0 u-w-100',
           styles.itemNameInput
         )}
         ref={titleInputRef}

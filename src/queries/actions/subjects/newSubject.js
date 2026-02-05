@@ -8,6 +8,9 @@ export const newSubject = async (client, title) => {
     relationships: {
       activities: {
         data: []
+      },
+      sources: {
+        data: []
       }
     }
   })

@@ -6,9 +6,9 @@ const defaultFetchPolicy = CozyClient.fetchPolicies.olderThan(
 )
 
 export const buildSubjectsQuery = () => ({
-  definition: () => Q('io.cozy.learnings.subjects').include(['activities']),
+  definition: () => Q('io.cozy.learnings.subjects').include(['activities', 'sources']),
   options: {
-    as: 'io.cozy.calendar.learnings/subjects/*',
+    as: 'io.cozy.calendar.learnings.subjects/*',
     fetchPolicy: defaultFetchPolicy
   }
 })

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useI18n } from 'twake-i18n'
 
+import { useClient } from 'cozy-client'
 import log from 'cozy-logger'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import {
@@ -19,16 +20,11 @@ import FileIcon from 'cozy-ui/transpiled/react/Icons/File'
 import TextField from 'cozy-ui/transpiled/react/TextField'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
-import { uploadFile } from '../../queries/rag/openrag'
+import { newSource } from '@/queries/actions/sources/importSource'
 
-const AddSourceDialog = ({
-  open,
-  onClose,
-  partition,
-  addTask,
-  setIsAddingTask
-}) => {
+const AddSourceDialog = ({ open, onClose, subject }) => {
   const { t } = useI18n()
+  const client = useClient()
   const [file, setFile] = useState(null)
   const [description, setDescription] = useState('')
   const [author, setAuthor] = useState('')
@@ -38,7 +34,7 @@ const AddSourceDialog = ({
     if (open) {
       setFile(null)
       setDescription('')
-      setAuthor('')
+      setAuthor('moi')
     }
   }, [open])
 
@@ -64,26 +60,13 @@ const AddSourceDialog = ({
     if (!file || !description || !author) return
 
     setUploading(true)
-    setIsAddingTask(true)
     onClose()
     try {
-      await uploadFile(partition, file, author, description)
-        .then(result => {
-          addTask(result.task_status_url.split('/').pop())
-          setIsAddingTask(false)
-          return result
-        })
-        .catch(error => {
-          // eslint-disable-next-line no-console
-          console.error(error)
-          log.error(error)
-          setIsAddingTask(false)
-        })
+      const task = await newSource(client, subject, file, description, author)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
       log.error(error)
-      setIsAddingTask(false)
     } finally {
       setUploading(false)
     }

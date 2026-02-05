@@ -85,7 +85,6 @@ function makeSystemPrompt(subject, age, topic, number, previousQuestions) {
 }
 
 export async function generateFlashCards(
-  partition,
   subject,
   age,
   topic,
@@ -104,12 +103,12 @@ export async function generateFlashCards(
   myHeaders.append('Content-Type', 'application/json')
 
   const raw = JSON.stringify({
-    model: 'openrag-vince-test-test1',
+    model: 'openrag-' + subject.partition,
     messages: [
       {
         role: 'user',
         content: makeSystemPrompt(
-          subject,
+          subject.title,
           age,
           topic,
           number,
@@ -182,7 +181,7 @@ export async function deleteFile(partition, fileId) {
     })
 }
 
-const generateFileHash = async file => {
+export const generateFileHash = async file => {
   const buffer = await file.arrayBuffer()
   const hashBuffer = await window.crypto.subtle.digest('SHA-1', buffer)
   const hashArray = Array.from(new Uint8Array(hashBuffer))
@@ -190,9 +189,7 @@ const generateFileHash = async file => {
   return hashHex.substring(0, 10)
 }
 
-export async function uploadFile(partition, file, author, description) {
-  const fileId = await generateFileHash(file)
-
+export async function uploadFile(partition, file, author, description, fileId) {
   const myHeaders = new Headers()
   myHeaders.append('Accept', 'application/json')
   myHeaders.append('Authorization', 'Bearer ' + AUTH_TOKEN)

@@ -18,6 +18,10 @@ export default {
       activities: {
         doctype: 'io.cozy.learnings',
         type: 'has-many'
+      },
+      sources: {
+        doctype: 'io.cozy.files',
+        type: 'has-many'
       }
     }
   },
