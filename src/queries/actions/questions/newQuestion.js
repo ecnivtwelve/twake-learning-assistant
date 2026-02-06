@@ -75,8 +75,8 @@ export const newQuestionsBatch = async (
     questionsList.push(response.data)
   }
 
-  await subject.questions.add(questionsList)
   await activity.questions.add(questionsList)
+  await subject.questions.add(questionsList)
 
   if (!questionsList || questionsList.length === 0) {
     throw new Error('Failed to create questions')

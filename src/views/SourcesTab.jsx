@@ -70,7 +70,8 @@ const SourcesTab = () => {
               selectedSubject,
               fileObj,
               'Imported from Cozy Drive',
-              'User'
+              'User',
+              file
             )
           }
           setIsFileDialogOpen(false)
