@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useI18n } from 'twake-i18n'
 
 import { useClient } from 'cozy-client'
+import { fetchBlobFileById } from 'cozy-client/dist/models/file'
 import { FilePickerDialog } from 'cozy-filepicker'
 import log from 'cozy-logger'
 import Button from 'cozy-ui/transpiled/react/Buttons'
@@ -19,6 +20,7 @@ import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
 import { useSubject } from '@/context/SubjectContext'
 import { deleteSource } from '@/queries/actions/sources/deleteSource'
+import { newSource } from '@/queries/actions/sources/importSource'
 
 const SourcesTab = () => {
   const { t } = useI18n()
@@ -58,8 +60,19 @@ const SourcesTab = () => {
       <FilePickerDialog
         open={isFilePickerDialogOpen}
         onClose={() => setIsFileDialogOpen(false)}
-        onFilesSelected={files => {
-          console.log(files)
+        onFilesSelected={async files => {
+          if (files && files.length > 0) {
+            const file = files[0]
+            const blob = await fetchBlobFileById(client, file._id)
+            const fileObj = new File([blob], file.name, { type: file.mime })
+            await newSource(
+              client,
+              selectedSubject,
+              fileObj,
+              'Imported from Cozy Drive',
+              'User'
+            )
+          }
           setIsFileDialogOpen(false)
         }}
         multiple={false}
