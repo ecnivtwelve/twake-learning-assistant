@@ -7,7 +7,7 @@ import Typography from 'cozy-ui/transpiled/react/Typography'
 import styles from './FlashcardPlayer.styl'
 
 export default function FlashcardPlayer({ flashcard }) {
-  const { label: question, answer, hint } = flashcard
+  const { label: question, choices, hint } = flashcard
   const [showAnswer, setShowAnswer] = React.useState(false)
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function FlashcardPlayer({ flashcard }) {
         ) : (
           <>
             <Typography variant="h3" align="center" color="white">
-              {answer}
+              {choices[0].description}
             </Typography>
           </>
         )}

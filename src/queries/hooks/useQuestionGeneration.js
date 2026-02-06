@@ -32,6 +32,7 @@ export const useQuestionGeneration = (activity, subject) => {
       if (json.cards && json.cards.length > 0 && json.cards[0].answer) {
         newQuestionsBatch(
           client,
+          subject,
           activity,
           json.cards.map(card => {
             return {

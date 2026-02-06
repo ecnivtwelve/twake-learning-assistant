@@ -5,6 +5,7 @@
   "generate": "Générer",
   "add": "Ajouter",
   "cancel": "Annuler",
+  "detach": "Retirer",
   "import": "Importer",
   "tags": {
     "subjects": "Matières",

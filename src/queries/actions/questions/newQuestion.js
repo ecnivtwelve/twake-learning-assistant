@@ -1,13 +1,36 @@
 import { buildActivityItemQuery } from '@/queries'
 
-export const newQuestion = async (client, activity, label, answer, hint) => {
+export const newQuestion = async (
+  client,
+  subject,
+  activity,
+  { label, answer, hint, interaction = 'flashcard' }
+) => {
   const response = await client.save({
     _type: 'io.cozy.learnings.questions',
     label: label,
-    answer: answer,
-    hint: hint
+    interaction: interaction,
+    choices: answer
+      ? [
+        {
+          id: 1,
+          description: answer
+        }
+      ]
+      : [],
+    correct: answer ? [1] : [],
+    hint: hint,
+    relationships: {
+      activities: {
+        data: [activity]
+      },
+      subjects: {
+        data: [subject]
+      }
+    }
   })
 
+  await subject.questions.add(response.data)
   await activity.questions.add(response.data)
 
   if (!response.data || !response.data._id) {
@@ -17,19 +40,42 @@ export const newQuestion = async (client, activity, label, answer, hint) => {
   return response.data
 }
 
-export const newQuestionsBatch = async (client, activity, questions) => {
+export const newQuestionsBatch = async (
+  client,
+  subject,
+  activity,
+  questions
+) => {
   const questionsList = []
 
   for (const question of questions) {
     const response = await client.save({
       _type: 'io.cozy.learnings.questions',
       label: question.label,
-      answer: question.answer,
-      hint: question.hint
+      interaction: 'flashcard',
+      choices: question.answer
+        ? [
+          {
+            id: 1,
+            description: question.answer
+          }
+        ]
+        : [],
+      correct: question.answer ? [1] : [],
+      hint: question.hint,
+      relationships: {
+        activities: {
+          data: [activity]
+        },
+        subjects: {
+          data: [subject]
+        }
+      }
     })
     questionsList.push(response.data)
   }
 
+  await subject.questions.add(questionsList)
   await activity.questions.add(questionsList)
 
   if (!questionsList || questionsList.length === 0) {

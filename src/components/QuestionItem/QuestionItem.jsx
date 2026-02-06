@@ -14,6 +14,7 @@ import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryA
 import ListItemText from 'cozy-ui/transpiled/react/ListItemText'
 import Menu from 'cozy-ui/transpiled/react/Menu'
 import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
+import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import TableItemText from '@/components/TableItem/TableItemText'
 import { renameQuestion } from '@/queries/actions/questions/renameQuestion'
@@ -24,6 +25,7 @@ const QuestionItem = ({
   autoFocus,
   selectedQuestions,
   setSelectedQuestions,
+  detachQuestion,
   deleteQuestion,
   onOpen,
   isOpened
@@ -93,7 +95,10 @@ const QuestionItem = ({
           onClick={e => e.stopPropagation()}
         />
       </TableItemText>
-      <TableItemText value={question.answer ?? ''} type="secondary" />
+      <TableItemText
+        value={question.choices[0].description ?? ''}
+        type="secondary"
+      />
       <TableItemText value={question.hint ?? ''} type="secondary" />
       <ListItemSecondaryAction className="u-pr-1">
         <IconButton
@@ -120,12 +125,26 @@ const QuestionItem = ({
           keepMounted
           onClose={() => setMenuShown(false)}
         >
-          <MenuItem onClick={() => deleteQuestion()}>
-            <ListItemIcon>
-              <Icon icon={TrashIcon} />
-            </ListItemIcon>
-            <ListItemText primary={t('delete')} />
-          </MenuItem>
+          {detachQuestion && (
+            <MenuItem onClick={() => detachQuestion()}>
+              <ListItemIcon>
+                <Icon icon={TrashIcon} />
+              </ListItemIcon>
+              <ListItemText primary={t('detach')} />
+            </MenuItem>
+          )}
+          {deleteQuestion && (
+            <MenuItem onClick={() => deleteQuestion()}>
+              <ListItemIcon>
+                <Typography color="error">
+                  <Icon icon={TrashIcon} />
+                </Typography>
+              </ListItemIcon>
+              <ListItemText
+                primary={<Typography color="error">{t('delete')}</Typography>}
+              />
+            </MenuItem>
+          )}
         </Menu>
       </ListItemSecondaryAction>
     </ListItem>

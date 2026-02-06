@@ -107,6 +107,7 @@ const ItemView = () => {
     setSelectedQuestions,
     createQuestion,
     deleteQuestion,
+    detachQuestion,
     actions,
     newQuestionId,
     resetNewQuestionId
@@ -159,6 +160,7 @@ const ItemView = () => {
           isLoading={isLoading}
           actions={actions}
           newQuestionId={newQuestionId}
+          onDetachQuestion={detachQuestion}
           onDeleteQuestion={deleteQuestion}
           generateQuestions={() => setCustomizeGenerationDialog(true)}
         />

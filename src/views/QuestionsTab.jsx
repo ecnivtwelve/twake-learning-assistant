@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useI18n } from 'twake-i18n'
 
+import { useClient, useQuery } from 'cozy-client'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
@@ -15,27 +16,30 @@ import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryA
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import FilterChip from '@/components/FilterChip/FilterChip'
+import QuestionItem from '@/components/QuestionItem/QuestionItem'
+import SubjectDropdown from '@/components/Subjects/SubjectDropdown'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
-import questions from '@/utils/data/questions.json'
+import { useSubject } from '@/context/SubjectContext'
+import { buildQuestionsQuery } from '@/queries'
+import { deleteQuestion } from '@/queries/actions/questions/deleteQuestion'
 
 const QuestionsTab = () => {
   const { t } = useI18n()
+  const client = useClient()
 
-  const [filters] = React.useState({
-    types: {
-      label: t('tags.types'),
-      values: []
-    },
-    sources: {
-      label: t('tags.sources'),
-      values: []
-    },
-    tags: {
-      label: t('tags.tags'),
-      values: []
-    }
-  })
+  const { selectedSubject } = useSubject()
+  const questions = selectedSubject?.questions.data || []
+
+  console.log(questions)
+
+  const [openedQuestion, setOpenedQuestion] = useState(null)
+
+  const handleOpenQuestion = question => {
+    setOpenedQuestion(question)
+  }
+
+  const [selectedQuestions, setSelectedQuestions] = useState([])
 
   return (
     <>
@@ -48,13 +52,7 @@ const QuestionsTab = () => {
           />
         }
       >
-        <Typography variant="h3">{t('questions.title')}</Typography>
-
-        <div className="u-flex u-mt-1">
-          {Object.entries(filters).map(([key, filter]) => (
-            <FilterChip key={key} label={filter.label} />
-          ))}
-        </div>
+        <SubjectDropdown />
       </TabTitle>
 
       <List>
@@ -72,32 +70,23 @@ const QuestionsTab = () => {
 
         <Divider />
 
-        {questions.map((question, i) => (
-          <React.Fragment key={i}>
-            <ListItem button>
-              <ListItemIcon className="u-w-2-half">
-                <Icon icon={HelpIcon} size={22} />
-              </ListItemIcon>
-              <TableItemText
-                value={question.question}
-                secondary={question.reponse}
-                type="primary"
+        {questions &&
+          questions.map((question, i) => (
+            <React.Fragment key={i}>
+              <QuestionItem
+                question={question}
+                autoFocus={false}
+                isOpened={false}
+                onOpen={() => { }}
+                selectedQuestions={selectedQuestions}
+                setSelectedQuestions={setSelectedQuestions}
+                deleteQuestion={() => {
+                  deleteQuestion(client, question)
+                }}
               />
-              <TableItemText value={question.source} type="secondary" />
-              <TableItemText value={question.tags} type="chip" />
-              <TableItemText
-                value={Math.round(question.score * 100)}
-                type="colouredValue"
-              />
-              <ListItemSecondaryAction className="u-pr-1">
-                <IconButton>
-                  <Icon icon={DotsIcon} />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-          </React.Fragment>
-        ))}
+              <Divider />
+            </React.Fragment>
+          ))}
       </List>
     </>
   )
