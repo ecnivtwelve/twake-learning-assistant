@@ -11,6 +11,9 @@ export const newSubject = async (client, title) => {
       },
       sources: {
         data: []
+      },
+      questions: {
+        data: []
       }
     }
   })

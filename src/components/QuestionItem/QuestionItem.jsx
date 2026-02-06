@@ -93,7 +93,10 @@ const QuestionItem = ({
           onClick={e => e.stopPropagation()}
         />
       </TableItemText>
-      <TableItemText value={question.answer ?? ''} type="secondary" />
+      <TableItemText
+        value={question.choices[0].description ?? ''}
+        type="secondary"
+      />
       <TableItemText value={question.hint ?? ''} type="secondary" />
       <ListItemSecondaryAction className="u-pr-1">
         <IconButton

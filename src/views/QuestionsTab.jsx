@@ -20,15 +20,13 @@ import SubjectDropdown from '@/components/Subjects/SubjectDropdown'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
 import { buildQuestionsQuery } from '@/queries'
+import { useSubject } from '@/context/SubjectContext'
 
 const QuestionsTab = () => {
   const { t } = useI18n()
 
-  const questionsQuery = buildQuestionsQuery()
-  const { data: questions, fetchStatus } = useQuery(
-    questionsQuery.definition,
-    questionsQuery.options
-  )
+  const { selectedSubject } = useSubject()
+  const questions = selectedSubject?.questions.data || []
 
   console.log(questions)
 
@@ -70,7 +68,7 @@ const QuestionsTab = () => {
                 </ListItemIcon>
                 <TableItemText
                   value={question.label}
-                  secondary={question.answer}
+                  secondary={question.choices[0].description}
                   type="primary"
                 />
                 <TableItemText

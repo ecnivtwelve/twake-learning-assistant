@@ -8,17 +8,19 @@ import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
 import { detachQuestions } from '@/queries/actions/questions/detachQuestion'
 import { newQuestion } from '@/queries/actions/questions/newQuestion'
+import { useSubject } from '@/context/SubjectContext'
 
 export const useQuestionActions = activity => {
   const { t } = useI18n()
   const client = useClient()
   const { showAlert } = useAlert()
+  const { selectedSubject: subject } = useSubject()
 
   const [selectedQuestions, setSelectedQuestions] = useState([])
   const [newQuestionId, setNewQuestionId] = useState(null)
 
   const createQuestion = () => {
-    newQuestion(client, activity, '')
+    newQuestion(client, subject, activity, '')
       .then(question => {
         setNewQuestionId(question._id)
         return showAlert({
