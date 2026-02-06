@@ -1,6 +1,7 @@
 import React from 'react'
 import { useI18n } from 'twake-i18n'
 
+import { useQuery } from 'cozy-client'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
@@ -15,27 +16,21 @@ import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryA
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import FilterChip from '@/components/FilterChip/FilterChip'
+import SubjectDropdown from '@/components/Subjects/SubjectDropdown'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
-import questions from '@/utils/data/questions.json'
+import { buildQuestionsQuery } from '@/queries'
 
 const QuestionsTab = () => {
   const { t } = useI18n()
 
-  const [filters] = React.useState({
-    types: {
-      label: t('tags.types'),
-      values: []
-    },
-    sources: {
-      label: t('tags.sources'),
-      values: []
-    },
-    tags: {
-      label: t('tags.tags'),
-      values: []
-    }
-  })
+  const questionsQuery = buildQuestionsQuery()
+  const { data: questions, fetchStatus } = useQuery(
+    questionsQuery.definition,
+    questionsQuery.options
+  )
+
+  console.log(questions)
 
   return (
     <>
@@ -48,13 +43,7 @@ const QuestionsTab = () => {
           />
         }
       >
-        <Typography variant="h3">{t('questions.title')}</Typography>
-
-        <div className="u-flex u-mt-1">
-          {Object.entries(filters).map(([key, filter]) => (
-            <FilterChip key={key} label={filter.label} />
-          ))}
-        </div>
+        <SubjectDropdown />
       </TabTitle>
 
       <List>
@@ -72,32 +61,33 @@ const QuestionsTab = () => {
 
         <Divider />
 
-        {questions.map((question, i) => (
-          <React.Fragment key={i}>
-            <ListItem button>
-              <ListItemIcon className="u-w-2-half">
-                <Icon icon={HelpIcon} size={22} />
-              </ListItemIcon>
-              <TableItemText
-                value={question.question}
-                secondary={question.reponse}
-                type="primary"
-              />
-              <TableItemText value={question.source} type="secondary" />
-              <TableItemText value={question.tags} type="chip" />
-              <TableItemText
-                value={Math.round(question.score * 100)}
-                type="colouredValue"
-              />
-              <ListItemSecondaryAction className="u-pr-1">
-                <IconButton>
-                  <Icon icon={DotsIcon} />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider />
-          </React.Fragment>
-        ))}
+        {questions &&
+          questions.map((question, i) => (
+            <React.Fragment key={i}>
+              <ListItem button>
+                <ListItemIcon className="u-w-2-half">
+                  <Icon icon={HelpIcon} size={22} />
+                </ListItemIcon>
+                <TableItemText
+                  value={question.label}
+                  secondary={question.answer}
+                  type="primary"
+                />
+                <TableItemText
+                  value={question.cozyMetadata.updatedAT}
+                  type="secondary"
+                />
+                <TableItemText value={[]} type="chip" />
+                <TableItemText value={0} type="colouredValue" />
+                <ListItemSecondaryAction className="u-pr-1">
+                  <IconButton>
+                    <Icon icon={DotsIcon} />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+              <Divider />
+            </React.Fragment>
+          ))}
       </List>
     </>
   )
