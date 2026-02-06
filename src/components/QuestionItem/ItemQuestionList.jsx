@@ -29,6 +29,7 @@ const ItemQuestionList = ({
   actions,
   newQuestionId,
   onDeleteQuestion,
+  onDetachQuestion,
   generateQuestions
 }) => {
   const { t } = useI18n()
@@ -138,7 +139,8 @@ const ItemQuestionList = ({
                   setSelectedQuestions={setSelectedQuestions}
                   onOpen={q => openQuestion(q)}
                   isOpened={openedQuestion?._id === question._id}
-                  deleteQuestion={() => onDeleteQuestion(question._id)}
+                  detachQuestion={() => onDetachQuestion(question._id)}
+                  deleteQuestion={() => onDeleteQuestion(question)}
                 />
                 <Divider />
               </motion.div>

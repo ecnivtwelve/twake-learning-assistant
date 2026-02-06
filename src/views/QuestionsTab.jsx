@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useI18n } from 'twake-i18n'
 
-import { useQuery } from 'cozy-client'
+import { useClient, useQuery } from 'cozy-client'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
@@ -16,19 +16,30 @@ import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryA
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import FilterChip from '@/components/FilterChip/FilterChip'
+import QuestionItem from '@/components/QuestionItem/QuestionItem'
 import SubjectDropdown from '@/components/Subjects/SubjectDropdown'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
-import { buildQuestionsQuery } from '@/queries'
 import { useSubject } from '@/context/SubjectContext'
+import { buildQuestionsQuery } from '@/queries'
+import { deleteQuestion } from '@/queries/actions/questions/deleteQuestion'
 
 const QuestionsTab = () => {
   const { t } = useI18n()
+  const client = useClient()
 
   const { selectedSubject } = useSubject()
   const questions = selectedSubject?.questions.data || []
 
   console.log(questions)
+
+  const [openedQuestion, setOpenedQuestion] = useState(null)
+
+  const handleOpenQuestion = question => {
+    setOpenedQuestion(question)
+  }
+
+  const [selectedQuestions, setSelectedQuestions] = useState([])
 
   return (
     <>
@@ -62,27 +73,17 @@ const QuestionsTab = () => {
         {questions &&
           questions.map((question, i) => (
             <React.Fragment key={i}>
-              <ListItem button>
-                <ListItemIcon className="u-w-2-half">
-                  <Icon icon={HelpIcon} size={22} />
-                </ListItemIcon>
-                <TableItemText
-                  value={question.label}
-                  secondary={question.choices[0].description}
-                  type="primary"
-                />
-                <TableItemText
-                  value={question.cozyMetadata.updatedAT}
-                  type="secondary"
-                />
-                <TableItemText value={[]} type="chip" />
-                <TableItemText value={0} type="colouredValue" />
-                <ListItemSecondaryAction className="u-pr-1">
-                  <IconButton>
-                    <Icon icon={DotsIcon} />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
+              <QuestionItem
+                question={question}
+                autoFocus={false}
+                isOpened={false}
+                onOpen={() => { }}
+                selectedQuestions={selectedQuestions}
+                setSelectedQuestions={setSelectedQuestions}
+                deleteQuestion={() => {
+                  deleteQuestion(client, question)
+                }}
+              />
               <Divider />
             </React.Fragment>
           ))}

@@ -5,6 +5,7 @@
   "generate": "Générer",
   "add": "Ajouter",
   "cancel": "Annuler",
+  "detach": "Retirer",
   "tags": {
     "subjects": "Matières",
     "level": "Niveau",

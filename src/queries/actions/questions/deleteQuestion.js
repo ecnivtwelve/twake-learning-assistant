@@ -1,6 +1,6 @@
 export const deleteQuestion = async (client, question) => {
   const response = await client.stackClient
-    .collection('io.cozy.learnings.question')
+    .collection('io.cozy.learnings.questions')
     .destroy(question)
 
   if (!response?.data) {
@@ -11,13 +11,7 @@ export const deleteQuestion = async (client, question) => {
 }
 
 export const deleteQuestions = async (client, questions) => {
-  const response = await client.stackClient
-    .collection('io.cozy.learnings.question')
-    .destroy(questions)
-
-  if (!response?.data) {
-    throw new Error('Failed to delete questions')
-  }
-
-  return response?.data
+  questions.forEach(question => {
+    deleteQuestion(client, question)
+  })
 }
