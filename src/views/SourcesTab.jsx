@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useI18n } from 'twake-i18n'
 
 import { useClient } from 'cozy-client'
+import { FilePickerDialog } from 'cozy-filepicker'
 import log from 'cozy-logger'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Divider from 'cozy-ui/transpiled/react/Divider'
@@ -27,21 +28,42 @@ const SourcesTab = () => {
   const sources = selectedSubject?.sources.data || []
 
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false)
+  const [isFilePickerDialogOpen, setIsFileDialogOpen] = React.useState(false)
 
   return (
     <>
       <TabTitle
         trailing={
-          <Button
-            variant="primary"
-            label={t('new')}
-            startIcon={<Icon icon={PlusIcon} />}
-            onClick={() => setIsAddDialogOpen(true)}
-          />
+          <div>
+            <Button
+              variant="secondary"
+              label={t('import')}
+              startIcon={<Icon icon={PlusIcon} />}
+              onClick={() => setIsFileDialogOpen(true)}
+              className="u-mr-half"
+            />
+
+            <Button
+              variant="primary"
+              label={t('new')}
+              startIcon={<Icon icon={PlusIcon} />}
+              onClick={() => setIsAddDialogOpen(true)}
+            />
+          </div>
         }
       >
         <SubjectDropdown />
       </TabTitle>
+
+      <FilePickerDialog
+        open={isFilePickerDialogOpen}
+        onClose={() => setIsFileDialogOpen(false)}
+        onFilesSelected={files => {
+          console.log(files)
+          setIsFileDialogOpen(false)
+        }}
+        multiple={false}
+      />
 
       <AddSourceDialog
         open={isAddDialogOpen}
