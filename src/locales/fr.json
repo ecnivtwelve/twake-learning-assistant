@@ -5,6 +5,7 @@
   "generate": "Générer",
   "add": "Ajouter",
   "cancel": "Annuler",
+  "import": "Importer",
   "tags": {
     "subjects": "Matières",
     "level": "Niveau",
