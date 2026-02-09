@@ -11,10 +11,10 @@ import ItemFlashcardPreview from '@/components/QuestionItem/ItemFlashcardPreview
 import ItemGenerationDialog from '@/components/QuestionItem/ItemGenerationDialog'
 import ItemHeader from '@/components/QuestionItem/ItemHeader'
 import ItemQuestionList from '@/components/QuestionItem/ItemQuestionList'
+import { useSubject } from '@/context/SubjectContext'
 import { buildActivityItemQuery } from '@/queries'
 import { useQuestionActions } from '@/queries/hooks/useQuestionActions'
 import { useQuestionGeneration } from '@/queries/hooks/useQuestionGeneration'
-import { useSubject } from '@/context/SubjectContext'
 
 const ItemView = () => {
   const { t } = useI18n()

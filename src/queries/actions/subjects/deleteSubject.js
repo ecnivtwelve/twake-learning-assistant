@@ -1,5 +1,6 @@
-import { deletePartition } from '@/queries/rag/openrag'
 import { deleteActivity } from '../activities/deleteActivity'
+
+import { deletePartition } from '@/queries/rag/openrag'
 
 export const deleteSubject = async (
   client,

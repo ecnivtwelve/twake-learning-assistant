@@ -23,29 +23,29 @@ export const newSource = async (
 
   const savedFileMeta = cozyFile
     ? {
-      ...cozyFile,
-      metadata: {
-        ...cozyFile.metadata,
-        partition: subject.partition,
-        partitionFileId: fileId,
-        taskId: taskId,
-        rag_processed: false
+        ...cozyFile,
+        metadata: {
+          ...cozyFile.metadata,
+          partition: subject.partition,
+          partitionFileId: fileId,
+          taskId: taskId,
+          rag_processed: false
+        }
       }
-    }
     : {
-      _type: 'io.cozy.files',
-      type: 'file',
-      name: file.name,
-      contentType: file.type,
-      dirId: 'io.cozy.files.root-dir',
-      data: file,
-      metadata: {
-        partition: subject.partition,
-        partitionFileId: fileId,
-        taskId: taskId,
-        rag_processed: false
+        _type: 'io.cozy.files',
+        type: 'file',
+        name: file.name,
+        contentType: file.type,
+        dirId: 'io.cozy.files.root-dir',
+        data: file,
+        metadata: {
+          partition: subject.partition,
+          partitionFileId: fileId,
+          taskId: taskId,
+          rag_processed: false
+        }
       }
-    }
 
   const savedFile = await client.save(savedFileMeta)
 

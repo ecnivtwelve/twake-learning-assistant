@@ -12,11 +12,11 @@ export const newQuestion = async (
     interaction: interaction,
     choices: answer
       ? [
-        {
-          id: 1,
-          description: answer
-        }
-      ]
+          {
+            id: 1,
+            description: answer
+          }
+        ]
       : [],
     correct: answer ? [1] : [],
     hint: hint,
@@ -55,11 +55,11 @@ export const newQuestionsBatch = async (
       interaction: 'flashcard',
       choices: question.answer
         ? [
-          {
-            id: 1,
-            description: question.answer
-          }
-        ]
+            {
+              id: 1,
+              description: question.answer
+            }
+          ]
         : [],
       correct: question.answer ? [1] : [],
       hint: question.hint,

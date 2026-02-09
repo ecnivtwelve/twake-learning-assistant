@@ -21,7 +21,10 @@ export const SubjectProvider = ({ children }) => {
     if (currentLength > 0) {
       if (currentLength > prevLength && prevLength !== 0) {
         setSelectedSubject(data[data.length - 1])
-      } else if (!selectedSubject || !data.find(s => s._id === selectedSubject._id)) {
+      } else if (
+        !selectedSubject ||
+        !data.find(s => s._id === selectedSubject._id)
+      ) {
         setSelectedSubject(data[0])
       }
     } else {

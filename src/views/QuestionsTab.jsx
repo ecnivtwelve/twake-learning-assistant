@@ -1,27 +1,19 @@
 import React, { useState } from 'react'
 import { useI18n } from 'twake-i18n'
 
-import { useClient, useQuery } from 'cozy-client'
+import { useClient } from 'cozy-client'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
-import IconButton from 'cozy-ui/transpiled/react/IconButton'
-import DotsIcon from 'cozy-ui/transpiled/react/Icons/Dots'
-import HelpIcon from 'cozy-ui/transpiled/react/Icons/HelpOutlined'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
-import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryAction'
-import Typography from 'cozy-ui/transpiled/react/Typography'
 
-import FilterChip from '@/components/FilterChip/FilterChip'
+import PageLayout from '@/components/PageLayout/PageLayout'
 import QuestionItem from '@/components/QuestionItem/QuestionItem'
-import SubjectDropdown from '@/components/Subjects/SubjectDropdown'
-import TabTitle from '@/components/TabTitle/TabTitle'
 import TableItemText from '@/components/TableItem/TableItemText'
 import { useSubject } from '@/context/SubjectContext'
-import { buildQuestionsQuery } from '@/queries'
 import { deleteQuestion } from '@/queries/actions/questions/deleteQuestion'
 
 const QuestionsTab = () => {
@@ -31,30 +23,25 @@ const QuestionsTab = () => {
   const { selectedSubject } = useSubject()
   const questions = selectedSubject?.questions.data || []
 
-  console.log(questions)
-
-  const [openedQuestion, setOpenedQuestion] = useState(null)
-
-  const handleOpenQuestion = question => {
-    setOpenedQuestion(question)
-  }
+  // const [openedQuestion, setOpenedQuestion] = useState(null)
+  // const handleOpenQuestion = question => {
+  //   setOpenedQuestion(question)
+  // }
+  // These were unused, so commenting them out or removing them.
+  // The original code had them but didn't use them (lint error).
 
   const [selectedQuestions, setSelectedQuestions] = useState([])
 
   return (
-    <>
-      <TabTitle
-        trailing={
-          <Button
-            variant="primary"
-            label={t('new')}
-            startIcon={<Icon icon={PlusIcon} />}
-          />
-        }
-      >
-        <SubjectDropdown />
-      </TabTitle>
-
+    <PageLayout
+      trailing={
+        <Button
+          variant="primary"
+          label={t('new')}
+          startIcon={<Icon icon={PlusIcon} />}
+        />
+      }
+    >
       <List>
         <ListItem size="small" dense>
           <ListItemIcon className="u-w-2-half"></ListItemIcon>
@@ -71,13 +58,13 @@ const QuestionsTab = () => {
         <Divider />
 
         {questions &&
-          questions.map((question, i) => (
-            <React.Fragment key={i}>
+          questions.map(question => (
+            <React.Fragment key={question._id}>
               <QuestionItem
                 question={question}
                 autoFocus={false}
                 isOpened={false}
-                onOpen={() => { }}
+                onOpen={() => {}}
                 selectedQuestions={selectedQuestions}
                 setSelectedQuestions={setSelectedQuestions}
                 deleteQuestion={() => {
@@ -88,7 +75,7 @@ const QuestionsTab = () => {
             </React.Fragment>
           ))}
       </List>
-    </>
+    </PageLayout>
   )
 }
 
