@@ -13,6 +13,7 @@ import Dialog, {
 } from 'cozy-ui/transpiled/react/Dialog'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import List from 'cozy-ui/transpiled/react/List'
+import SearchBar from 'cozy-ui/transpiled/react/SearchBar'
 
 import QuestionItem from './QuestionItem'
 
@@ -20,13 +21,14 @@ import { buildQuestionsQuery } from '@/queries'
 
 const ItemImportDialog = ({ open, onClose, onSelectQuestions }) => {
   const { t } = useI18n()
+  const [searchTerm, setSearchTerm] = useState('')
 
   const questionsQuery = buildQuestionsQuery()
   const questions = useQuery(questionsQuery.definition, questionsQuery.options)
 
   const { dialogProps, dialogTitleProps, dividerProps, dialogActionsProps } =
     useCozyDialog({
-      size: 'medium',
+      size: 'large',
       open: open,
       onClose: onClose,
       disableEnforceFocus: true
@@ -34,14 +36,28 @@ const ItemImportDialog = ({ open, onClose, onSelectQuestions }) => {
 
   const [selectedQuestions, setSelectedQuestions] = useState([])
 
+  const filteredQuestions = questions.data?.filter(question =>
+    question.label?.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   return (
     <Dialog {...dialogProps}>
       <DialogCloseButton onClick={onClose} />
       <DialogTitle {...dialogTitleProps}>Importer des questions</DialogTitle>
       <Divider {...dividerProps} />
+      <div className="u-m-1">
+        <SearchBar
+          elevation={0}
+          type="search"
+          value={searchTerm}
+          onChange={ev => setSearchTerm(ev.target.value)}
+          onClear={() => setSearchTerm('')}
+        />
+      </div>
+      <Divider {...dividerProps} />
       <div className="u-h-6" style={{ overflowY: 'scroll' }}>
         <List>
-          {questions.data?.map(question => (
+          {filteredQuestions?.map(question => (
             <QuestionItem
               key={question._id}
               question={question}
