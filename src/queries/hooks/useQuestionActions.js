@@ -9,6 +9,7 @@ import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 import { deleteQuestions } from '../actions/questions/deleteQuestion'
 
 import { useSubject } from '@/context/SubjectContext'
+import { attachQuestions } from '@/queries/actions/questions/attachQuestion'
 import { detachQuestions } from '@/queries/actions/questions/detachQuestion'
 import { newQuestion } from '@/queries/actions/questions/newQuestion'
 
@@ -70,6 +71,23 @@ export const useQuestionActions = activity => {
       })
   }
 
+  const attachQuestion = questionIds => {
+    const questions = questionIds.map(id => ({ _id: id }))
+    attachQuestions(activity, questions)
+      .then(() => {
+        return showAlert({
+          message: t('questions.alerts.added'),
+          severity: 'success'
+        })
+      })
+      .catch(() => {
+        return showAlert({
+          message: t('questions.alerts.error'),
+          severity: 'error'
+        })
+      })
+  }
+
   const deleteSelected = () => ({
     name: 'deleteSelected',
     icon: TrashIcon,
@@ -91,6 +109,7 @@ export const useQuestionActions = activity => {
     createQuestion,
     deleteQuestion,
     detachQuestion,
+    attachQuestion,
     actions,
     newQuestionId,
     resetNewQuestionId: () => setNewQuestionId(null)

@@ -70,7 +70,8 @@
     "alerts": {
       "created": "Question créée",
       "error": "Erreur lors de la création de la question",
-      "deleted": "Question supprimée de l'activité"
+      "deleted": "Question supprimée de l'activité",
+      "added": "Question ajoutée à l'activité"
     },
     "generate": {
       "success": "Questions générées",

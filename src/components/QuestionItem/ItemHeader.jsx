@@ -6,6 +6,7 @@ import Button from 'cozy-ui/transpiled/react/Buttons'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
+import UploadIcon from 'cozy-ui/transpiled/react/Icons/Upload'
 
 import FilterChip from '@/components/FilterChip/FilterChip'
 import TabTitle from '@/components/TabTitle/TabTitle'
@@ -16,6 +17,7 @@ const ItemHeader = ({
   setActivityTitle,
   onRenameActivity,
   onOpenGenerationDialog,
+  onOpenImportDialog,
   onCreateQuestion,
   filters,
   isLoading
@@ -44,10 +46,18 @@ const ItemHeader = ({
         <>
           <Button
             variant="secondary"
+            label={t('import')}
+            startIcon={<Icon icon={UploadIcon} />}
+            onClick={onOpenImportDialog}
+            className="u-mr-half"
+          />
+
+          <Button
+            variant="secondary"
             label={t('generate')}
             startIcon={<Icon icon={NewIcon} />}
             onClick={onOpenGenerationDialog}
-            className="u-mr-1"
+            className="u-mr-half"
           />
 
           <Button

@@ -15,6 +15,7 @@ export const useQuestionGeneration = (activity, subject) => {
   const [isGenerating, setIsGenerating] = useState(false)
   const [customizeGenerationDialog, setCustomizeGenerationDialog] =
     useState(false)
+  const [customizeImportDialog, setCustomizeImportDialog] = useState(false)
   const [numberOfQuestions, setNumberOfQuestions] = useState(5)
 
   const ragGenerate = async (previousQuestions = []) => {
@@ -69,6 +70,8 @@ export const useQuestionGeneration = (activity, subject) => {
     ragGenerate,
     customizeGenerationDialog,
     setCustomizeGenerationDialog,
+    customizeImportDialog,
+    setCustomizeImportDialog,
     numberOfQuestions,
     setNumberOfQuestions
   }

@@ -10,6 +10,7 @@ import { renameActivity } from '../../queries/actions/activities/renameActivity'
 import ItemFlashcardPreview from '@/components/QuestionItem/ItemFlashcardPreview'
 import ItemGenerationDialog from '@/components/QuestionItem/ItemGenerationDialog'
 import ItemHeader from '@/components/QuestionItem/ItemHeader'
+import ItemImportDialog from '@/components/QuestionItem/ItemImportDialog'
 import ItemQuestionList from '@/components/QuestionItem/ItemQuestionList'
 import { useSubject } from '@/context/SubjectContext'
 import { buildActivityItemQuery } from '@/queries'
@@ -98,6 +99,8 @@ const ItemView = () => {
     ragGenerate,
     customizeGenerationDialog,
     setCustomizeGenerationDialog,
+    customizeImportDialog,
+    setCustomizeImportDialog,
     numberOfQuestions,
     setNumberOfQuestions
   } = useQuestionGeneration(activity, selectedSubject)
@@ -108,6 +111,7 @@ const ItemView = () => {
     createQuestion,
     deleteQuestion,
     detachQuestion,
+    attachQuestion,
     actions,
     newQuestionId,
     resetNewQuestionId
@@ -135,9 +139,16 @@ const ItemView = () => {
         setActivityTitle={setActivityTitle}
         onRenameActivity={handleRenameActivity}
         onOpenGenerationDialog={() => setCustomizeGenerationDialog(true)}
+        onOpenImportDialog={() => setCustomizeImportDialog(true)}
         onCreateQuestion={createQuestion}
         filters={filters}
         isLoading={isLoading}
+      />
+
+      <ItemImportDialog
+        open={customizeImportDialog}
+        onClose={() => setCustomizeImportDialog(false)}
+        onSelectQuestions={attachQuestion}
       />
 
       <ItemGenerationDialog
