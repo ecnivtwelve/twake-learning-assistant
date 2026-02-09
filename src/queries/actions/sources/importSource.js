@@ -1,3 +1,5 @@
+import { safeAddRelationship } from '../utils'
+
 import {
   deleteFile,
   deleteTask,
@@ -72,11 +74,13 @@ export const newSource = async (
     throw new Error('Failed to create source')
   }
 
-  await subject.sources.add(source.data).catch(async error => {
+  try {
+    await safeAddRelationship(client, subject, 'sources', source.data)
+  } catch (error) {
     await deleteTask(taskId)
     await client.destroy(source)
     throw new Error('Failed to add source to subject: ' + error.message)
-  })
+  }
 
   return taskId
 }

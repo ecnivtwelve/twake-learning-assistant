@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo
+} from 'react'
 
 import { RealTimeQueries, useQuery } from 'cozy-client'
 
@@ -7,13 +13,17 @@ import { buildSubjectsQuery } from '@/queries'
 const SubjectContext = createContext()
 
 export const SubjectProvider = ({ children }) => {
-  const [selectedSubject, setSelectedSubject] = useState(null)
+  const [selectedSubjectId, setSelectedSubjectId] = useState(null)
 
   const subjectsQuery = buildSubjectsQuery()
   const subjects = useQuery(subjectsQuery.definition, subjectsQuery.options)
 
   const [prevLength, setPrevLength] = useState(0)
   const data = subjects.data || []
+
+  // TODO : filtrer dès la query plutôt qu'ici
+  const selectedSubject =
+    data.find(s => s._id === selectedSubjectId) || null
 
   console.log(data)
 
@@ -22,23 +32,23 @@ export const SubjectProvider = ({ children }) => {
 
     if (currentLength > 0) {
       if (currentLength > prevLength && prevLength !== 0) {
-        setSelectedSubject(data[data.length - 1])
+        setSelectedSubjectId(data[data.length - 1]._id)
       } else if (
-        !selectedSubject ||
-        !data.find(s => s._id === selectedSubject._id)
+        !selectedSubjectId ||
+        !data.find(s => s._id === selectedSubjectId)
       ) {
-        setSelectedSubject(data[0])
+        setSelectedSubjectId(data[0]._id)
       }
     } else {
-      setSelectedSubject(null)
+      setSelectedSubjectId(null)
     }
 
     setPrevLength(currentLength)
-  }, [data, selectedSubject, prevLength])
+  }, [data, selectedSubjectId, prevLength])
 
   const value = {
     selectedSubject,
-    setSelectedSubject,
+    setSelectedSubject: subject => setSelectedSubjectId(subject?._id || null),
     subjects
   }
 

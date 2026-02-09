@@ -1,3 +1,5 @@
+import { safeAddRelationship } from '../utils'
+
 export const newActivity = async (client, subject) => {
   const response = await client.create('io.cozy.learnings', {
     title: '',
@@ -10,7 +12,7 @@ export const newActivity = async (client, subject) => {
     }
   })
 
-  subject.activities.add(response.data)
+  await safeAddRelationship(client, subject, 'activities', response.data)
 
   if (!response?.data) {
     throw new Error('Failed to create activity')

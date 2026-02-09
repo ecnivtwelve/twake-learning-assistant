@@ -1,43 +1,15 @@
-import { buildActivityItemQuery } from '@/queries'
+import { safeAddRelationship } from '../utils'
 
 export const newQuestion = async (
   client,
   subject,
   activity,
-  { label, answer, hint, interaction = 'flashcard' }
+  { label, answer, hint }
 ) => {
-  const response = await client.save({
-    _type: 'io.cozy.learnings.questions',
-    label: label,
-    interaction: interaction,
-    choices: answer
-      ? [
-        {
-          id: 1,
-          description: answer
-        }
-      ]
-      : [],
-    correct: answer ? [1] : [],
-    hint: hint,
-    relationships: {
-      activities: {
-        data: [activity]
-      },
-      subjects: {
-        data: [subject]
-      }
-    }
-  })
-
-  await subject.questions.add([response.data])
-  await activity.questions.add([response.data])
-
-  if (!response.data || !response.data._id) {
-    throw new Error('Failed to create question')
-  }
-
-  return response.data
+  const newList = await newQuestionsBatch(client, subject, activity, [
+    { label, answer, hint }
+  ])
+  return newList[0]
 }
 
 export const newQuestionsBatch = async (
@@ -75,8 +47,8 @@ export const newQuestionsBatch = async (
     questionsList.push(response.data)
   }
 
-  await activity.questions.add(questionsList)
-  await subject.questions.add(questionsList)
+  await safeAddRelationship(client, activity, 'questions', questionsList)
+  await safeAddRelationship(client, subject, 'questions', questionsList)
 
   if (!questionsList || questionsList.length === 0) {
     throw new Error('Failed to create questions')
