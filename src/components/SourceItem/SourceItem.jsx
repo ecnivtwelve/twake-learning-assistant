@@ -31,7 +31,8 @@ const SourceItem = ({ source, deleteSource }) => {
     <>
       <ListItem key={source._id}>
         <ListItemIcon className="u-w-2-half">
-          {!processed ? (
+          {!processed &&
+            (source.metadata?.taskId || source.attributes?.metadata?.taskId) ? (
             <InfosBadge badgeContent={<CircularProgress size={16} />}>
               <Icon size={32} icon={FiletypeTextIcon} />
             </InfosBadge>

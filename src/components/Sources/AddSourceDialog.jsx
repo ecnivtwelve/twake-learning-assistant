@@ -46,6 +46,8 @@ const AddSourceDialog = ({ open, onClose, subject }) => {
       disableEnforceFocus: true
     })
 
+  const [error, setError] = useState(null)
+
   const handleFileChange = e => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0]
@@ -60,13 +62,15 @@ const AddSourceDialog = ({ open, onClose, subject }) => {
     if (!file || !description || !author) return
 
     setUploading(true)
-    onClose()
+    setError(null)
     try {
-      const task = await newSource(client, subject, file, description, author)
+      await newSource(client, subject, file, description, author)
+      onClose()
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
       log.error(error)
+      setError(error)
     } finally {
       setUploading(false)
     }
@@ -81,6 +85,11 @@ const AddSourceDialog = ({ open, onClose, subject }) => {
       <Divider {...dividerProps} />
       <DialogContent>
         <div className="u-flex u-flex-column u-g-1 u-mb-1-half">
+          {error && (
+            <Typography variant="body1" color="error" className="u-mb-1">
+              {t('sources.add.error')}
+            </Typography>
+          )}
           <div className="u-flex u-flex-items-center">
             <Button
               variant="secondary"

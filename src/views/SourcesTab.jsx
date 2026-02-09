@@ -10,6 +10,7 @@ import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
+import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
 import PageLayout from '@/components/PageLayout/PageLayout'
 import SourceItem from '@/components/SourceItem/SourceItem'
@@ -22,6 +23,7 @@ import { deleteSource } from '@/queries/actions/sources/deleteSource'
 const SourcesTab = () => {
   const { t } = useI18n()
   const client = useClient()
+  const { showAlert } = useAlert()
 
   const { selectedSubject } = useSubject()
   const sources = selectedSubject?.sources.data || []
@@ -56,9 +58,27 @@ const SourcesTab = () => {
         <FilePickerDialog
           open={isFilePickerDialogOpen}
           onClose={() => setIsFileDialogOpen(false)}
-          onFilesSelected={files => {
-            handleFilesSelected(files)
+          onFilesSelected={async files => {
             setIsFileDialogOpen(false)
+            showAlert({
+              message: t('sources.import.loading'),
+              severity: 'info',
+              variant: 'filled'
+            })
+            try {
+              await handleFilesSelected(files)
+              showAlert({
+                message: t('sources.import.success'),
+                severity: 'success',
+                variant: 'filled'
+              })
+            } catch (error) {
+              showAlert({
+                message: t('sources.import.error'),
+                severity: 'error',
+                variant: 'filled'
+              })
+            }
           }}
           multiple={false}
         />

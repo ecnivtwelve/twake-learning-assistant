@@ -74,13 +74,12 @@ export async function fetchPartitionTask(taskId) {
 }
 
 function makeSystemPrompt(subject, age, topic, number, previousQuestions) {
-  const prompt = `Tu es un expert en ingénierie pédagogique. Matière : ${subject}. Niveau : ${age}. Sujet : ${topic}. Génère exactement ${number} flashcards à partir des documents fournis. ${
-    previousQuestions.length > 0
+  const prompt = `Tu es un expert en ingénierie pédagogique. Matière : ${subject}. Niveau : ${age}. Sujet : ${topic}. Génère exactement ${number} flashcards à partir des documents fournis. ${previousQuestions.length > 0
       ? `Les flashcards suivantes sont déjà présentes : "${previousQuestions.join(
-          ', '
-        )}"`
+        ', '
+      )}"`
       : ''
-  } N'ajoute pas de flashcards qui sont déjà présentes. Assure-toi que la question et la réponse sont cohérentes, claires, et compréhensibles.`
+    } N'ajoute pas de flashcards qui sont déjà présentes. Assure-toi que la question et la réponse sont cohérentes, claires, et compréhensibles.`
 
   return prompt
 }
@@ -195,16 +194,24 @@ export async function uploadFile(partition, file, author, description, fileId) {
   myHeaders.append('Accept', 'application/json')
   myHeaders.append('Authorization', 'Bearer ' + AUTH_TOKEN)
 
+  let filename = file.name
+  let mimetype = file.type
+
+  if (filename.endsWith('.docs-note') || filename.endsWith('.cozy-note')) {
+    filename = filename.replace(/\.(docs-note|cozy-note)$/, '.md')
+    mimetype = 'text/markdown'
+  }
+
   const formdata = new FormData()
   formdata.append(
     'metadata',
     JSON.stringify({
-      mimetype: file.type,
+      mimetype: mimetype,
       author: author,
       description: description
     })
   )
-  formdata.append('file', file, file.name)
+  formdata.append('file', file, filename)
 
   const requestOptions = {
     method: 'POST',

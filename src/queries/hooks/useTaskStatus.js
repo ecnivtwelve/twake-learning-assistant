@@ -6,19 +6,19 @@ import { fetchPartitionTask } from '@/queries/rag/openrag'
 
 export const useTaskStatus = source => {
   const client = useClient()
-  const taskId = source.metadata && source.metadata.taskId
-  const [isCompleted, setIsCompleted] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const metadata = source.metadata || source.attributes?.metadata
+  const taskId = metadata && metadata.taskId
+  const isRagProcessed = metadata && metadata.rag_processed
+
+  const [isCompleted, setIsCompleted] = useState(isRagProcessed)
   const timerRef = useRef(null)
 
   useEffect(() => {
-    if (!taskId || isCompleted) return
-    if (source.metadata.rag_processed) return
+    if (!taskId || isCompleted || isRagProcessed) return
 
     const checkStatus = async () => {
       try {
         const task = await fetchPartitionTask(taskId)
-        setIsLoading(false)
         if (task.task_state === 'COMPLETED') {
           setIsCompleted(true)
           await client.save({
@@ -27,7 +27,8 @@ export const useTaskStatus = source => {
             _rev: source._rev,
             metadata: {
               taskId: null,
-              processed: true
+              processed: true,
+              rag_processed: true
             }
           })
         } else {
@@ -43,8 +44,7 @@ export const useTaskStatus = source => {
 
     // Cleanup timer on unmount
     return () => clearTimeout(timerRef.current)
-  }, [taskId, isCompleted])
+  }, [taskId, isCompleted, isRagProcessed, client, source._id, source._rev])
 
-  if (isLoading) return true
   return isCompleted
 }

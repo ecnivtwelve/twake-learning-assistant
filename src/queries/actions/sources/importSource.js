@@ -10,6 +10,10 @@ export const newSource = async (
 ) => {
   const fileId = await generateFileHash(file)
 
+  if (!fileId) {
+    throw new Error('FileId not found')
+  }
+
   console.log(subject)
 
   const result = await uploadFile(
@@ -21,33 +25,37 @@ export const newSource = async (
   )
   const taskId = result.task_status_url.split('/').pop()
 
-  const savedFileMeta = cozyFile
-    ? {
-        ...cozyFile,
-        metadata: {
-          ...cozyFile.metadata,
-          partition: subject.partition,
-          partitionFileId: fileId,
-          taskId: taskId,
-          rag_processed: false
-        }
-      }
-    : {
-        _type: 'io.cozy.files',
-        type: 'file',
-        name: file.name,
-        contentType: file.type,
-        dirId: 'io.cozy.files.root-dir',
-        data: file,
-        metadata: {
-          partition: subject.partition,
-          partitionFileId: fileId,
-          taskId: taskId,
-          rag_processed: false
-        }
-      }
+  if (!taskId) {
+    throw new Error('TaskId not found')
+  }
 
-  const savedFile = await client.save(savedFileMeta)
+  const savedFile = cozyFile
+    ? await client.save({
+      ...cozyFile,
+      _id: cozyFile._id,
+      _rev: cozyFile._rev,
+      metadata: {
+        ...cozyFile.metadata,
+        partition: subject.partition,
+        partitionFileId: fileId,
+        taskId: taskId,
+        rag_processed: false
+      }
+    })
+    : await client.save({
+      _type: 'io.cozy.files',
+      type: 'file',
+      name: file.name,
+      contentType: file.type,
+      dirId: 'io.cozy.files.root-dir',
+      data: file,
+      metadata: {
+        partition: subject.partition,
+        partitionFileId: fileId,
+        taskId: taskId,
+        rag_processed: false
+      }
+    })
 
   await subject.sources.add(savedFile.data)
 
