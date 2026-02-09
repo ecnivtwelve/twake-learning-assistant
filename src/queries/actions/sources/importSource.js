@@ -1,4 +1,9 @@
-import { generateFileHash, uploadFile } from '@/queries/rag/openrag'
+import {
+  deleteFile,
+  deleteTask,
+  generateFileHash,
+  uploadFile
+} from '@/queries/rag/openrag'
 
 export const newSource = async (
   client,
@@ -14,10 +19,10 @@ export const newSource = async (
     throw new Error('FileId not found')
   }
 
-  console.log(subject)
+  const partitionId = subject.partition || 'subject-' + subject._id
 
   const result = await uploadFile(
-    subject.partition,
+    partitionId,
     file,
     author,
     description,
@@ -29,35 +34,49 @@ export const newSource = async (
     throw new Error('TaskId not found')
   }
 
-  const savedFile = cozyFile
-    ? await client.save({
-      ...cozyFile,
-      _id: cozyFile._id,
-      _rev: cozyFile._rev,
-      metadata: {
-        ...cozyFile.metadata,
-        partition: subject.partition,
-        partitionFileId: fileId,
-        taskId: taskId,
-        rag_processed: false
-      }
-    })
-    : await client.save({
-      _type: 'io.cozy.files',
-      type: 'file',
-      name: file.name,
-      contentType: file.type,
-      dirId: 'io.cozy.files.root-dir',
-      data: file,
-      metadata: {
-        partition: subject.partition,
-        partitionFileId: fileId,
-        taskId: taskId,
-        rag_processed: false
-      }
-    })
+  const fileDoc = cozyFile
+    ? cozyFile
+    : (
+      await client.save({
+        _type: 'io.cozy.files',
+        type: 'file',
+        name: file.name,
+        contentType: file.type,
+        dirId: 'io.cozy.files.root-dir',
+        data: file
+      })
+    ).data
 
-  await subject.sources.add(savedFile.data)
+  const source = await client.save({
+    _type: 'io.cozy.learnings.sources',
+    name: file.name,
+    description: description,
+    author: author,
+    partition: partitionId,
+    partitionFileId: fileId,
+    taskId: taskId,
+    rag_processed: false,
+    uploadedAt: new Date().toISOString(),
+    relationships: {
+      file: {
+        data: {
+          _id: fileDoc._id,
+          _type: 'io.cozy.files'
+        }
+      }
+    }
+  })
+
+  if (!source.data) {
+    await deleteTask(taskId)
+    throw new Error('Failed to create source')
+  }
+
+  await subject.sources.add(source.data).catch(async error => {
+    await deleteTask(taskId)
+    await client.destroy(source)
+    throw new Error('Failed to add source to subject: ' + error.message)
+  })
 
   return taskId
 }

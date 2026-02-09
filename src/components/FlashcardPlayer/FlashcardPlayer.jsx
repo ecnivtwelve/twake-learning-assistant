@@ -48,7 +48,7 @@ export default function FlashcardPlayer({ flashcard }) {
         ) : (
           <>
             <Typography variant="h3" align="center" color="white">
-              {choices[0].description}
+              {choices[0]?.description}
             </Typography>
           </>
         )}

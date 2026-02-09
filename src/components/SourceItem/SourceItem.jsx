@@ -32,7 +32,9 @@ const SourceItem = ({ source, deleteSource }) => {
       <ListItem key={source._id}>
         <ListItemIcon className="u-w-2-half">
           {!processed &&
-            (source.metadata?.taskId || source.attributes?.metadata?.taskId) ? (
+            (source.taskId ||
+              source.metadata?.taskId ||
+              source.attributes?.metadata?.taskId) ? (
             <InfosBadge badgeContent={<CircularProgress size={16} />}>
               <Icon size={32} icon={FiletypeTextIcon} />
             </InfosBadge>
@@ -42,12 +44,17 @@ const SourceItem = ({ source, deleteSource }) => {
         </ListItemIcon>
         <TableItemText value={source.name} type="primary" />
         <TableItemText
-          value={source.metadata?.partitionFileId || ''}
+          value={
+            source.partitionFileId || source.metadata?.partitionFileId || ''
+          }
           type="secondary"
         />
-        <TableItemText value={source.cozyMetadata.updatedAt} type="secondary" />
         <TableItemText
-          value={source.metadata?.partition || ''}
+          value={source.cozyMetadata?.updatedAt || source.meta?.updatedAt || ''}
+          type="secondary"
+        />
+        <TableItemText
+          value={source.partition || source.metadata?.partition || ''}
           type="secondary"
         />
         <ListItemSecondaryAction className="u-pr-1">

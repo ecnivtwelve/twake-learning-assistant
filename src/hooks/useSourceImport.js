@@ -2,11 +2,13 @@ import { useState } from 'react'
 
 import { fetchBlobFileById } from 'cozy-client/dist/models/file'
 
+import { useSubject } from '@/context/SubjectContext'
 import { newSource } from '@/queries/actions/sources/importSource'
 
-export const useSourceImport = (client, selectedSubject) => {
+export const useSourceImport = client => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const { selectedSubject } = useSubject()
 
   const handleFilesSelected = async files => {
     if (files && files.length > 0) {

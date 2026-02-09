@@ -23,7 +23,7 @@ export const useQuestionActions = activity => {
   const [newQuestionId, setNewQuestionId] = useState(null)
 
   const createQuestion = () => {
-    newQuestion(client, subject, activity, '')
+    newQuestion(client, subject, activity, { label: '' })
       .then(question => {
         setNewQuestionId(question._id)
         return showAlert({

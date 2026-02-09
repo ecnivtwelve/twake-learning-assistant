@@ -20,15 +20,18 @@ import FileIcon from 'cozy-ui/transpiled/react/Icons/File'
 import TextField from 'cozy-ui/transpiled/react/TextField'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
+import { useSubject } from '@/context/SubjectContext'
 import { newSource } from '@/queries/actions/sources/importSource'
 
-const AddSourceDialog = ({ open, onClose, subject }) => {
+const AddSourceDialog = ({ open, onClose }) => {
   const { t } = useI18n()
   const client = useClient()
   const [file, setFile] = useState(null)
   const [description, setDescription] = useState('')
   const [author, setAuthor] = useState('')
   const [uploading, setUploading] = useState(false)
+  const { selectedSubject } = useSubject()
+  const subject = selectedSubject || {}
 
   React.useEffect(() => {
     if (open) {

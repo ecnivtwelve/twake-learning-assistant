@@ -15,6 +15,8 @@ export const SubjectProvider = ({ children }) => {
   const [prevLength, setPrevLength] = useState(0)
   const data = subjects.data || []
 
+  console.log(data)
+
   useEffect(() => {
     const currentLength = data.length
 
@@ -45,6 +47,7 @@ export const SubjectProvider = ({ children }) => {
       <RealTimeQueries doctype="io.cozy.learnings" />
       <RealTimeQueries doctype="io.cozy.learnings.subjects" />
       <RealTimeQueries doctype="io.cozy.learnings.questions" />
+      <RealTimeQueries doctype="io.cozy.learnings.sources" />
       <RealTimeQueries doctype="io.cozy.files" />
       <SubjectContext.Provider value={value}>
         {children}

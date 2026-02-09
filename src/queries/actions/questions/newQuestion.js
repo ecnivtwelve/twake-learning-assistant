@@ -12,11 +12,11 @@ export const newQuestion = async (
     interaction: interaction,
     choices: answer
       ? [
-          {
-            id: 1,
-            description: answer
-          }
-        ]
+        {
+          id: 1,
+          description: answer
+        }
+      ]
       : [],
     correct: answer ? [1] : [],
     hint: hint,
@@ -30,8 +30,8 @@ export const newQuestion = async (
     }
   })
 
-  await subject.questions.add(response.data)
-  await activity.questions.add(response.data)
+  await subject.questions.add([response.data])
+  await activity.questions.add([response.data])
 
   if (!response.data || !response.data._id) {
     throw new Error('Failed to create question')
@@ -55,11 +55,11 @@ export const newQuestionsBatch = async (
       interaction: 'flashcard',
       choices: question.answer
         ? [
-            {
-              id: 1,
-              description: question.answer
-            }
-          ]
+          {
+            id: 1,
+            description: question.answer
+          }
+        ]
         : [],
       correct: question.answer ? [1] : [],
       hint: question.hint,

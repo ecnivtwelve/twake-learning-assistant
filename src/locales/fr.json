@@ -92,6 +92,11 @@
       "serializing": "Traitement",
       "completed": "Terminé",
       "failed": "Échoué"
+    },
+    "import": {
+      "loading": "Chargement du fichier...",
+      "error": "Erreur lors de l'importation",
+      "success": "Source importée"
     }
   },
   "insights": {

@@ -20,12 +20,21 @@ export default {
         type: 'has-many'
       },
       sources: {
-        doctype: 'io.cozy.files',
+        doctype: 'io.cozy.learnings.sources',
         type: 'has-many'
       },
       questions: {
         doctype: 'io.cozy.learnings.questions',
         type: 'has-many'
+      }
+    }
+  },
+  sources: {
+    doctype: 'io.cozy.learnings.sources',
+    relationships: {
+      file: {
+        doctype: 'io.cozy.files',
+        type: 'has-one'
       }
     }
   },

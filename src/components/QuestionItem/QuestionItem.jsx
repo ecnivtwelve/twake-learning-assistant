@@ -96,7 +96,7 @@ const QuestionItem = ({
         />
       </TableItemText>
       <TableItemText
-        value={question.choices[0].description ?? ''}
+        value={question.choices[0]?.description ?? ''}
         type="secondary"
       />
       <TableItemText value={question.hint ?? ''} type="secondary" />

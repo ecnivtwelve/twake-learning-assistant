@@ -32,6 +32,20 @@ export async function deletePartition(partition) {
   return fetch(`${OPENRAG_URL}/partition/${partition}`, requestOptions)
 }
 
+export async function deleteTask(taskId) {
+  const myHeaders = new Headers()
+  myHeaders.append('Accept', 'application/json')
+  myHeaders.append('Authorization', 'Bearer ' + AUTH_TOKEN)
+
+  const requestOptions = {
+    method: 'DELETE',
+    headers: myHeaders,
+    redirect: 'follow'
+  }
+
+  return fetch(`${OPENRAG_URL}/indexer/task/${taskId}`, requestOptions)
+}
+
 export async function fetchPartition(partition) {
   const myHeaders = new Headers()
   myHeaders.append('Accept', 'application/json')
@@ -75,10 +89,10 @@ export async function fetchPartitionTask(taskId) {
 
 function makeSystemPrompt(subject, age, topic, number, previousQuestions) {
   const prompt = `Tu es un expert en ingénierie pédagogique. Matière : ${subject}. Niveau : ${age}. Sujet : ${topic}. Génère exactement ${number} flashcards à partir des documents fournis. ${previousQuestions.length > 0
-      ? `Les flashcards suivantes sont déjà présentes : "${previousQuestions.join(
-        ', '
-      )}"`
-      : ''
+    ? `Les flashcards suivantes sont déjà présentes : "${previousQuestions.join(
+      ', '
+    )}"`
+    : ''
     } N'ajoute pas de flashcards qui sont déjà présentes. Assure-toi que la question et la réponse sont cohérentes, claires, et compréhensibles.`
 
   return prompt

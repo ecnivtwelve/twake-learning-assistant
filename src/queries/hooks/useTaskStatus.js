@@ -1,17 +1,26 @@
 import { useState, useEffect, useRef } from 'react'
+import { useI18n } from 'twake-i18n'
 
 import { useClient } from 'cozy-client'
+import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
-import { fetchPartitionTask } from '@/queries/rag/openrag'
+import { deleteSource } from '../actions/sources/deleteSource'
+
+import { deleteTask, fetchPartitionTask } from '@/queries/rag/openrag'
 
 export const useTaskStatus = source => {
   const client = useClient()
-  const metadata = source.metadata || source.attributes?.metadata
-  const taskId = metadata && metadata.taskId
-  const isRagProcessed = metadata && metadata.rag_processed
+  const { t } = useI18n
+  const taskId = source.taskId || source.metadata?.taskId
+  // Check top-level rag_processed first, then metadata
+  const isRagProcessed =
+    source.rag_processed !== undefined
+      ? source.rag_processed
+      : source.metadata?.rag_processed
 
   const [isCompleted, setIsCompleted] = useState(isRagProcessed)
   const timerRef = useRef(null)
+  const { showAlert } = useAlert()
 
   useEffect(() => {
     if (!taskId || isCompleted || isRagProcessed) return
@@ -19,17 +28,36 @@ export const useTaskStatus = source => {
     const checkStatus = async () => {
       try {
         const task = await fetchPartitionTask(taskId)
+        console.log('task', task)
         if (task.task_state === 'COMPLETED') {
           setIsCompleted(true)
-          await client.save({
-            _id: source._id,
-            _type: 'io.cozy.files',
-            _rev: source._rev,
-            metadata: {
-              taskId: null,
-              processed: true,
-              rag_processed: true
-            }
+          if (source._type === 'io.cozy.learnings.sources') {
+            await client.save({
+              ...source,
+              rag_processed: true,
+              processed: true // legacy?
+            })
+          } else {
+            // Backward compatibility for io.cozy.files
+            await client.save({
+              _id: source._id,
+              _type: 'io.cozy.files',
+              _rev: source._rev,
+              metadata: {
+                ...source.metadata,
+                taskId: null,
+                processed: true,
+                rag_processed: true
+              }
+            })
+          }
+        } else if (task.task_state === 'FAILED') {
+          await deleteTask(taskId)
+          await client.destroy(source)
+          showAlert({
+            message: t('sources.import.error'),
+            severity: 'error',
+            variant: 'filled'
           })
         } else {
           timerRef.current = setTimeout(checkStatus, 3000)
@@ -44,7 +72,7 @@ export const useTaskStatus = source => {
 
     // Cleanup timer on unmount
     return () => clearTimeout(timerRef.current)
-  }, [taskId, isCompleted, isRagProcessed, client, source._id, source._rev])
+  }, [taskId, isCompleted, isRagProcessed, client, source])
 
   return isCompleted
 }
