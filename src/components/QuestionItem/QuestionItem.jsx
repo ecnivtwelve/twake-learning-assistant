@@ -100,53 +100,58 @@ const QuestionItem = ({
         type="secondary"
       />
       <TableItemText value={question.hint ?? ''} type="secondary" />
-      <ListItemSecondaryAction className="u-pr-1">
-        <IconButton
-          ref={menuButtonRef}
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          onClick={() => setMenuShown(!menuShown)}
-        >
-          <Icon icon={DotsIcon} />
-        </IconButton>
 
-        <Menu
-          open={menuShown}
-          anchorEl={menuButtonRef.current}
-          getContentAnchorEl={null}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left'
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'left'
-          }}
-          keepMounted
-          onClose={() => setMenuShown(false)}
-        >
-          {detachQuestion && (
-            <MenuItem onClick={() => detachQuestion()}>
-              <ListItemIcon>
-                <Icon icon={TrashIcon} />
-              </ListItemIcon>
-              <ListItemText primary={t('detach')} />
-            </MenuItem>
-          )}
-          {deleteQuestion && (
-            <MenuItem onClick={() => deleteQuestion()}>
-              <ListItemIcon>
-                <Typography color="error">
-                  <Icon icon={TrashIcon} />
-                </Typography>
-              </ListItemIcon>
-              <ListItemText
-                primary={<Typography color="error">{t('delete')}</Typography>}
-              />
-            </MenuItem>
-          )}
-        </Menu>
-      </ListItemSecondaryAction>
+      {detachQuestion ||
+        (deleteQuestion && (
+          <ListItemSecondaryAction className="u-pr-1">
+            <IconButton
+              ref={menuButtonRef}
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={() => setMenuShown(!menuShown)}
+            >
+              <Icon icon={DotsIcon} />
+            </IconButton>
+            <Menu
+              open={menuShown}
+              anchorEl={menuButtonRef.current}
+              getContentAnchorEl={null}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left'
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left'
+              }}
+              keepMounted
+              onClose={() => setMenuShown(false)}
+            >
+              {detachQuestion && (
+                <MenuItem onClick={() => detachQuestion()}>
+                  <ListItemIcon>
+                    <Icon icon={TrashIcon} />
+                  </ListItemIcon>
+                  <ListItemText primary={t('detach')} />
+                </MenuItem>
+              )}
+              {deleteQuestion && (
+                <MenuItem onClick={() => deleteQuestion()}>
+                  <ListItemIcon>
+                    <Typography color="error">
+                      <Icon icon={TrashIcon} />
+                    </Typography>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography color="error">{t('delete')}</Typography>
+                    }
+                  />
+                </MenuItem>
+              )}
+            </Menu>
+          </ListItemSecondaryAction>
+        ))}
     </ListItem>
   )
 }

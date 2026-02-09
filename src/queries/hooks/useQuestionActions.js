@@ -59,7 +59,7 @@ export const useQuestionActions = activity => {
     detachQuestions(activity, [{ _id: questionId }])
       .then(() => {
         return showAlert({
-          message: t('questions.alerts.deleted'),
+          message: t('questions.alerts.detached'),
           severity: 'success'
         })
       })

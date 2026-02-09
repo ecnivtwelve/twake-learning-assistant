@@ -16,16 +16,20 @@ import List from 'cozy-ui/transpiled/react/List'
 import SearchBar from 'cozy-ui/transpiled/react/SearchBar'
 
 import QuestionItem from './QuestionItem'
-
-import { buildQuestionsQuery } from '@/queries'
+import { useSubject } from '@/context/SubjectContext'
+import { buildQuestionsBySubjectQuery } from '@/queries'
 
 const ItemImportDialog = ({ open, onClose, onSelectQuestions }) => {
   const { t } = useI18n()
   const [searchTerm, setSearchTerm] = useState('')
 
-  const questionsQuery = buildQuestionsQuery()
-  const questions = useQuery(questionsQuery.definition, questionsQuery.options)
+  const { selectedSubject } = useSubject()
+  const questionsQuery = buildQuestionsBySubjectQuery(selectedSubject?._id)
 
+  const questions = useQuery(questionsQuery.definition, {
+    ...questionsQuery.options,
+    enabled: !!selectedSubject?._id
+  })
   const { dialogProps, dialogTitleProps, dividerProps, dialogActionsProps } =
     useCozyDialog({
       size: 'large',
