@@ -42,6 +42,7 @@ export const SubjectProvider = ({ children }) => {
 
   return (
     <>
+      <RealTimeQueries doctype="io.cozy.learnings" />
       <RealTimeQueries doctype="io.cozy.learnings.subjects" />
       <RealTimeQueries doctype="io.cozy.learnings.questions" />
       <RealTimeQueries doctype="io.cozy.files" />
