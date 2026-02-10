@@ -11,6 +11,7 @@ import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
+import Viewer from 'cozy-viewer'
 
 import PageLayout from '@/components/PageLayout/PageLayout'
 import SourceItem from '@/components/SourceItem/SourceItem'
@@ -33,8 +34,21 @@ const SourcesTab = () => {
 
   const { handleFilesSelected } = useSourceImport(client, selectedSubject)
 
+  const [openedFile, setOpenedFile] = React.useState({
+    files: [],
+    index: 0
+  })
+
   return (
     <>
+      {openedFile.files.length > 0 && (
+        <Viewer
+          files={openedFile.files}
+          onCloseRequest={() => setOpenedFile({ files: [], index: 0 })}
+          currentIndex={openedFile.index}
+        />
+      )}
+
       <PageLayout
         trailing={
           <div>
@@ -111,6 +125,22 @@ const SourcesTab = () => {
                   source={source}
                   deleteSource={async () => {
                     await deleteSource(client, selectedSubject, source)
+                  }}
+                  onOpen={async () => {
+                    const fileId = source.relationships?.file?.data?._id
+                    console.log(fileId)
+                    if (!fileId) {
+                      return
+                    }
+                    const query = await client.get('io.cozy.files', fileId)
+                    const file = await client.query(query)
+                    if (!file.data) {
+                      return
+                    }
+                    setOpenedFile({
+                      files: [file.data],
+                      index: 0
+                    })
                   }}
                 />
                 <Divider />

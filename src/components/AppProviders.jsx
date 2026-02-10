@@ -4,27 +4,32 @@ import { I18n } from 'twake-i18n'
 import { BarProvider } from 'cozy-bar'
 import { CozyProvider } from 'cozy-client'
 import { WebviewIntentProvider } from 'cozy-intent'
+import { SharingProvider } from 'cozy-sharing'
 import AlertProvider from 'cozy-ui/transpiled/react/providers/Alert'
 import { BreakpointsProvider } from 'cozy-ui/transpiled/react/providers/Breakpoints'
 import CozyTheme from 'cozy-ui/transpiled/react/providers/CozyTheme'
 
 import { SubjectProvider } from '@/context/SubjectContext'
+import SharingProvider from 'cozy-sharing'
+import 'cozy-viewer/dist/stylesheet.css'
 
 const AppProviders = ({ client, lang, polyglot, children }) => {
   return (
     <WebviewIntentProvider>
       <CozyProvider client={client}>
-        <BarProvider>
-          <I18n lang={lang} polyglot={polyglot}>
-            <AlertProvider>
-              <CozyTheme>
-                <BreakpointsProvider>
-                  <SubjectProvider>{children}</SubjectProvider>
-                </BreakpointsProvider>
-              </CozyTheme>
-            </AlertProvider>
-          </I18n>
-        </BarProvider>
+        <SharingProvider doctype="io.cozy.files" documentType="Files">
+          <BarProvider>
+            <I18n lang={lang} polyglot={polyglot}>
+              <AlertProvider>
+                <CozyTheme>
+                  <BreakpointsProvider>
+                    <SubjectProvider>{children}</SubjectProvider>
+                  </BreakpointsProvider>
+                </CozyTheme>
+              </AlertProvider>
+            </I18n>
+          </BarProvider>
+        </SharingProvider>
       </CozyProvider>
     </WebviewIntentProvider>
   )

@@ -7,6 +7,7 @@ import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 import { deleteSource } from '../actions/sources/deleteSource'
 
 import { deleteTask, fetchPartitionTask } from '@/queries/rag/openrag'
+import log from 'cozy-logger'
 
 export const useTaskStatus = source => {
   const client = useClient()
@@ -28,29 +29,13 @@ export const useTaskStatus = source => {
     const checkStatus = async () => {
       try {
         const task = await fetchPartitionTask(taskId)
-        console.log('task', task)
         if (task.task_state === 'COMPLETED') {
           setIsCompleted(true)
-          if (source._type === 'io.cozy.learnings.sources') {
-            await client.save({
-              ...source,
-              rag_processed: true,
-              processed: true // legacy?
-            })
-          } else {
-            // Backward compatibility for io.cozy.files
-            await client.save({
-              _id: source._id,
-              _type: 'io.cozy.files',
-              _rev: source._rev,
-              metadata: {
-                ...source.metadata,
-                taskId: null,
-                processed: true,
-                rag_processed: true
-              }
-            })
-          }
+          await client.save({
+            ...source,
+            rag_processed: true,
+            processed: true // legacy?
+          })
         } else if (task.task_state === 'FAILED') {
           await deleteTask(taskId)
           await client.destroy(source)
@@ -63,7 +48,7 @@ export const useTaskStatus = source => {
           timerRef.current = setTimeout(checkStatus, 3000)
         }
       } catch (err) {
-        console.error('Polling error:', err)
+        log.error('Polling error:', err)
         timerRef.current = setTimeout(checkStatus, 5000)
       }
     }

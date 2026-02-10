@@ -20,7 +20,7 @@ import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
 import TableItemText from '@/components/TableItem/TableItemText'
 import { useTaskStatus } from '@/queries/hooks/useTaskStatus'
 
-const SourceItem = ({ source, deleteSource }) => {
+const SourceItem = ({ source, deleteSource, onOpen }) => {
   const { t } = useI18n()
   const [menuShown, setMenuShown] = React.useState(false)
   const menuButtonRef = React.useRef(null)
@@ -29,7 +29,7 @@ const SourceItem = ({ source, deleteSource }) => {
 
   return (
     <>
-      <ListItem key={source._id}>
+      <ListItem key={source._id} button onClick={() => onOpen(source)}>
         <ListItemIcon className="u-w-2-half">
           {!processed &&
             (source.taskId ||
