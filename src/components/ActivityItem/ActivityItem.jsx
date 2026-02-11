@@ -29,6 +29,7 @@ const ActivityItem = ({ activity, deleteActivity }) => {
         <ActivityIcon size={32} />
       </ListItemIcon>
       <ListItemText
+        className="u-w-100"
         primary={
           activity.title?.trim() === ''
             ? t('activity.untitled')
@@ -36,6 +37,7 @@ const ActivityItem = ({ activity, deleteActivity }) => {
         }
       />
       <ListItemText
+        className="u-w-100"
         secondary={formatLocallyDistanceToNow(
           new Date(activity.cozyMetadata.updatedAt)
         )}

@@ -109,7 +109,7 @@ const SourcesTab = () => {
             />
             <TableItemText value={t('sources.table.update')} type="secondary" />
             <TableItemText value={t('sources.table.tags')} type="secondary" />
-            <div className="u-w-2-half" />
+            <div className="u-w-1-half" />
           </ListItem>
 
           <Divider />

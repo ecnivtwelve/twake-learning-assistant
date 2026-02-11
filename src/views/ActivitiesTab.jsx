@@ -48,7 +48,7 @@ const ActivitiesTab = () => {
           <ListItemIcon className="u-w-2-half" />
           <ListItemText primary="Nom" />
           <ListItemText secondary="Date" />
-          <div className="u-w-half" />
+          <div className="u-w-3 u-mr-half" />
         </ListItem>
         <Divider />
         <div>
