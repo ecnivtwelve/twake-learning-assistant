@@ -22,7 +22,7 @@ const ItemView = () => {
   const client = useClient()
   const { showAlert } = useAlert()
   const location = useLocation()
-  const { selectedSubject } = useSubject()
+  const { selectedSubject, setSelectedSubject } = useSubject()
 
   const activityId = useMemo(
     () => location.pathname.split('/').pop(),
@@ -37,6 +37,17 @@ const ItemView = () => {
     activityItemQuery.definition,
     activityItemQuery.options
   )
+
+  useEffect(() => {
+    const activitySubjectId = activityData?.relationships?.subjects?.data?._id
+    if (!activitySubjectId || !selectedSubject) return
+    if (activitySubjectId !== selectedSubject._id) {
+      setSelectedSubject({
+        _id: activitySubjectId,
+        type: 'io.cozy.learnings.subjects'
+      })
+    }
+  }, [activityData, selectedSubject])
 
   const [activity, setActivity] = useState(activityData)
 

@@ -8,6 +8,12 @@ export const newActivity = async (client, subject) => {
     relationships: {
       questions: {
         data: []
+      },
+      subjects: {
+        data: {
+          _id: subject._id,
+          type: 'io.cozy.learnings.subjects'
+        }
       }
     }
   })

@@ -77,7 +77,7 @@ const QuestionItem = ({
             checked={selectedQuestions.includes(question._id)}
             onClick={e => e.stopPropagation()}
             onChange={selectQuestion}
-            className="u-p-0"
+            className="u-p-0 u-ml-1"
           />
         </div>
         <Typography
