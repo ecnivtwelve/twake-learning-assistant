@@ -14,6 +14,7 @@ import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemSkeleton from 'cozy-ui/transpiled/react/Skeletons/ListItemSkeleton'
 
 import ActivityIcon from '@/assets/icons/ActivityIcon'
+import EditQuestionDialog from '@/components/QuestionItem/EditQuestionDialog'
 import QuestionItem from '@/components/QuestionItem/QuestionItem'
 import TableItemText from '@/components/TableItem/TableItemText'
 
@@ -41,6 +42,7 @@ const ItemQuestionList = ({
       setOpenedQuestion(question)
     }
   }
+  const [editedQuestion, setEditedQuestion] = React.useState(null)
 
   return (
     <>
@@ -51,6 +53,12 @@ const ItemQuestionList = ({
           onClose={() => setSelectedQuestions([])}
         />
       )}
+
+      <EditQuestionDialog
+        open={editedQuestion !== null}
+        onClose={() => setEditedQuestion(null)}
+        question={editedQuestion}
+      />
 
       <div className="u-flex u-flex-col u-w-100 u-h-100">
         <List className="u-w-100">
@@ -141,6 +149,7 @@ const ItemQuestionList = ({
                   isOpened={openedQuestion?._id === question._id}
                   detachQuestion={() => onDetachQuestion(question._id)}
                   deleteQuestion={() => onDeleteQuestion(question)}
+                  editQuestion={() => setEditedQuestion(question)}
                 />
                 <Divider />
               </motion.div>

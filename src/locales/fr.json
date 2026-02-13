@@ -7,6 +7,8 @@
   "cancel": "Annuler",
   "detach": "Retirer",
   "import": "Importer",
+  "save": "Sauvegarder",
+  "edit": "Modifier",
   "tags": {
     "subjects": "Matières",
     "level": "Niveau",
@@ -61,11 +63,15 @@
   "questions": {
     "title": "Questions",
     "placeholder": "Donner un nom à la question",
+    "edit": "Modifier la question",
     "table": {
       "questions": "Questions",
       "source": "Source",
       "tags": "Tags",
-      "level": "Maîtrise"
+      "title": "Titre",
+      "level": "Maîtrise",
+      "answer": "Réponse",
+      "hint": "Indice"
     },
     "alerts": {
       "created": "Question créée",
