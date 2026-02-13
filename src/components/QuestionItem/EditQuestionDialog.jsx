@@ -40,7 +40,7 @@ const EditQuestionDialog = ({ open, onClose, question }) => {
 
   useEffect(() => {
     setQuestionTitle(question?.label)
-    setQuestionAnswer(question?.choices[0].description)
+    setQuestionAnswer(question?.choices[0]?.description)
     setQuestionHint(question?.hint)
   }, [question])
 

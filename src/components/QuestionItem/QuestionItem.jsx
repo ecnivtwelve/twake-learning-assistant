@@ -1,8 +1,7 @@
 import classNames from 'classnames'
-import React, { useState } from 'react'
+import React from 'react'
 import { useI18n } from 'twake-i18n'
 
-import { useClient } from 'cozy-client'
 import Checkbox from 'cozy-ui/transpiled/react/Checkbox'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import IconButton from 'cozy-ui/transpiled/react/IconButton'
@@ -15,12 +14,14 @@ import ListItemSecondaryAction from 'cozy-ui/transpiled/react/ListItemSecondaryA
 import ListItemText from 'cozy-ui/transpiled/react/ListItemText'
 import Menu from 'cozy-ui/transpiled/react/Menu'
 import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
+import Paper from 'cozy-ui/transpiled/react/Paper'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import TableItemText from '@/components/TableItem/TableItemText'
 import styles from '@/styles/item-view.styl'
 
 const QuestionItem = ({
+  id,
   question,
   selectedQuestions,
   setSelectedQuestions,
@@ -28,15 +29,76 @@ const QuestionItem = ({
   deleteQuestion,
   editQuestion,
   onOpen,
-  isOpened
+  isOpened,
+  card,
+  isPresent
 }) => {
   const { t } = useI18n()
   const [menuShown, setMenuShown] = React.useState(false)
   const menuButtonRef = React.useRef(null)
 
+  const selectQuestion = () => {
+    setSelectedQuestions(
+      selectedQuestions.includes(question._id)
+        ? selectedQuestions.filter(id => id !== question._id)
+        : [...selectedQuestions, question._id]
+    )
+  }
+
+  if (card) {
+    return (
+      <Paper
+        id={id}
+        className="u-p-1"
+        onClick={!isPresent && selectQuestion}
+        button
+        style={{
+          outline: selectedQuestions.includes(question._id)
+            ? '2px solid var(--primaryColor)'
+            : 'none',
+          cursor: isPresent ? 'default' : 'pointer',
+          background: selectedQuestions.includes(question._id)
+            ? 'var(--secondaryBackground)'
+            : undefined,
+          opacity: isPresent ? 0.5 : 1
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          <Typography variant="h5" color="textPrimary" style={{ flex: 1 }}>
+            {question.label}
+          </Typography>
+          <Checkbox
+            checked={selectedQuestions.includes(question._id)}
+            onClick={e => e.stopPropagation()}
+            onChange={selectQuestion}
+            className="u-p-0"
+          />
+        </div>
+        <Typography
+          variant="subtitle2"
+          color="textSecondary"
+          className="u-mt-1"
+        >
+          {question.choices[0]?.description ?? ''}
+        </Typography>
+        <Typography variant="body2" color="textSecondary" className="u-mt-1">
+          {question.hint ?? ''}
+        </Typography>
+      </Paper>
+    )
+  }
+
   return (
     <ListItem
+      id={id}
       disableRipple
+      disabled={isPresent}
       button
       onClick={() => {
         onOpen(question)
@@ -51,13 +113,7 @@ const QuestionItem = ({
       <Checkbox
         checked={selectedQuestions.includes(question._id)}
         onClick={e => e.stopPropagation()}
-        onChange={() => {
-          setSelectedQuestions(
-            selectedQuestions.includes(question._id)
-              ? selectedQuestions.filter(id => id !== question._id)
-              : [...selectedQuestions, question._id]
-          )
-        }}
+        onChange={selectQuestion}
       />
       <TableItemText type="primary" value={question.label} />
       <TableItemText
