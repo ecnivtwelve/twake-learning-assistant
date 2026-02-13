@@ -36,7 +36,8 @@
     "empty": {
       "title": "Aucune question",
       "message": "Créez votre première question pour commencer",
-      "generate": "Générer des questions"
+      "generate": "Générer des questions",
+      "select": "Sélectionner des questions"
     }
   },
   "activities": {

@@ -185,7 +185,7 @@ const ItemView = () => {
           newQuestionId={newQuestionId}
           onDetachQuestion={detachQuestion}
           onDeleteQuestion={deleteQuestion}
-          generateQuestions={() => setCustomizeGenerationDialog(true)}
+          selectQuestions={() => setCustomizeImportDialog(true)}
         />
 
         <ItemFlashcardPreview openedQuestion={openedQuestion} />

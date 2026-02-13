@@ -31,7 +31,7 @@ const ItemQuestionList = ({
   newQuestionId,
   onDeleteQuestion,
   onDetachQuestion,
-  generateQuestions
+  selectQuestions
 }) => {
   const { t } = useI18n()
 
@@ -118,9 +118,9 @@ const ItemQuestionList = ({
                 >
                   <Button
                     variant="primary"
-                    label={t('activity.empty.generate')}
+                    label={t('activity.empty.select')}
                     startIcon={<Icon icon={NewIcon} />}
-                    onClick={() => generateQuestions()}
+                    onClick={() => selectQuestions()}
                     className="u-mt-1"
                   />
                 </Empty>
