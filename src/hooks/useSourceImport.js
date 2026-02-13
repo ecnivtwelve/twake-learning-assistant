@@ -15,16 +15,19 @@ export const useSourceImport = client => {
       setIsLoading(true)
       setError(null)
       try {
-        const file = files[0]
-        const blob = await fetchBlobFileById(client, file._id)
-        const fileObj = new File([blob], file.name, { type: file.mime })
-        await newSource(
-          client,
-          selectedSubject,
-          fileObj,
-          'Imported from Cozy Drive',
-          'User',
-          file
+        await Promise.all(
+          files.map(async file => {
+            const blob = await fetchBlobFileById(client, file._id)
+            const fileObj = new File([blob], file.name, { type: file.mime })
+            await newSource(
+              client,
+              selectedSubject,
+              fileObj,
+              'Imported from Cozy Drive',
+              'User',
+              file
+            )
+          })
         )
       } catch (e) {
         setError(e)

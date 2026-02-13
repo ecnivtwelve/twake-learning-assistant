@@ -25,8 +25,6 @@ export const SubjectProvider = ({ children }) => {
   const selectedSubject =
     data.find(s => s._id === selectedSubjectId) || null
 
-  console.log(data)
-
   useEffect(() => {
     const currentLength = data.length
 

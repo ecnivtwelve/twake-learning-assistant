@@ -19,7 +19,8 @@ Object.assign(config.source.alias, {
   'cozy-ui-plus': resolve(__dirname, './node_modules/cozy-ui-plus'),
   'cozy-client': resolve(__dirname, './node_modules/cozy-client'),
   'cozy-device-helper': resolve(__dirname, './node_modules/cozy-device-helper'),
-  'cozy-intent': resolve(__dirname, './node_modules/cozy-intent')
+  'cozy-intent': resolve(__dirname, './node_modules/cozy-intent'),
+  'twake-i18n': resolve(__dirname, './node_modules/twake-i18n')
 })
 
 export default defineConfig(config)

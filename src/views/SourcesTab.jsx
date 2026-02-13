@@ -39,6 +39,8 @@ const SourcesTab = () => {
     index: 0
   })
 
+  const existingFiles = sources.map(source => source.relationships?.file?.data?._id)
+
   return (
     <>
       {openedFile.files.length > 0 && (
@@ -53,18 +55,10 @@ const SourcesTab = () => {
         trailing={
           <div>
             <Button
-              variant="secondary"
-              label={t('import')}
-              startIcon={<Icon icon={PlusIcon} />}
-              onClick={() => setIsFileDialogOpen(true)}
-              className="u-mr-half"
-            />
-
-            <Button
               variant="primary"
               label={t('new')}
               startIcon={<Icon icon={PlusIcon} />}
-              onClick={() => setIsAddDialogOpen(true)}
+              onClick={() => setIsFileDialogOpen(true)}
             />
           </div>
         }
@@ -72,6 +66,9 @@ const SourcesTab = () => {
         <FilePickerDialog
           open={isFilePickerDialogOpen}
           onClose={() => setIsFileDialogOpen(false)}
+          multiple={true}
+          fileTypes={['application/pdf', 'text/markdown', 'text/plain']}
+          existingFiles={existingFiles}
           onFilesSelected={async files => {
             setIsFileDialogOpen(false)
             showAlert({
@@ -94,7 +91,6 @@ const SourcesTab = () => {
               })
             }
           }}
-          multiple={false}
         />
 
         <AddSourceDialog
@@ -128,7 +124,6 @@ const SourcesTab = () => {
                   }}
                   onOpen={async () => {
                     const fileId = source.relationships?.file?.data?._id
-                    console.log(fileId)
                     if (!fileId) {
                       return
                     }
