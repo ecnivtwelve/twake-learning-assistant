@@ -1,24 +1,22 @@
 import React from 'react'
-import { useI18n } from 'twake-i18n'
 
 import { BarLeft } from 'cozy-bar'
 import ButtonCozyHome from 'cozy-bar/dist/components/utils/ButtonCozyHome'
-import AppTitle from 'cozy-ui/transpiled/react/AppTitle'
+import { useClient } from 'cozy-client'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 
-import LearningAssistantIcon from '@/assets/icons/LearningAssistantIcon'
+import TwakeLearningsWordmark from '@/assets/icons/TwakeLearningsWordmark'
 
 const BarTitle = () => {
-  const { t } = useI18n()
+  const client = useClient()
 
   return (
     <BarLeft>
       <div className="u-flex u-flex-items-center">
-        <ButtonCozyHome />
+        <ButtonCozyHome homeHref={client.stackClient.uri} />
         <Divider orientation="vertical" flexItem />
-        <div className="u-flex u-flex-items-center u-ml-1">
-          <LearningAssistantIcon />
-          <AppTitle className="u-ml-half">{t('title')}</AppTitle>
+        <div className="u-flex u-flex-items-center u-ml-half">
+          <TwakeLearningsWordmark />
         </div>
       </div>
     </BarLeft>
