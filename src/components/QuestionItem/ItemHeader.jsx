@@ -8,9 +8,16 @@ import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import UploadIcon from 'cozy-ui/transpiled/react/Icons/Upload'
 
+import Menu from 'cozy-ui/transpiled/react/Menu'
+import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
+import List from 'cozy-ui/transpiled/react/List'
+import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
+import ListItemText from 'cozy-ui/transpiled/react/ListItemText'
+
 import FilterChip from '@/components/FilterChip/FilterChip'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import styles from '@/styles/item-view.styl'
+import Divider from 'cozy-ui/transpiled/react/Divider'
 
 const ItemHeader = ({
   activityTitle,
@@ -39,34 +46,79 @@ const ItemHeader = ({
     }
   }, [isLoading, activityTitle])
 
+  const addButtonRef = React.useRef()
+  const [addMenuOpen, setAddMenuOpen] = React.useState(false)
+
   return (
     <TabTitle
       backEnabled
       trailing={
         <>
           <Button
-            variant="secondary"
-            label={t('new')}
-            startIcon={<Icon icon={PlusIcon} />}
-            onClick={onCreateQuestion}
-            className="u-mr-half"
-          />
-
-          <Button
-            variant="secondary"
-            label={t('generate')}
-            startIcon={<Icon icon={NewIcon} />}
-            onClick={onOpenGenerationDialog}
-            className="u-mr-half"
-          />
-
-          <Button
             variant="primary"
             className="color-learnings"
-            label={t('import')}
-            startIcon={<Icon icon={UploadIcon} />}
-            onClick={onOpenImportDialog}
+            label={t('activity.add.add')}
+            startIcon={<Icon icon={PlusIcon} />}
+            ref={addButtonRef}
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={() => setAddMenuOpen(true)}
           />
+
+          <Menu
+            open={addMenuOpen}
+            anchorEl={addButtonRef.current}
+            getContentAnchorEl={null}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right'
+            }}
+            keepMounted
+            onClose={() => setAddMenuOpen(false)}
+          >
+            {/* TODO: simplifier ce menu */}
+            <MenuItem
+              onClick={() => {
+                setAddMenuOpen(false)
+                onOpenImportDialog()
+              }}
+            >
+              <ListItemIcon>
+                <Icon icon={UploadIcon} />
+              </ListItemIcon>
+              <ListItemText
+                primary={t('activity.add.select')}
+                secondary={t('activity.add.select_description')}
+              />
+            </MenuItem>
+            <Divider className="u-mv-half" />
+            <MenuItem
+              onClick={() => {
+                setAddMenuOpen(false)
+                onOpenGenerationDialog()
+              }}
+            >
+              <ListItemIcon>
+                <Icon icon={NewIcon} />
+              </ListItemIcon>
+              <ListItemText primary={t('activity.add.generate')} />
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setAddMenuOpen(false)
+                onCreateQuestion()
+              }}
+            >
+              <ListItemIcon>
+                <Icon icon={PlusIcon} />
+              </ListItemIcon>
+              <ListItemText primary={t('activity.add.new')} />
+            </MenuItem>
+          </Menu>
         </>
       }
     >
