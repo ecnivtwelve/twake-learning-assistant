@@ -29,7 +29,7 @@ export const SubjectProvider = ({ children }) => {
 
   useEffect(() => {
     if (!subjects.data) return
-    if (selectedSubjectId) return
+    if (selectedSubjectId && data.find(s => s._id === selectedSubjectId)) return
 
     const currentLength = data.length
 
