@@ -127,7 +127,7 @@ const QuestionItem = ({
                 <Chip
                   key={source.id}
                   label={source.name}
-                  icon={<Icon icon={FiletypeTextIcon} />}
+                  icon={<Icon className={"u-ml-half"} icon={FiletypeTextIcon} />}
                   variant="outlined"
                   className="u-mr-half"
                 />
