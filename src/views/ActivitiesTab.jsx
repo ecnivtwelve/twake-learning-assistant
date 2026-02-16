@@ -34,7 +34,6 @@ const ActivitiesTab = () => {
           label={t('new')}
           startIcon={<Icon icon={PlusIcon} />}
           disabled={!selectedSubject}
-          className="color-learnings"
           onClick={async () => {
             const activity = await newActivity(client, selectedSubject)
             if (activity) {

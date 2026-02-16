@@ -56,7 +56,6 @@ const ItemHeader = ({
         <>
           <Button
             variant="primary"
-            className="color-learnings"
             label={t('activity.add.add')}
             startIcon={<Icon icon={PlusIcon} />}
             ref={addButtonRef}

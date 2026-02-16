@@ -45,7 +45,6 @@ const QuestionsTab = () => {
         <Button
           variant="primary"
           label={t('new')}
-          className="color-learnings"
           startIcon={<Icon icon={PlusIcon} />}
         />
       }
