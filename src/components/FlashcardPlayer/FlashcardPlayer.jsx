@@ -2,17 +2,73 @@ import classNames from 'classnames'
 import { motion, AnimatePresence } from 'motion/react'
 import React, { useEffect } from 'react'
 
+import Paper from 'cozy-ui/transpiled/react/Paper'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import styles from './FlashcardPlayer.styl'
 
 export default function FlashcardPlayer({ flashcard }) {
-  const { label: question, choices, hint } = flashcard
+  const { label: question, choices, hint, interaction, correct } = flashcard
   const [showAnswer, setShowAnswer] = React.useState(false)
 
   useEffect(() => {
     setShowAnswer(false)
   }, [flashcard])
+
+  if (interaction === 'choice') {
+    return (
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -20, scale: 0.9 }}
+          transition={{ duration: 0.5, type: 'spring', bounce: 0.3 }}
+          key={flashcard._id}
+          style={{
+            position: 'absolute',
+            padding: 20
+          }}
+        >
+          <Typography variant="h3" align="center" className="u-mb-2">
+            {question}
+          </Typography>
+          {choices.map((choice, index) => (
+            <Paper
+              key={index}
+              className="u-mt-half"
+              style={{
+                backgroundColor:
+                  correct == choice.id ? 'var(--primaryColor)' : undefined
+              }}
+            >
+              <div className="u-flex u-flex-row u-flex-items-center u-flex-justify-start u-p-1">
+                <Typography
+                  variant="body1"
+                  className="u-mr-1"
+                  color="textSecondary"
+                  style={{
+                    color: correct == choice.id ? 'white' : undefined
+                  }}
+                >
+                  {index + 1}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  color="textPrimary"
+                  style={{
+                    color: correct == choice.id ? 'white' : undefined,
+                    fontWeight: correct == choice.id ? 'bold' : undefined
+                  }}
+                >
+                  {choice.description}
+                </Typography>
+              </div>
+            </Paper>
+          ))}
+        </motion.div>
+      </AnimatePresence>
+    )
+  }
 
   return (
     <AnimatePresence>

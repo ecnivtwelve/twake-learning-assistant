@@ -107,7 +107,8 @@ const ItemView = () => {
 
   const {
     isGenerating,
-    ragGenerate,
+    ragGenerateFlashcards,
+    ragGenerateMCQs,
     customizeGenerationDialog,
     setCustomizeGenerationDialog,
     customizeImportDialog,
@@ -167,7 +168,10 @@ const ItemView = () => {
       <ItemGenerationDialog
         open={customizeGenerationDialog}
         onClose={() => setCustomizeGenerationDialog(false)}
-        onGenerate={() => ragGenerate(questions.map(q => q.label))}
+        onGenerateFlashcards={() =>
+          ragGenerateFlashcards(questions.map(q => q.label))
+        }
+        onGenerateMCQs={() => ragGenerateMCQs()}
         numberOfQuestions={numberOfQuestions}
         setNumberOfQuestions={setNumberOfQuestions}
       />

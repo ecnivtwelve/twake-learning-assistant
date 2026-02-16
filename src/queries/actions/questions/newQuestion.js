@@ -22,24 +22,19 @@ export const newQuestionsBatch = async (
   subject,
   activity,
   questions,
+  interaction = 'flashcard',
   sources = []
 ) => {
   const questionsList = []
 
   for (const question of questions) {
+    console.log(question)
     const response = await client.save({
       _type: 'io.cozy.learnings.questions',
       label: question.label,
-      interaction: 'flashcard',
-      choices: question.answer
-        ? [
-          {
-            id: 1,
-            description: question.answer
-          }
-        ]
-        : [],
-      correct: question.answer ? [1] : [],
+      interaction: interaction,
+      choices: question.choices,
+      correct: question.correct ?? 1,
       hint: question.hint,
       relationships: {
         activities: {
@@ -53,6 +48,7 @@ export const newQuestionsBatch = async (
         }
       }
     })
+    console.log(response)
     questionsList.push(response.data)
   }
 

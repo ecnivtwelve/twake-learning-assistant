@@ -87,7 +87,13 @@ export async function fetchPartitionTask(taskId) {
     })
 }
 
-function makeSystemPrompt(subject, age, topic, number, previousQuestions) {
+function makeFlashcardsSystemPrompt(
+  subject,
+  age,
+  topic,
+  number,
+  previousQuestions
+) {
   const prompt = `Tu es un expert en ingénierie pédagogique. Matière : ${subject}. Niveau : ${age}. Sujet : ${topic}. Génère exactement ${number} flashcards à partir des documents fournis. ${previousQuestions.length > 0
     ? `Les flashcards suivantes sont déjà présentes : "${previousQuestions.join(
       ', '
@@ -121,7 +127,7 @@ export async function generateFlashCards(
     messages: [
       {
         role: 'user',
-        content: makeSystemPrompt(
+        content: makeFlashcardsSystemPrompt(
           subject.title,
           age,
           topic,
@@ -241,4 +247,38 @@ export async function uploadFile(partition, file, author, description, fileId) {
     .catch(error => {
       throw new Error(error)
     })
+}
+
+function makeMCQSystemPrompt(subject, age, topic, number) {
+  return `Tu es un professeur de ${subject}. Niveau ${age}. Theme : ${topic}.
+Génère exactement ${number} questions de QCM avec leur réponse correcte à partir du cours.
+Chaque question doit porter sur un concept DIFFÉRENT.
+Réponds UNIQUEMENT avec ce JSON :
+[{"question":"...","reponse":"..."}, ...]`
+}
+
+export async function generateMCQs(subject, age, topic, number = 3) {
+  const myHeaders = new Headers()
+  myHeaders.append('Authorization', 'Bearer ' + AUTH_TOKEN)
+  myHeaders.append('Content-Type', 'application/json')
+
+  const seedPayload = JSON.stringify({
+    model: 'openrag-' + subject.partition,
+    messages: [
+      {
+        role: 'user',
+        content: makeMCQSystemPrompt(subject.title, age, topic, number)
+      }
+    ],
+    temperature: 0.7
+  })
+
+  const response = await fetch(`${OPENRAG_URL}/v1/chat/completions`, {
+    method: 'POST',
+    headers: myHeaders,
+    body: seedPayload
+  })
+
+  const result = await response.json()
+  return result
 }

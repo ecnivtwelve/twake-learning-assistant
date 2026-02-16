@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useI18n } from 'twake-i18n'
 
 import Button from 'cozy-ui/transpiled/react/Buttons'
@@ -19,7 +19,8 @@ import TextField from 'cozy-ui/transpiled/react/TextField'
 const ItemGenerationDialog = ({
   open,
   onClose,
-  onGenerate,
+  onGenerateFlashcards,
+  onGenerateMCQs,
   numberOfQuestions,
   setNumberOfQuestions
 }) => {
@@ -38,6 +39,13 @@ const ItemGenerationDialog = ({
       onClose: onClose,
       disableEnforceFocus: true
     })
+
+  const modes = [
+    { value: 'flashcards', label: 'Flashcards' },
+    { value: 'mcq', label: 'Questions à choix multiple' }
+  ]
+
+  const [mode, setMode] = useState('flashcards')
 
   return (
     <Dialog {...dialogProps}>
@@ -60,6 +68,22 @@ const ItemGenerationDialog = ({
             </MenuItem>
           ))}
         </TextField>
+        <TextField
+          select
+          options={modes}
+          value={mode}
+          onChange={e => setMode(e.target.value)}
+          label="Type de questions"
+          variant="outlined"
+          fullWidth
+          className="u-mt-1"
+        >
+          {modes.map(option => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
       </div>
       <Divider {...dividerProps} />
       <DialogActions {...dialogActionsProps}>
@@ -70,7 +94,11 @@ const ItemGenerationDialog = ({
           startIcon={<Icon icon={NewIcon} />}
           onClick={() => {
             onClose()
-            onGenerate()
+            if (mode === 'flashcards') {
+              onGenerateFlashcards()
+            } else {
+              onGenerateMCQs()
+            }
           }}
         />
       </DialogActions>
