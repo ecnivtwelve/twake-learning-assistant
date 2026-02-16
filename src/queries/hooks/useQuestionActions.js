@@ -73,7 +73,7 @@ export const useQuestionActions = activity => {
 
   const attachQuestion = questionIds => {
     const questions = questionIds.map(id => ({ _id: id }))
-    attachQuestions(activity, questions)
+    attachQuestions(client, activity, questions)
       .then(() => {
         return showAlert({
           message: t('questions.alerts.added'),

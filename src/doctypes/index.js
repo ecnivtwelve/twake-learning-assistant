@@ -49,6 +49,10 @@ export default {
         doctype: 'io.cozy.learnings',
         type: 'has-many'
       },
+      sources: {
+        doctype: 'io.cozy.learnings.sources',
+        type: 'has-many'
+      },
       subjects: {
         doctype: 'io.cozy.learnings.subjects',
         type: 'has-many'

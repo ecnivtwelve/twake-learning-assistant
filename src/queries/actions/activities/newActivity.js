@@ -9,6 +9,9 @@ export const newActivity = async (client, subject) => {
       questions: {
         data: []
       },
+      sources: {
+        data: []
+      },
       subjects: {
         data: {
           _id: subject._id,

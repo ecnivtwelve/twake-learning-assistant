@@ -31,6 +31,7 @@ export const useQuestionGeneration = (activity, subject) => {
         false
       )
 
+      let matchingSources = []
       if (data.extra) {
         try {
           const extra = JSON.parse(data.extra)
@@ -44,7 +45,8 @@ export const useQuestionGeneration = (activity, subject) => {
                 .indexFields(['partition'])
                 .limitBy(1000)
             )
-            const matchingSources = allSources.filter(source =>
+
+            matchingSources = allSources.filter(source =>
               sourceIds.includes(source.partitionFileId)
             )
 
@@ -73,7 +75,8 @@ export const useQuestionGeneration = (activity, subject) => {
               answer: card.answer,
               hint: card.tip
             }
-          })
+          }),
+          matchingSources
         )
 
         showAlert({

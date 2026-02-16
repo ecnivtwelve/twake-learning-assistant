@@ -4,11 +4,16 @@ export const newQuestion = async (
   client,
   subject,
   activity,
-  { label, answer, hint }
+  { label, answer, hint },
+  sources = []
 ) => {
-  const newList = await newQuestionsBatch(client, subject, activity, [
-    { label, answer, hint }
-  ])
+  const newList = await newQuestionsBatch(
+    client,
+    subject,
+    activity,
+    [{ label, answer, hint }],
+    sources
+  )
   return newList[0]
 }
 
@@ -16,7 +21,8 @@ export const newQuestionsBatch = async (
   client,
   subject,
   activity,
-  questions
+  questions,
+  sources = []
 ) => {
   const questionsList = []
 
@@ -41,6 +47,9 @@ export const newQuestionsBatch = async (
         },
         subjects: {
           data: [subject]
+        },
+        sources: {
+          data: sources
         }
       }
     })
