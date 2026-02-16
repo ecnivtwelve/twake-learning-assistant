@@ -46,9 +46,9 @@ const ItemHeader = ({
         <>
           <Button
             variant="secondary"
-            label={t('import')}
-            startIcon={<Icon icon={UploadIcon} />}
-            onClick={onOpenImportDialog}
+            label={t('new')}
+            startIcon={<Icon icon={PlusIcon} />}
+            onClick={onCreateQuestion}
             className="u-mr-half"
           />
 
@@ -62,9 +62,10 @@ const ItemHeader = ({
 
           <Button
             variant="primary"
-            label={t('new')}
-            startIcon={<Icon icon={PlusIcon} />}
-            onClick={onCreateQuestion}
+            className="color-learnings"
+            label={t('import')}
+            startIcon={<Icon icon={UploadIcon} />}
+            onClick={onOpenImportDialog}
           />
         </>
       }

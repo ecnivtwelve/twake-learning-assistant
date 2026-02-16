@@ -56,6 +56,7 @@ const SourcesTab = () => {
           <div>
             <Button
               variant="primary"
+              className="color-learnings"
               label={t('new')}
               startIcon={<Icon icon={PlusIcon} />}
               onClick={() => setIsFileDialogOpen(true)}

@@ -121,7 +121,7 @@ const ItemQuestionList = ({
                     label={t('activity.empty.select')}
                     startIcon={<Icon icon={NewIcon} />}
                     onClick={() => selectQuestions()}
-                    className="u-mt-1"
+                    className="u-mt-1 color-learnings"
                   />
                 </Empty>
               </motion.div>
