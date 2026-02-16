@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useI18n } from 'twake-i18n'
 
-import { useClient } from 'cozy-client'
+import { useClient, Q } from 'cozy-client'
 import log from 'cozy-logger'
 import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
 import { newQuestionsBatch } from '@/queries/actions/questions/newQuestion'
+import { safeAddRelationship } from '@/queries/actions/utils'
 import { extractJSONObject, generateFlashCards } from '@/queries/rag/openrag'
 
 export const useQuestionGeneration = (activity, subject) => {
@@ -29,6 +30,37 @@ export const useQuestionGeneration = (activity, subject) => {
         previousQuestions,
         false
       )
+
+      if (data.extra) {
+        try {
+          const extra = JSON.parse(data.extra)
+          if (extra.sources && extra.sources.length > 0) {
+            const sourceIds = extra.sources.map(s => s.file_id)
+            const { data: allSources } = await client.query(
+              Q('io.cozy.learnings.sources')
+                .where({
+                  partition: subject.partition || 'subject-' + subject._id
+                })
+                .indexFields(['partition'])
+                .limitBy(1000)
+            )
+            const matchingSources = allSources.filter(source =>
+              sourceIds.includes(source.partitionFileId)
+            )
+
+            if (matchingSources.length > 0) {
+              await safeAddRelationship(
+                client,
+                activity,
+                'sources',
+                matchingSources
+              )
+            }
+          }
+        } catch (error) {
+          log.error('Failed to link sources to activity', error)
+        }
+      }
       const json = extractJSONObject(data.choices[0].message.content)
       if (json.cards && json.cards.length > 0 && json.cards[0].answer) {
         newQuestionsBatch(

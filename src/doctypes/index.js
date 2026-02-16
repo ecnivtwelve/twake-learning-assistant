@@ -9,6 +9,10 @@ export default {
       questions: {
         doctype: 'io.cozy.learnings.questions',
         type: 'has-many'
+      },
+      sources: {
+        doctype: 'io.cozy.learnings.sources',
+        type: 'has-many'
       }
     }
   },

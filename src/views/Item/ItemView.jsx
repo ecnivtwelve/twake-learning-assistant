@@ -154,6 +154,7 @@ const ItemView = () => {
         onCreateQuestion={createQuestion}
         filters={filters}
         isLoading={isLoading}
+        sources={activity?.sources?.data || []}
       />
 
       <ItemImportDialog

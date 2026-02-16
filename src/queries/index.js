@@ -23,7 +23,10 @@ export const buildActivitiesQuery = () => ({
 })
 
 export const buildActivityItemQuery = id => ({
-  definition: () => Q('io.cozy.learnings').getById(id).include(['questions']),
+  definition: () =>
+    Q('io.cozy.learnings')
+      .getById(id)
+      .include(['questions', 'subjects', 'sources']),
   options: {
     as: `io.cozy.calendar.learnings/${id}`,
     fetchPolicy: defaultFetchPolicy,
