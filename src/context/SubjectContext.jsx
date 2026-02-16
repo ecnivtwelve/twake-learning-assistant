@@ -13,19 +13,24 @@ import { buildSubjectsQuery } from '@/queries'
 const SubjectContext = createContext()
 
 export const SubjectProvider = ({ children }) => {
-  const [selectedSubjectId, setSelectedSubjectId] = useState(null)
+  const [selectedSubjectId, setSelectedSubjectId] = useState(() =>
+    localStorage.getItem('selectedSubjectId')
+  )
 
   const subjectsQuery = buildSubjectsQuery()
   const subjects = useQuery(subjectsQuery.definition, subjectsQuery.options)
 
   const [prevLength, setPrevLength] = useState(0)
-  const data = subjects.data || []
+  const data = useMemo(() => subjects.data || [], [subjects.data])
 
   // TODO : filtrer dès la query plutôt qu'ici
   const selectedSubject =
     data.find(s => s._id === selectedSubjectId) || null
 
   useEffect(() => {
+    if (!subjects.data) return
+    if (selectedSubjectId) return
+
     const currentLength = data.length
 
     if (currentLength > 0) {
@@ -42,7 +47,15 @@ export const SubjectProvider = ({ children }) => {
     }
 
     setPrevLength(currentLength)
-  }, [data, selectedSubjectId, prevLength])
+  }, [data, selectedSubjectId, prevLength, subjects.data])
+
+  useEffect(() => {
+    if (selectedSubjectId) {
+      localStorage.setItem('selectedSubjectId', selectedSubjectId)
+    } else {
+      localStorage.removeItem('selectedSubjectId')
+    }
+  }, [selectedSubjectId])
 
   const value = {
     selectedSubject,
