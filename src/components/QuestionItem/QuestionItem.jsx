@@ -16,6 +16,9 @@ import Menu from 'cozy-ui/transpiled/react/Menu'
 import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
 import Paper from 'cozy-ui/transpiled/react/Paper'
 import Typography from 'cozy-ui/transpiled/react/Typography'
+import Chip from 'cozy-ui/transpiled/react/Chips'
+import Icon from 'cozy-ui/transpiled/react/Icon'
+import FiletypeTextIcon from 'cozy-ui/transpiled/react/Icons/FiletypeText'
 
 import TableItemText from '@/components/TableItem/TableItemText'
 import styles from '@/styles/item-view.styl'
@@ -31,7 +34,8 @@ const QuestionItem = ({
   onOpen,
   isOpened,
   card,
-  isPresent
+  isPresent,
+  showSources
 }) => {
   const { t } = useI18n()
   const [menuShown, setMenuShown] = React.useState(false)
@@ -87,9 +91,6 @@ const QuestionItem = ({
         >
           {question.choices[0]?.description ?? ''}
         </Typography>
-        <Typography variant="body2" color="textSecondary" className="u-mt-1">
-          {question.hint ?? ''}
-        </Typography>
       </Paper>
     )
   }
@@ -116,11 +117,31 @@ const QuestionItem = ({
         onChange={selectQuestion}
       />
       <TableItemText type="primary" value={question.label} />
+      {showSources && (
+        question.sources ? (
+          <ListItemText className='u-w-1 u-w-half-s'>
+            <div className='u-w-100 u-flex-row u-flex' style={{
+              maskImage: "linear-gradient(to right, black 70%, transparent 100%)",
+            }}>
+              {question.sources?.data?.map(source => (
+                <Chip
+                  key={source.id}
+                  label={source.name}
+                  icon={<Icon icon={FiletypeTextIcon} />}
+                  variant="outlined"
+                  className="u-mr-half"
+                />
+              ))}
+            </div>
+          </ListItemText>
+        ) : (
+          <ListItemText className='u-w-1 u-w-half-s' secondary={t('questions.noSource')} />
+        )
+      )}
       <TableItemText
         value={question.choices[0]?.description ?? ''}
         type="secondary"
       />
-      <TableItemText value={question.hint ?? ''} type="secondary" />
 
       {(detachQuestion || deleteQuestion) && (
         <ListItemSecondaryAction className="u-pr-1">

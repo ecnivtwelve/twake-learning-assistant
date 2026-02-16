@@ -44,13 +44,15 @@ export const buildQuestionsQuery = () => ({
 
 export const buildQuestionsBySubjectQuery = subjectId => ({
   definition: () =>
-    Q('io.cozy.learnings.questions').where({
-      'relationships.subjects.data': {
-        $elemMatch: {
-          _id: subjectId
+    Q('io.cozy.learnings.questions')
+      .where({
+        'relationships.subjects.data': {
+          $elemMatch: {
+            _id: subjectId
+          }
         }
-      }
-    }),
+      })
+      .include(['sources']),
   options: {
     as: `io.cozy.learnings.questions/subject/${subjectId}`,
     fetchPolicy: defaultFetchPolicy

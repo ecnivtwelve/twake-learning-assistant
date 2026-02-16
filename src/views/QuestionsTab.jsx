@@ -9,6 +9,8 @@ import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
+import Tab from 'cozy-ui/transpiled/react/Tab'
+import Tabs from 'cozy-ui/transpiled/react/Tabs'
 
 import PageLayout from '@/components/PageLayout/PageLayout'
 import EditQuestionDialog from '@/components/QuestionItem/EditQuestionDialog'
@@ -17,6 +19,17 @@ import TableItemText from '@/components/TableItem/TableItemText'
 import { useSubject } from '@/context/SubjectContext'
 import { buildQuestionsBySubjectQuery } from '@/queries'
 import { deleteQuestion } from '@/queries/actions/questions/deleteQuestion'
+
+export const question_types = [
+  {
+    label: 'Flashcards',
+    value: 'flashcard'
+  },
+  {
+    label: 'QCM',
+    value: 'choice'
+  }
+]
 
 const QuestionsTab = () => {
   const { t } = useI18n()
@@ -29,24 +42,46 @@ const QuestionsTab = () => {
     questionsQuery.options
   )
 
-  // const [openedQuestion, setOpenedQuestion] = useState(null)
-  // const handleOpenQuestion = question => {
-  //   setOpenedQuestion(question)
-  // }
-  // These were unused, so commenting them out or removing them.
-  // The original code had them but didn't use them (lint error).
-
   const [selectedQuestions, setSelectedQuestions] = useState([])
   const [editedQuestion, setEditedQuestion] = useState(null)
+
+  const [selectedQuestionType, setSelectedQuestionType] = useState(0)
+
+  const filteredQuestions = questions?.filter(
+    question =>
+      question.interaction === question_types[selectedQuestionType].value
+  )
+
+  console.log(filteredQuestions)
 
   return (
     <PageLayout
       trailing={
-        <Button
-          variant="primary"
-          label={t('new')}
-          startIcon={<Icon icon={PlusIcon} />}
-        />
+        <>
+          <div className="u-w-5">
+            <Tabs
+              size="small"
+              segmented
+              value={selectedQuestionType}
+              onChange={(event, value) => setSelectedQuestionType(value)}
+              variant="fullWidth"
+            >
+              {question_types.map(question_type => (
+                <Tab
+                  className="u-miw-3"
+                  key={question_type.value}
+                  label={question_type.label}
+                />
+              ))}
+            </Tabs>
+          </div>
+          <Button
+            variant="primary"
+            label={t('new')}
+            startIcon={<Icon icon={PlusIcon} />}
+            className="u-ml-1"
+          />
+        </>
       }
     >
       <RealTimeQueries doctype="io.cozy.learnings.questions" />
@@ -63,15 +98,15 @@ const QuestionsTab = () => {
             value={t('questions.table.questions')}
             type="primary"
           />
+          <TableItemText value={t('questions.table.source')} type="secondary" />
           <TableItemText value={t('questions.table.answer')} type="secondary" />
-          <TableItemText value={t('questions.table.hint')} type="secondary" />
           <div className="u-w-3 u-pr-half" />
         </ListItem>
 
         <Divider />
 
-        {questions &&
-          questions.map(question => (
+        {filteredQuestions &&
+          filteredQuestions.map(question => (
             <React.Fragment key={question._id}>
               <QuestionItem
                 question={question}
@@ -85,6 +120,7 @@ const QuestionsTab = () => {
                 deleteQuestion={() => {
                   deleteQuestion(client, question)
                 }}
+                showSources
               />
               <Divider />
             </React.Fragment>

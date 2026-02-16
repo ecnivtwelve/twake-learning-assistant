@@ -79,7 +79,6 @@ const ItemQuestionList = ({
             />
             <TableItemText value="Question" type="primary" />
             <TableItemText value="Réponse" type="secondary" />
-            <TableItemText value="Indice" type="secondary" />
             <div className="u-w-2-half u-p-1" />
           </ListItem>
 

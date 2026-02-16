@@ -24,12 +24,11 @@ export const SubjectProvider = ({ children }) => {
   const data = useMemo(() => subjects.data || [], [subjects.data])
 
   // TODO : filtrer dès la query plutôt qu'ici
-  const selectedSubject =
-    data.find(s => s._id === selectedSubjectId) || null
+  const selectedSubject = data.find(s => s._id === selectedSubjectId) || null
 
   useEffect(() => {
     if (!subjects.data) return
-    if (selectedSubjectId && data.find(s => s._id === selectedSubjectId)) return
+    if (selectedSubjectId) return
 
     const currentLength = data.length
 

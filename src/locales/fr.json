@@ -72,6 +72,7 @@
     "title": "Questions",
     "placeholder": "Donner un nom à la question",
     "edit": "Modifier la question",
+    "noSource": "Aucune source",
     "table": {
       "questions": "Questions",
       "source": "Source",
