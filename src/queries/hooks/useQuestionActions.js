@@ -88,8 +88,8 @@ export const useQuestionActions = activity => {
       })
   }
 
-  const deleteSelected = () => ({
-    name: 'deleteSelected',
+  const detachSelected = () => ({
+    name: 'detachSelected',
     icon: TrashIcon,
     action: async () => {
       const questionsIds = selectedQuestions.map(q => {
@@ -98,10 +98,23 @@ export const useQuestionActions = activity => {
       await detachQuestions(activity, questionsIds)
       setSelectedQuestions([])
     },
+    label: t('detach')
+  })
+
+  const deleteSelected = () => ({
+    name: 'deleteSelected',
+    icon: TrashIcon,
+    action: async () => {
+      const questionsIds = selectedQuestions.map(q => {
+        return { _id: q }
+      })
+      await deleteQuestions(client, questionsIds)
+      setSelectedQuestions([])
+    },
     label: t('delete')
   })
 
-  const actions = makeActions([deleteSelected])
+  const actions = makeActions([detachSelected, deleteSelected])
 
   return {
     selectedQuestions,

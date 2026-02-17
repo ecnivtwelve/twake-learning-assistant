@@ -3,7 +3,7 @@ import log from 'cozy-logger'
 
 import { newQuestionsBatch } from '@/queries/actions/questions/newQuestion'
 import { safeAddRelationship } from '@/queries/actions/utils'
-import { extractJSONObject } from '@/queries/rag/openrag'
+import { extractJSONObject, runDistractorPipeline } from '@/queries/rag/openrag'
 
 export const linkSourcesToActivity = async (
   client,
@@ -54,7 +54,8 @@ export const handleGenerationResponse = async (
   matchingSources,
   type,
   showAlert,
-  t
+  t,
+  age
 ) => {
   try {
     const json = extractJSONObject(rawContent)
@@ -77,28 +78,52 @@ export const handleGenerationResponse = async (
     } else if (type === 'choice') {
       const items = Array.isArray(json) ? json : json.questions || []
       if (items.length > 0 && items[0].reponse) {
-        questions = items.map(card => ({
-          label: card.question,
-          choices: [
-            {
-              id: 1,
-              description: card.reponse
-            },
-            {
-              id: 2,
-              description: 'TBD'
-            },
-            {
-              id: 3,
-              description: 'TBD'
-            },
-            {
-              id: 4,
-              description: 'TBD'
+        questions = await Promise.all(
+          items.map(async card => {
+            const distractorData = await runDistractorPipeline(
+              card.question,
+              card.reponse,
+              subject,
+              age
+            )
+            if (distractorData) {
+              return {
+                label: distractorData.question,
+                choices: distractorData.options.map((opt, index) => ({
+                  id: index + 1,
+                  description: opt
+                })),
+                correct:
+                  distractorData.options.indexOf(
+                    distractorData.correct_answer
+                  ) + 1
+              }
+            } else {
+              return {
+                label: card.question,
+                choices: [
+                  {
+                    id: 1,
+                    description: card.reponse
+                  },
+                  {
+                    id: 2,
+                    description: 'TBD'
+                  },
+                  {
+                    id: 3,
+                    description: 'TBD'
+                  },
+                  {
+                    id: 4,
+                    description: 'TBD'
+                  }
+                ],
+                correct: 1
+              }
             }
-          ],
-          correct: 1
-        }))
+          })
+        )
       }
     }
 

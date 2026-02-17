@@ -86,7 +86,8 @@ export const useQuestionGeneration = (activity, subject) => {
         matchingSources,
         'choice',
         showAlert,
-        t
+        t,
+        16
       )
     } catch (error) {
       log.error(error)

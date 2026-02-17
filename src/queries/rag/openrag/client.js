@@ -1,9 +1,15 @@
-import { AUTH_TOKEN, OPENRAG_URL } from '@/consts/consts'
+import {
+  AUTH_TOKEN,
+  LUCIE_API_KEY,
+  LUCIE_MODEL,
+  LUCIE_URL,
+  OPENRAG_URL
+} from '@/consts/consts'
 
-export const getHeaders = (additionalHeaders = {}) => {
+export const getHeaders = (additionalHeaders = {}, ignoreAuth = false) => {
   const headers = new Headers()
   headers.append('Accept', 'application/json')
-  headers.append('Authorization', 'Bearer ' + AUTH_TOKEN)
+  if (!ignoreAuth) headers.append('Authorization', 'Bearer ' + AUTH_TOKEN)
 
   Object.keys(additionalHeaders).forEach(key => {
     headers.append(key, additionalHeaders[key])
@@ -26,4 +32,4 @@ export const getRequestOptions = (method, headers, body = null) => {
   return options
 }
 
-export { OPENRAG_URL }
+export { LUCIE_URL, OPENRAG_URL, LUCIE_MODEL, LUCIE_API_KEY }
