@@ -15,6 +15,7 @@ import Icon from 'cozy-ui/transpiled/react/Icon'
 import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
 import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
 import TextField from 'cozy-ui/transpiled/react/TextField'
+import { question_types } from '@/views/QuestionsTab'
 
 const ItemGenerationDialog = ({
   open,
@@ -40,12 +41,8 @@ const ItemGenerationDialog = ({
       disableEnforceFocus: true
     })
 
-  const modes = [
-    { value: 'mcq', label: 'Questions à choix multiple' },
-    { value: 'flashcards', label: 'Flashcards' }
-  ]
-
-  const [mode, setMode] = useState('mcq')
+  const modes = question_types
+  const [mode, setMode] = useState('choice')
 
   return (
     <Dialog {...dialogProps}>
