@@ -41,11 +41,11 @@ const ItemGenerationDialog = ({
     })
 
   const modes = [
-    { value: 'flashcards', label: 'Flashcards' },
-    { value: 'mcq', label: 'Questions à choix multiple' }
+    { value: 'mcq', label: 'Questions à choix multiple' },
+    { value: 'flashcards', label: 'Flashcards' }
   ]
 
-  const [mode, setMode] = useState('flashcards')
+  const [mode, setMode] = useState('mcq')
 
   return (
     <Dialog {...dialogProps}>

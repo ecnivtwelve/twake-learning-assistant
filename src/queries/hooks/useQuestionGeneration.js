@@ -25,6 +25,7 @@ export const useQuestionGeneration = (activity, subject) => {
   const ragGenerateFlashcards = async (previousQuestions = []) => {
     try {
       setIsGenerating(true)
+      setGenerationStatus('OPENRAG')
       const data = await generateFlashCards(
         subject,
         16,
@@ -59,11 +60,15 @@ export const useQuestionGeneration = (activity, subject) => {
       })
     }
     setIsGenerating(false)
+    setGenerationStatus(null)
   }
+
+  const [generationStatus, setGenerationStatus] = useState(null)
 
   const ragGenerateMCQs = async () => {
     try {
       setIsGenerating(true)
+      setGenerationStatus('OPENRAG')
       const data = await generateMCQs(
         subject,
         16,
@@ -87,7 +92,8 @@ export const useQuestionGeneration = (activity, subject) => {
         'choice',
         showAlert,
         t,
-        16
+        16,
+        setGenerationStatus
       )
     } catch (error) {
       log.error(error)
@@ -95,8 +101,10 @@ export const useQuestionGeneration = (activity, subject) => {
         message: t('questions.generate.error'),
         severity: 'error'
       })
+    } finally {
+      setIsGenerating(false)
+      setGenerationStatus(null)
     }
-    setIsGenerating(false)
   }
 
   return {
@@ -108,6 +116,7 @@ export const useQuestionGeneration = (activity, subject) => {
     customizeImportDialog,
     setCustomizeImportDialog,
     numberOfQuestions,
-    setNumberOfQuestions
+    setNumberOfQuestions,
+    generationStatus
   }
 }

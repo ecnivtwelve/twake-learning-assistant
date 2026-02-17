@@ -55,7 +55,8 @@ export const handleGenerationResponse = async (
   type,
   showAlert,
   t,
-  age
+  age,
+  onStatusUpdate
 ) => {
   try {
     const json = extractJSONObject(rawContent)
@@ -78,6 +79,10 @@ export const handleGenerationResponse = async (
     } else if (type === 'choice') {
       const items = Array.isArray(json) ? json : json.questions || []
       if (items.length > 0 && items[0].reponse) {
+        if (onStatusUpdate) {
+          onStatusUpdate(`LUCIE 0/${items.length}`)
+        }
+        let completedCount = 0
         questions = await Promise.all(
           items.map(async card => {
             const distractorData = await runDistractorPipeline(
@@ -86,6 +91,10 @@ export const handleGenerationResponse = async (
               subject,
               age
             )
+            completedCount++
+            if (onStatusUpdate) {
+              onStatusUpdate(`LUCIE ${completedCount}/${items.length}`)
+            }
             if (distractorData) {
               return {
                 label: distractorData.question,

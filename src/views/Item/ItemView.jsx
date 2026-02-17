@@ -114,7 +114,8 @@ const ItemView = () => {
     customizeImportDialog,
     setCustomizeImportDialog,
     numberOfQuestions,
-    setNumberOfQuestions
+    setNumberOfQuestions,
+    generationStatus
   } = useQuestionGeneration(activity, selectedSubject)
 
   const {
@@ -200,6 +201,7 @@ const ItemView = () => {
           onDetachQuestion={detachQuestion}
           onDeleteQuestion={deleteQuestion}
           selectQuestions={() => setCustomizeImportDialog(true)}
+          generationStatus={generationStatus}
         />
 
         <ItemFlashcardPreview openedQuestion={openedQuestion} />

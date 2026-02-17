@@ -11,7 +11,9 @@ import Icon from 'cozy-ui/transpiled/react/Icon'
 import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
+import { CircularProgress } from 'cozy-ui/transpiled/react/Progress'
 import ListItemSkeleton from 'cozy-ui/transpiled/react/Skeletons/ListItemSkeleton'
+import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import ActivityIcon from '@/assets/icons/ActivityIcon'
 import EditQuestionDialog from '@/components/QuestionItem/EditQuestionDialog'
@@ -31,7 +33,8 @@ const ItemQuestionList = ({
   newQuestionId,
   onDeleteQuestion,
   onDetachQuestion,
-  selectQuestions
+  selectQuestions,
+  generationStatus
 }) => {
   const { t } = useI18n()
 
@@ -43,6 +46,16 @@ const ItemQuestionList = ({
     }
   }
   const [editedQuestion, setEditedQuestion] = React.useState(null)
+
+  const getTranslatedStatus = status => {
+    if (status.startsWith('LUCIE')) {
+      return 'Ajout des réponses (' + status.split('LUCIE ')[1] + ')'
+    }
+    if (status.startsWith('OPENRAG')) {
+      return 'Analyse des documents en cours...'
+    }
+    return 'AUCUN'
+  }
 
   return (
     <>
@@ -83,6 +96,55 @@ const ItemQuestionList = ({
           </ListItem>
 
           <Divider />
+
+          {generationStatus && (
+            <div
+              style={{
+                position: 'absolute',
+                zIndex: 999,
+                background: '#ffffff55',
+                width: '100%',
+                height: '100%',
+                backdropFilter: 'blur(2px)'
+              }}
+            >
+              <Empty
+                icon={<CircularProgress />}
+                title="Génération des questions"
+                text={
+                  <div className="u-w-100" style={{ position: 'relative' }}>
+                    <AnimatePresence>
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{
+                          delay: 0.2,
+                          duration: 0.2,
+                          ease: [0.3, 0, 0, 1]
+                        }}
+                        style={{
+                          position: 'absolute',
+                          width: '100%'
+                        }}
+                        key={generationStatus}
+                      >
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          align="center"
+                          className="u-w-100"
+                        >
+                          {getTranslatedStatus(generationStatus ?? '')}
+                        </Typography>
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+                }
+                centered
+              />
+            </div>
+          )}
 
           <AnimatePresence>
             {questions.length == 0 && !isGenerating && !isLoading && (
