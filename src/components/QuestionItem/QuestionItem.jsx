@@ -140,7 +140,7 @@ const QuestionItem = ({
         )
       )}
       <TableItemText
-        value={question.choices[0]?.description ?? ''}
+        value={question.choices.find(choice => choice.id === question.correct)?.description ?? ''}
         type="secondary"
       />
 
