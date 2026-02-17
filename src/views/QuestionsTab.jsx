@@ -1,19 +1,22 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useI18n } from 'twake-i18n'
 
 import { RealTimeQueries, useQuery } from 'cozy-client'
 import ActionsBar from 'cozy-ui/transpiled/react/ActionsBar'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Divider from 'cozy-ui/transpiled/react/Divider'
+import Empty from 'cozy-ui/transpiled/react/Empty'
 import Icon from 'cozy-ui/transpiled/react/Icon'
+import ListIcon from 'cozy-ui/transpiled/react/Icons/List'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import Tab from 'cozy-ui/transpiled/react/Tab'
 import Tabs from 'cozy-ui/transpiled/react/Tabs'
-import Empty from 'cozy-ui/transpiled/react/Empty'
 
+import QuestionIcon from '@/assets/icons/QuestionIcon'
 import PageLayout from '@/components/PageLayout/PageLayout'
 import EditQuestionDialog from '@/components/QuestionItem/EditQuestionDialog'
 import QuestionItem from '@/components/QuestionItem/QuestionItem'
@@ -21,17 +24,15 @@ import TableItemText from '@/components/TableItem/TableItemText'
 import { useSubject } from '@/context/SubjectContext'
 import { buildQuestionsBySubjectQuery } from '@/queries'
 import { useQuestionActions } from '@/queries/hooks/useQuestionActions'
-import ActivityIcon from '@/assets/icons/ActivityIcon'
-import { useNavigate } from 'react-router-dom'
 
 export const question_types = [
   {
-    label: 'Flashcards',
-    value: 'flashcard'
-  },
-  {
     label: 'QCM',
     value: 'choice'
+  },
+  {
+    label: 'Flashcards',
+    value: 'flashcard'
   }
 ]
 
@@ -138,7 +139,7 @@ const QuestionsTab = () => {
 
         {filteredQuestions && filteredQuestions.length === 0 && (
           <Empty
-            icon={<ActivityIcon size={96} />}
+            icon={<QuestionIcon size={96} />}
             title={t('questions.empty.title')}
             text={t('questions.empty.message')}
             centered
@@ -146,7 +147,7 @@ const QuestionsTab = () => {
             <Button
               variant="primary"
               label={t('questions.empty.select')}
-              startIcon={<Icon icon={PlusIcon} />}
+              startIcon={<Icon icon={ListIcon} />}
               onClick={() => navigate('/activities')}
               className="u-mt-1"
             />
