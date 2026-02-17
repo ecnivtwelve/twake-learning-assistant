@@ -47,7 +47,7 @@ const ItemView = () => {
         type: 'io.cozy.learnings.subjects'
       })
     }
-  }, [activityData, selectedSubject])
+  }, [activityData, selectedSubject, setSelectedSubject])
 
   const [activity, setActivity] = useState(activityData)
 
@@ -143,6 +143,15 @@ const ItemView = () => {
       }
     }
   }, [newQuestionId, questions, resetNewQuestionId])
+
+  useEffect(() => {
+    if (openedQuestion) {
+      const updatedQuestion = questions.find(q => q._id === openedQuestion._id)
+      if (updatedQuestion && updatedQuestion !== openedQuestion) {
+        setOpenedQuestion(updatedQuestion)
+      }
+    }
+  }, [questions, openedQuestion])
 
   return (
     <div className="u-flex u-flex-column u-h-100">

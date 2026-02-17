@@ -64,8 +64,13 @@ const QuestionItem = ({
           background: selectedQuestions.includes(question._id)
             ? 'var(--secondaryBackground)'
             : undefined,
+          cursor: isPresent ? 'default' : 'pointer',
+          background: selectedQuestions.includes(question._id)
+            ? 'var(--secondaryBackground)'
+            : undefined,
           opacity: isPresent ? 0.5 : 1
         }}
+        onDoubleClick={() => !isPresent && editQuestion && editQuestion()}
       >
         <div
           style={{
@@ -104,6 +109,7 @@ const QuestionItem = ({
       onClick={() => {
         onOpen(question)
       }}
+      onDoubleClick={() => !isPresent && editQuestion && editQuestion()}
       className={classNames(
         isOpened ? styles.listItemOpened : null,
         selectedQuestions.includes(question._id)
