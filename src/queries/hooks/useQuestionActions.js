@@ -13,7 +13,7 @@ import { attachQuestions } from '@/queries/actions/questions/attachQuestion'
 import { detachQuestions } from '@/queries/actions/questions/detachQuestion'
 import { newQuestion } from '@/queries/actions/questions/newQuestion'
 
-export const useQuestionActions = activity => {
+export const useQuestionActions = (activity, questions = []) => {
   const { t } = useI18n()
   const client = useClient()
   const { showAlert } = useAlert()
@@ -105,16 +105,21 @@ export const useQuestionActions = activity => {
     name: 'deleteSelected',
     icon: TrashIcon,
     action: async () => {
-      const questionsIds = selectedQuestions.map(q => {
-        return { _id: q }
-      })
-      await deleteQuestions(client, questionsIds)
+      const questionsToDelete = selectedQuestions
+        .map(id => questions.find(q => q._id === id))
+        .filter(Boolean)
+      await deleteQuestions(client, questionsToDelete)
       setSelectedQuestions([])
     },
     label: t('delete')
   })
 
-  const actions = makeActions([detachSelected, deleteSelected])
+  const availableActions = [deleteSelected]
+  if (activity) {
+    availableActions.push(detachSelected)
+  }
+
+  const actions = makeActions(availableActions)
 
   return {
     selectedQuestions,

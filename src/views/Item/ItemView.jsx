@@ -127,7 +127,7 @@ const ItemView = () => {
     actions,
     newQuestionId,
     resetNewQuestionId
-  } = useQuestionActions(activity)
+  } = useQuestionActions(activity, questions)
 
   const [openedQuestion, setOpenedQuestion] = React.useState(null)
 

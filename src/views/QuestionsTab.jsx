@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useI18n } from 'twake-i18n'
 
-import { RealTimeQueries, useClient, useQuery } from 'cozy-client'
+import { RealTimeQueries, useQuery } from 'cozy-client'
+import ActionsBar from 'cozy-ui/transpiled/react/ActionsBar'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
@@ -18,7 +19,7 @@ import QuestionItem from '@/components/QuestionItem/QuestionItem'
 import TableItemText from '@/components/TableItem/TableItemText'
 import { useSubject } from '@/context/SubjectContext'
 import { buildQuestionsBySubjectQuery } from '@/queries'
-import { deleteQuestion } from '@/queries/actions/questions/deleteQuestion'
+import { useQuestionActions } from '@/queries/hooks/useQuestionActions'
 
 export const question_types = [
   {
@@ -33,7 +34,6 @@ export const question_types = [
 
 const QuestionsTab = () => {
   const { t } = useI18n()
-  const client = useClient()
 
   const { selectedSubject } = useSubject()
   const questionsQuery = buildQuestionsBySubjectQuery(selectedSubject?._id)
@@ -42,7 +42,8 @@ const QuestionsTab = () => {
     questionsQuery.options
   )
 
-  const [selectedQuestions, setSelectedQuestions] = useState([])
+  const { selectedQuestions, setSelectedQuestions, actions, deleteQuestion } =
+    useQuestionActions(null, questions)
   const [editedQuestion, setEditedQuestion] = useState(null)
 
   const [selectedQuestionType, setSelectedQuestionType] = useState(0)
@@ -51,8 +52,6 @@ const QuestionsTab = () => {
     question =>
       question.interaction === question_types[selectedQuestionType].value
   )
-
-  console.log(filteredQuestions)
 
   return (
     <PageLayout
@@ -85,6 +84,13 @@ const QuestionsTab = () => {
       }
     >
       <RealTimeQueries doctype="io.cozy.learnings.questions" />
+      {selectedQuestions.length > 0 && (
+        <ActionsBar
+          actions={actions}
+          docs={selectedQuestions}
+          onClose={() => setSelectedQuestions([])}
+        />
+      )}
       <EditQuestionDialog
         open={editedQuestion !== null}
         onClose={() => setEditedQuestion(null)}
@@ -118,7 +124,7 @@ const QuestionsTab = () => {
                 selectedQuestions={selectedQuestions}
                 setSelectedQuestions={setSelectedQuestions}
                 deleteQuestion={() => {
-                  deleteQuestion(client, question)
+                  deleteQuestion(question)
                 }}
                 showSources
               />
