@@ -28,7 +28,6 @@ export const SubjectProvider = ({ children }) => {
 
   useEffect(() => {
     if (!subjects.data) return
-    if (selectedSubjectId) return
 
     const currentLength = data.length
 

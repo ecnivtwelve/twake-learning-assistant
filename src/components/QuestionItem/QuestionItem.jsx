@@ -122,6 +122,7 @@ const QuestionItem = ({
           <ListItemText className='u-w-1 u-w-half-s'>
             <div className='u-w-100 u-flex-row u-flex' style={{
               maskImage: "linear-gradient(to right, black 70%, transparent 100%)",
+              pointerEvents: "none"
             }}>
               {question.sources?.data?.map(source => (
                 <Chip
