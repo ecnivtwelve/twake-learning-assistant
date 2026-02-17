@@ -27,7 +27,7 @@ export const SubjectProvider = ({ children }) => {
   const selectedSubject = data.find(s => s._id === selectedSubjectId) || null
 
   useEffect(() => {
-    if (!subjects.data) return
+    if (!subjects.data || subjects.fetchStatus === 'loading') return
 
     const currentLength = data.length
 
@@ -45,7 +45,7 @@ export const SubjectProvider = ({ children }) => {
     }
 
     setPrevLength(currentLength)
-  }, [data, selectedSubjectId, prevLength, subjects.data])
+  }, [data, selectedSubjectId, prevLength, subjects.data, subjects.fetchStatus])
 
   useEffect(() => {
     if (selectedSubjectId) {

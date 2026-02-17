@@ -5,14 +5,18 @@ import { useClient } from 'cozy-client'
 import { FilePickerDialog } from 'cozy-filepicker'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Divider from 'cozy-ui/transpiled/react/Divider'
+import Empty from 'cozy-ui/transpiled/react/Empty'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
+import ListIcon from 'cozy-ui/transpiled/react/Icons/List'
+
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 import Viewer from 'cozy-viewer'
 
+import ActivityIcon from '@/assets/icons/ActivityIcon'
 import PageLayout from '@/components/PageLayout/PageLayout'
 import SourceItem from '@/components/SourceItem/SourceItem'
 import AddSourceDialog from '@/components/Sources/AddSourceDialog'
@@ -39,7 +43,9 @@ const SourcesTab = () => {
     index: 0
   })
 
-  const existingFiles = sources.map(source => source.relationships?.file?.data?._id)
+  const existingFiles = sources.map(
+    source => source.relationships?.file?.data?._id
+  )
 
   return (
     <>
@@ -141,6 +147,23 @@ const SourcesTab = () => {
                 <Divider />
               </React.Fragment>
             ))}
+
+          {sources.length === 0 && (
+            <Empty
+              icon={<ActivityIcon size={96} />}
+              title={t('sources.empty.title')}
+              text={t('sources.empty.message')}
+              centered
+            >
+              <Button
+                variant="primary"
+                label={t('sources.empty.select')}
+                startIcon={<Icon icon={ListIcon} />}
+                onClick={() => setIsFileDialogOpen(true)}
+                className="u-mt-1"
+              />
+            </Empty>
+          )}
         </List>
       </PageLayout>
     </>

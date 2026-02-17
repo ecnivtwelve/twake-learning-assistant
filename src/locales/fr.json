@@ -51,7 +51,8 @@
     "title": "Entraînements",
     "empty": {
       "title": "Aucun entraînement",
-      "message": "Créez votre premier entraînement pour commencer"
+      "message": "Créez votre premier entraînement pour commencer",
+      "select": "Créer un entraînement"
     },
     "table": {
       "activities": "Entraînements",
@@ -92,6 +93,11 @@
     "generate": {
       "success": "Questions générées",
       "error": "Erreur lors de la génération des questions"
+    },
+    "empty": {
+      "title": "Aucune question",
+      "message": "Créez votre première activité pour commencer",
+      "select": "Ouvir les activités"
     }
   },
   "sources": {
@@ -112,6 +118,11 @@
       "loading": "Chargement du fichier...",
       "error": "Erreur lors de l'importation",
       "success": "Source importée"
+    },
+    "empty": {
+      "title": "Aucune source",
+      "message": "Ajoutez votre première source pour commencer",
+      "select": "Ajouter une source"
     }
   },
   "insights": {

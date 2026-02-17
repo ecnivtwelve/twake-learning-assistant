@@ -12,6 +12,7 @@ import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import Tab from 'cozy-ui/transpiled/react/Tab'
 import Tabs from 'cozy-ui/transpiled/react/Tabs'
+import Empty from 'cozy-ui/transpiled/react/Empty'
 
 import PageLayout from '@/components/PageLayout/PageLayout'
 import EditQuestionDialog from '@/components/QuestionItem/EditQuestionDialog'
@@ -20,6 +21,8 @@ import TableItemText from '@/components/TableItem/TableItemText'
 import { useSubject } from '@/context/SubjectContext'
 import { buildQuestionsBySubjectQuery } from '@/queries'
 import { useQuestionActions } from '@/queries/hooks/useQuestionActions'
+import ActivityIcon from '@/assets/icons/ActivityIcon'
+import { useNavigate } from 'react-router-dom'
 
 export const question_types = [
   {
@@ -34,6 +37,7 @@ export const question_types = [
 
 const QuestionsTab = () => {
   const { t } = useI18n()
+  const navigate = useNavigate()
 
   const { selectedSubject } = useSubject()
   const questionsQuery = buildQuestionsBySubjectQuery(selectedSubject?._id)
@@ -131,6 +135,23 @@ const QuestionsTab = () => {
               <Divider />
             </React.Fragment>
           ))}
+
+        {filteredQuestions && filteredQuestions.length === 0 && (
+          <Empty
+            icon={<ActivityIcon size={96} />}
+            title={t('questions.empty.title')}
+            text={t('questions.empty.message')}
+            centered
+          >
+            <Button
+              variant="primary"
+              label={t('questions.empty.select')}
+              startIcon={<Icon icon={PlusIcon} />}
+              onClick={() => navigate('/activities')}
+              className="u-mt-1"
+            />
+          </Empty>
+        )}
       </List>
     </PageLayout>
   )

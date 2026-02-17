@@ -17,6 +17,8 @@ import PageLayout from '@/components/PageLayout/PageLayout'
 import { useSubject } from '@/context/SubjectContext'
 import { deleteActivity } from '@/queries/actions/activities/deleteActivity'
 import { newActivity } from '@/queries/actions/activities/newActivity'
+import Empty from 'cozy-ui/transpiled/react/Empty'
+import ActivityIcon from '@/assets/icons/ActivityIcon'
 
 const ActivitiesTab = () => {
   const { t } = useI18n()
@@ -62,6 +64,28 @@ const ActivitiesTab = () => {
                 <Divider />
               </React.Fragment>
             ))}
+
+          {activities && activities.length === 0 && (
+            <Empty
+              icon={<ActivityIcon size={96} />}
+              title={t('activities.empty.title')}
+              text={t('activities.empty.message')}
+              centered
+            >
+              <Button
+                variant="primary"
+                label={t('activities.empty.select')}
+                startIcon={<Icon icon={PlusIcon} />}
+                onClick={async () => {
+                  const activity = await newActivity(client, selectedSubject)
+                  if (activity) {
+                    navigate(`/item/${activity._id}`)
+                  }
+                }}
+                className="u-mt-1"
+              />
+            </Empty>
+          )}
         </div>
       </List>
     </PageLayout>
