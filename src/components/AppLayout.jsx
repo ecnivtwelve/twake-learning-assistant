@@ -29,7 +29,7 @@ const AppLayout = () => {
       <div
         className={`u-w-100 ${isDesktop ? '' : 'u-pt-3'}`}
         style={{
-          padding: 16,
+          padding: isDesktop ? 16 : 0,
           backgroundColor: 'var(--defaultBackgroundColor)'
         }}
       >
@@ -39,7 +39,7 @@ const AppLayout = () => {
             overflowY: 'auto',
             position: 'relative',
             backgroundColor: 'var(--paperBackgroundColor)',
-            borderRadius: '1rem'
+            borderRadius: isDesktop ? '1rem' : 0
           }}
         >
           <AnimatePresence initial={false}>
