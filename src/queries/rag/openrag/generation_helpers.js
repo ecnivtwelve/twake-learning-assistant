@@ -8,10 +8,13 @@ import {
 import { extractJSONObject } from './utils'
 
 async function callLucie(prompt, maxTokens = 1000, temperature = 0.5) {
-  const myHeaders = getHeaders({
-    'Content-Type': 'application/json',
-    Authorization: 'Bearer ' + LUCIE_API_KEY
-  }, true)
+  const myHeaders = getHeaders(
+    {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + LUCIE_API_KEY
+    },
+    true
+  )
 
   const raw = JSON.stringify({
     model: LUCIE_MODEL,
@@ -43,7 +46,7 @@ async function callLucie(prompt, maxTokens = 1000, temperature = 0.5) {
   }
 }
 
-async function generateDistractors(question, answer, subject, age) {
+async function generateDistractors(question, answer) {
   const prompt = `Genere 8 distracteurs : reponses FAUSSES mais plausibles.
 Regles : courts, uniques, pas de paraphrase de la bonne reponse, pas de placeholders.
 Question : ${question}
@@ -56,7 +59,7 @@ JSON strict : {"distractors":[]}`
   return json?.distractors || []
 }
 
-async function reviewDistractors(question, answer, distractors, subject, age) {
+async function reviewDistractors(question, answer, distractors) {
   const numbered = distractors.map((d, i) => `${i + 1}. ${d}`).join('\n')
   const prompt = `Pour chaque distracteur, donne un verdict (BON/MOYEN/MAUVAIS), un bon distracteur doit être plausible mais faux et un commentaire court (<=12 mots).
 Question : ${question}
@@ -71,37 +74,13 @@ JSON strict : {"reviews":[{"distractor":"","verdict":"BON","commentaire":""}]}`
   return json?.reviews || []
 }
 
-async function selectAndFormat(question, answer, reviews, subject, age) {
-  const prompt = `Choisis les 3 meilleurs distracteurs selon les avis.
-Puis formate le QCM final (4 options melangees).
-Question : ${question}
-Bonne reponse : ${answer}
-Avis : ${JSON.stringify(reviews)}
-JSON strict : {"final_mcq":{"question":"","options":["","","",""],"correct_answer":""}}`
 
-  const content = await callLucie(prompt, 700, 0.2)
-  if (!content) return null
-  const json = extractJSONObject(content)
-  return json?.final_mcq
-}
-
-export async function runDistractorPipeline(question, answer, subject, age) {
+export async function runDistractorPipeline(question, answer) {
   try {
-    const distractors = await generateDistractors(
-      question,
-      answer,
-      subject,
-      age
-    )
+    const distractors = await generateDistractors(question, answer)
     if (!distractors || distractors.length === 0) return null
 
-    const reviews = await reviewDistractors(
-      question,
-      answer,
-      distractors,
-      subject,
-      age
-    )
+    const reviews = await reviewDistractors(question, answer, distractors)
     if (!reviews || reviews.length === 0) {
       // Fallback if review fails: just pick 3 random distractors
       const selected = distractors.slice(0, 3)
@@ -112,15 +91,7 @@ export async function runDistractorPipeline(question, answer, subject, age) {
       }
     }
 
-    const finalMcq = await selectAndFormat(
-      question,
-      answer,
-      reviews,
-      subject,
-      age
-    )
-    if (finalMcq) return finalMcq
-
+    // Select top 3 distractors based on reviews
     const validReviews = reviews.filter(r => r.distractor)
     const sorted = validReviews.sort((a, b) => {
       const score = {
@@ -134,12 +105,14 @@ export async function runDistractorPipeline(question, answer, subject, age) {
       return (score[b.verdict] || 0) - (score[a.verdict] || 0)
     })
     const top3 = sorted.slice(0, 3).map(r => r.distractor)
+
     return {
       question,
       options: [answer, ...top3].sort(() => Math.random() - 0.5),
       correct_answer: answer
     }
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error('Distractor pipeline failed', e)
     return null
   }
