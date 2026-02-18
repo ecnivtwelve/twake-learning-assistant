@@ -152,6 +152,16 @@ const QuestionItem = ({
 
       {(detachQuestion || deleteQuestion) && (
         <ListItemSecondaryAction className="u-pr-1">
+          {editQuestion &&
+            <IconButton
+              ref={menuButtonRef}
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={() => editQuestion()}
+            >
+              <Icon icon={PenIcon} />
+            </IconButton>
+          }
           <IconButton
             ref={menuButtonRef}
             aria-controls="simple-menu"

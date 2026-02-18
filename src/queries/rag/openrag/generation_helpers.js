@@ -82,7 +82,6 @@ export async function runDistractorPipeline(question, answer) {
 
     const reviews = await reviewDistractors(question, answer, distractors)
     if (!reviews || reviews.length === 0) {
-      // Fallback if review fails: just pick 3 random distractors
       const selected = distractors.slice(0, 3)
       return {
         question: question,
@@ -91,7 +90,6 @@ export async function runDistractorPipeline(question, answer) {
       }
     }
 
-    // Select top 3 distractors based on reviews
     const validReviews = reviews.filter(r => r.distractor)
     const sorted = validReviews.sort((a, b) => {
       const score = {
