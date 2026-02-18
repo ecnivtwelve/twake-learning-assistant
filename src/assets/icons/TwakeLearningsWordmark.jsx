@@ -1,9 +1,9 @@
 import * as React from 'react'
-const TwakeLearningsWordmark = props => (
+const TwakeLearningsWordmark = ({ size = 250, ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={250}
-    height={31}
+    width={size}
+    height={(size * 31) / 250}
     viewBox="0 0 250 31"
     fill="none"
     {...props}

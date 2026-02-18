@@ -9,6 +9,7 @@
   "import": "Importer",
   "save": "Sauvegarder",
   "edit": "Modifier",
+  "back": "Retour",
   "tags": {
     "subjects": "Matières",
     "level": "Niveau",
@@ -146,5 +147,27 @@
       "created": "Matière créée",
       "error": "Erreur lors de la création de la matière"
     }
+  },
+  "welcome": {
+    "title": "Bienvenue sur ",
+    "message": "L'outil de création pédagogique de Twake Workplace",
+    "item1": {
+      "title": "Création d'entraînements",
+      "description": "Créez facilement des entraînements pédagogiques pour vos élèves"
+    },
+    "item2": {
+      "title": "Génération de questions par IA",
+      "description": "Importez vos documents et laissez l'IA générer des questions"
+    },
+    "item3": {
+      "title": "Organisation des contenus",
+      "description": "Organisez vos entraînements en différentes matières et en documents sources"
+    },
+    "start": "Commencer",
+    "createSubject": {
+      "title": "Créez votre première matière",
+      "message": "Une matière est un ensemble d'entraînements et de sources"
+    },
+    "end": "Terminer"
   }
 }

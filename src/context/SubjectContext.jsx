@@ -8,6 +8,7 @@ import React, {
 
 import { RealTimeQueries, useQuery } from 'cozy-client'
 
+import WelcomeDialog from '@/components/Subjects/WelcomeDialog'
 import { buildSubjectsQuery } from '@/queries'
 
 const SubjectContext = createContext()
@@ -61,6 +62,14 @@ export const SubjectProvider = ({ children }) => {
     subjects
   }
 
+  const [welcomeDialogOpen, setWelcomeDialogOpen] = useState(false)
+
+  useEffect(() => {
+    if (subjects.fetchStatus === 'loading' && subjects.data.length > 0) {
+      setWelcomeDialogOpen(true)
+    }
+  }, [subjects.fetchStatus, subjects.data])
+
   return (
     <>
       <RealTimeQueries doctype="io.cozy.learnings" />
@@ -68,6 +77,12 @@ export const SubjectProvider = ({ children }) => {
       <RealTimeQueries doctype="io.cozy.learnings.questions" />
       <RealTimeQueries doctype="io.cozy.learnings.sources" />
       <RealTimeQueries doctype="io.cozy.files" />
+
+      <WelcomeDialog
+        open={welcomeDialogOpen}
+        onClose={() => setWelcomeDialogOpen(false)}
+      />
+
       <SubjectContext.Provider value={value}>
         {children}
       </SubjectContext.Provider>
