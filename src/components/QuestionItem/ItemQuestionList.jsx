@@ -179,7 +179,7 @@ const ItemQuestionList = ({
                 >
                   <Button
                     variant="primary"
-                    label={t('activity.empty.select')}
+                    label={t('activity.empty.generate')}
                     startIcon={<Icon icon={NewIcon} />}
                     onClick={() => selectQuestions()}
                     className="u-mt-1"

@@ -200,7 +200,7 @@ const ItemView = () => {
           newQuestionId={newQuestionId}
           onDetachQuestion={detachQuestion}
           onDeleteQuestion={deleteQuestion}
-          selectQuestions={() => setCustomizeImportDialog(true)}
+          selectQuestions={() => setCustomizeGenerationDialog(true)}
           generationStatus={generationStatus}
         />
 
