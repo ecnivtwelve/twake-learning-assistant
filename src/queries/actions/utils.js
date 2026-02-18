@@ -18,13 +18,15 @@ export const safeAddRelationship = async (
       currentDoc = result.data
 
       const itemsToAdd = Array.isArray(items) ? items : [items]
-      const existingData = currentDoc.relationships?.[relationshipName]?.data || []
+      const existingData =
+        currentDoc.relationships?.[relationshipName]?.data || []
 
-      // filtrer les doublons
-      const newData = [...existingData, ...itemsToAdd].filter(
-        (item, index, self) =>
-          index === self.findIndex(t => t._id === item._id)
-      ).map(item => ({ _id: item._id, _type: item._type }))
+      const newData = [...existingData, ...itemsToAdd]
+        .filter(
+          (item, index, self) =>
+            index === self.findIndex(t => t._id === item._id)
+        )
+        .map(item => ({ _id: item._id, _type: item._type }))
 
       await client.save({
         ...currentDoc,

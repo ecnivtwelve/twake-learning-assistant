@@ -90,21 +90,6 @@ const ItemView = () => {
       })
   }
 
-  const [filters] = React.useState({
-    subjects: {
-      label: t('tags.types'),
-      values: []
-    },
-    level: {
-      label: t('tags.sources'),
-      values: []
-    },
-    notion: {
-      label: t('tags.notions'),
-      values: []
-    }
-  })
-
   const {
     isGenerating,
     ragGenerateFlashcards,
@@ -163,7 +148,6 @@ const ItemView = () => {
         onOpenGenerationDialog={() => setCustomizeGenerationDialog(true)}
         onOpenImportDialog={() => setCustomizeImportDialog(true)}
         onCreateQuestion={createQuestion}
-        filters={filters}
         isLoading={isLoading}
         sources={activity?.sources?.data || []}
       />

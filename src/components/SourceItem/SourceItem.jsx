@@ -1,13 +1,11 @@
-import { AnimatePresence, motion } from 'motion/react'
 import React from 'react'
-import { formatLocallyDistanceToNow, useI18n } from 'twake-i18n'
+import { useI18n } from 'twake-i18n'
 
 import CircularProgress from 'cozy-ui/transpiled/react/CircularProgress'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import IconButton from 'cozy-ui/transpiled/react/IconButton'
 import DotsIcon from 'cozy-ui/transpiled/react/Icons/Dots'
 import FiletypeTextIcon from 'cozy-ui/transpiled/react/Icons/FiletypeText'
-import SchoolIcon from 'cozy-ui/transpiled/react/Icons/School'
 import TrashIcon from 'cozy-ui/transpiled/react/Icons/Trash'
 import InfosBadge from 'cozy-ui/transpiled/react/InfosBadge'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
@@ -32,9 +30,9 @@ const SourceItem = ({ source, deleteSource, onOpen }) => {
       <ListItem key={source._id} button onClick={() => onOpen(source)}>
         <ListItemIcon className="u-w-2-half">
           {!processed &&
-            (source.taskId ||
-              source.metadata?.taskId ||
-              source.attributes?.metadata?.taskId) ? (
+          (source.taskId ||
+            source.metadata?.taskId ||
+            source.attributes?.metadata?.taskId) ? (
             <InfosBadge badgeContent={<CircularProgress size={16} />}>
               <Icon size={32} icon={FiletypeTextIcon} />
             </InfosBadge>

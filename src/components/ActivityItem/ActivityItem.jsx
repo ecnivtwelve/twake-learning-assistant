@@ -14,7 +14,6 @@ import Menu from 'cozy-ui/transpiled/react/Menu'
 import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
 
 import ActivityIcon from '@/assets/icons/ActivityIcon'
-import TableItemText from '@/components/TableItem/TableItemText'
 
 const ActivityItem = ({ activity, deleteActivity }) => {
   const { t } = useI18n()

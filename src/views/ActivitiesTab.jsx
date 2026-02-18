@@ -5,6 +5,7 @@ import { useI18n } from 'twake-i18n'
 import { useClient } from 'cozy-client'
 import Button from 'cozy-ui/transpiled/react/Buttons'
 import Divider from 'cozy-ui/transpiled/react/Divider'
+import Empty from 'cozy-ui/transpiled/react/Empty'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import List from 'cozy-ui/transpiled/react/List'
@@ -12,13 +13,12 @@ import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import ListItemText from 'cozy-ui/transpiled/react/ListItemText'
 
+import ActivityIcon from '@/assets/icons/ActivityIcon'
 import ActivityItem from '@/components/ActivityItem/ActivityItem'
 import PageLayout from '@/components/PageLayout/PageLayout'
 import { useSubject } from '@/context/SubjectContext'
 import { deleteActivity } from '@/queries/actions/activities/deleteActivity'
 import { newActivity } from '@/queries/actions/activities/newActivity'
-import Empty from 'cozy-ui/transpiled/react/Empty'
-import ActivityIcon from '@/assets/icons/ActivityIcon'
 
 const ActivitiesTab = () => {
   const { t } = useI18n()

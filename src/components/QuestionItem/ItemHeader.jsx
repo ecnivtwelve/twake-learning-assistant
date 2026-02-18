@@ -2,29 +2,23 @@ import classNames from 'classnames'
 import React from 'react'
 import { useI18n } from 'twake-i18n'
 
+import { useClient } from 'cozy-client'
 import Button from 'cozy-ui/transpiled/react/Buttons'
+import Chip from 'cozy-ui/transpiled/react/Chips'
+import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
+import FiletypeTextIcon from 'cozy-ui/transpiled/react/Icons/FiletypeText'
 import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import UploadIcon from 'cozy-ui/transpiled/react/Icons/Upload'
-import Viewer from 'cozy-viewer'
-
-import Menu from 'cozy-ui/transpiled/react/Menu'
-import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
-import List from 'cozy-ui/transpiled/react/List'
 import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import ListItemText from 'cozy-ui/transpiled/react/ListItemText'
-import Chip from 'cozy-ui/transpiled/react/Chips'
-import Icon from 'cozy-ui/transpiled/react/Icon'
-import Typography from 'cozy-ui/transpiled/react/Typography'
-import FileOutlineIcon from "cozy-ui/transpiled/react/Icons/FileOutline"
-import FiletypeTextIcon from 'cozy-ui/transpiled/react/Icons/FiletypeText'
+import Menu from 'cozy-ui/transpiled/react/Menu'
+import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
+import Viewer from 'cozy-viewer'
 
-import FilterChip from '@/components/FilterChip/FilterChip'
 import TabTitle from '@/components/TabTitle/TabTitle'
 import styles from '@/styles/item-view.styl'
-import Divider from 'cozy-ui/transpiled/react/Divider'
-import { useClient } from 'cozy-client'
 
 const ItemHeader = ({
   activityTitle,
@@ -33,7 +27,6 @@ const ItemHeader = ({
   onOpenGenerationDialog,
   onOpenImportDialog,
   onCreateQuestion,
-  filters,
   isLoading,
   sources
 }) => {
@@ -62,7 +55,6 @@ const ItemHeader = ({
     files: [],
     index: 0
   })
-
 
   return (
     <>
@@ -161,11 +153,13 @@ const ItemHeader = ({
         />
 
         {sources.length > 0 && (
-          <div className="u-flex u-mt-1"
+          <div
+            className="u-flex u-mt-1"
             style={{
-              width: "100%",
-              overflowX: "scroll",
-              maskImage: "linear-gradient(to right, black 90%, transparent 100%)",
+              width: '100%',
+              overflowX: 'scroll',
+              maskImage:
+                'linear-gradient(to right, black 90%, transparent 100%)'
             }}
           >
             {sources.map(source => (

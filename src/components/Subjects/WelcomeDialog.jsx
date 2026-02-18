@@ -19,13 +19,12 @@ import TwakeLearningsWordmark from '@/assets/icons/TwakeLearningsWordmark'
 import { newSubject } from '@/queries/actions/subjects/newSubject'
 
 const WelcomeDialog = ({ open, onClose }) => {
-  const { dialogProps, dialogTitleProps, dividerProps, dialogActionsProps } =
-    useCozyDialog({
-      size: 'large',
-      open: open,
-      onClose: onClose,
-      disableEnforceFocus: true
-    })
+  const { dialogProps } = useCozyDialog({
+    size: 'large',
+    open: open,
+    onClose: onClose,
+    disableEnforceFocus: true
+  })
 
   const [step, setStep] = useState(0)
 

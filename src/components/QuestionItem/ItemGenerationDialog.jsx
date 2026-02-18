@@ -15,6 +15,7 @@ import Icon from 'cozy-ui/transpiled/react/Icon'
 import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
 import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
 import TextField from 'cozy-ui/transpiled/react/TextField'
+
 import { question_types } from '@/views/QuestionsTab'
 
 const ItemGenerationDialog = ({

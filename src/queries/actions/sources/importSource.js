@@ -1,11 +1,6 @@
 import { safeAddRelationship } from '../utils'
 
-import {
-  deleteFile,
-  deleteTask,
-  generateFileHash,
-  uploadFile
-} from '@/queries/rag/openrag'
+import { deleteTask, generateFileHash, uploadFile } from '@/queries/rag/openrag'
 
 export const newSource = async (
   client,
@@ -39,15 +34,15 @@ export const newSource = async (
   const fileDoc = cozyFile
     ? cozyFile
     : (
-      await client.save({
-        _type: 'io.cozy.files',
-        type: 'file',
-        name: file.name,
-        contentType: file.type,
-        dirId: 'io.cozy.files.root-dir',
-        data: file
-      })
-    ).data
+        await client.save({
+          _type: 'io.cozy.files',
+          type: 'file',
+          name: file.name,
+          contentType: file.type,
+          dirId: 'io.cozy.files.root-dir',
+          data: file
+        })
+      ).data
 
   const source = await client.save({
     _type: 'io.cozy.learnings.sources',

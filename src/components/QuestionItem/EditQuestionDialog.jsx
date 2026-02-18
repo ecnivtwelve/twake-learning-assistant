@@ -19,7 +19,6 @@ import Icon from 'cozy-ui/transpiled/react/Icon'
 import BurgerIcon from 'cozy-ui/transpiled/react/Icons/Burger'
 import List from 'cozy-ui/transpiled/react/List'
 import ListSubheader from 'cozy-ui/transpiled/react/ListSubheader'
-import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
 import TextField from 'cozy-ui/transpiled/react/TextField'
 
 const DraggableAnswerItem = ({
@@ -56,7 +55,7 @@ const DraggableAnswerItem = ({
         {question.interaction && question.interaction === 'choice' && (
           <Checkbox
             checked={questionCorrectId === choice.id}
-            onChange={e => setQuestionCorrectId(choice.id)}
+            onChange={() => setQuestionCorrectId(choice.id)}
           />
         )}
         <TextField

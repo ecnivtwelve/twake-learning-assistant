@@ -2,16 +2,14 @@ import { useState, useEffect, useRef } from 'react'
 import { useI18n } from 'twake-i18n'
 
 import { useClient } from 'cozy-client'
+import log from 'cozy-logger'
 import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
-import { deleteSource } from '../actions/sources/deleteSource'
-
 import { deleteTask, fetchPartitionTask } from '@/queries/rag/openrag'
-import log from 'cozy-logger'
 
 export const useTaskStatus = source => {
   const client = useClient()
-  const { t } = useI18n
+  const { t } = useI18n()
   const taskId = source.taskId || source.metadata?.taskId
   // Check top-level rag_processed first, then metadata
   const isRagProcessed =
@@ -57,7 +55,7 @@ export const useTaskStatus = source => {
 
     // Cleanup timer on unmount
     return () => clearTimeout(timerRef.current)
-  }, [taskId, isCompleted, isRagProcessed, client, source])
+  }, [taskId, isCompleted, isRagProcessed, client, source, showAlert, t])
 
   return isCompleted
 }

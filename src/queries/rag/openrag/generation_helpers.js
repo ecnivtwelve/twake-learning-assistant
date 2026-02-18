@@ -74,7 +74,6 @@ JSON strict : {"reviews":[{"distractor":"","verdict":"BON","commentaire":""}]}`
   return json?.reviews || []
 }
 
-
 export async function runDistractorPipeline(question, answer) {
   try {
     const distractors = await generateDistractors(question, answer)

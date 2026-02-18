@@ -1,6 +1,6 @@
-import { motion, AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import React from 'react'
-import { Outlet, useLocation, useOutlet } from 'react-router-dom'
+import { useLocation, useOutlet } from 'react-router-dom'
 
 import { BarComponent } from 'cozy-bar'
 import useBreakpoints from 'cozy-ui/transpiled/react/providers/Breakpoints'

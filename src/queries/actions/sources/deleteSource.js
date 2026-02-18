@@ -1,5 +1,3 @@
-import { deleteFile } from '@/queries/rag/openrag'
-
 export const deleteSource = async (client, subject, source) => {
   const fileId = source.partitionFileId || source.metadata?.partitionFileId
   if (fileId) {

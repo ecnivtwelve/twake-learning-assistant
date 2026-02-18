@@ -7,14 +7,10 @@ import {
   DialogCloseButton,
   useCozyDialog
 } from 'cozy-ui/transpiled/react/CozyDialogs'
-import Dialog, {
-  DialogTitle,
-  DialogActions
-} from 'cozy-ui/transpiled/react/Dialog'
+import Dialog, { DialogActions } from 'cozy-ui/transpiled/react/Dialog'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
-import List from 'cozy-ui/transpiled/react/List'
 import { CircularProgress } from 'cozy-ui/transpiled/react/Progress'
 import SearchBar from 'cozy-ui/transpiled/react/SearchBar'
 import Tab from 'cozy-ui/transpiled/react/Tab'
@@ -48,13 +44,12 @@ const ItemImportDialog = ({
     ...questionsQuery.options,
     enabled: !!selectedSubject?._id
   })
-  const { dialogProps, dialogTitleProps, dividerProps, dialogActionsProps } =
-    useCozyDialog({
-      size: 'large',
-      open: open,
-      onClose: onClose,
-      disableEnforceFocus: true
-    })
+  const { dialogProps, dividerProps, dialogActionsProps } = useCozyDialog({
+    size: 'large',
+    open: open,
+    onClose: onClose,
+    disableEnforceFocus: true
+  })
 
   const [selectedQuestions, setSelectedQuestions] = useState([])
   const [selectedQuestionType, setSelectedQuestionType] = useState(0)
@@ -147,11 +142,11 @@ const ItemImportDialog = ({
           style={
             searchTerm.length == 0
               ? {
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-                gap: '1rem',
-                padding: '1rem'
-              }
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                  gap: '1rem',
+                  padding: '1rem'
+                }
               : {}
           }
         >
@@ -180,8 +175,9 @@ const ItemImportDialog = ({
         <Button variant="secondary" label={t('cancel')} onClick={onClose} />
         <Button
           variant="primary"
-          label={`${t('import')} ${selectedQuestions.length > 0 ? `(${selectedQuestions.length})` : ''
-            }`}
+          label={`${t('import')} ${
+            selectedQuestions.length > 0 ? `(${selectedQuestions.length})` : ''
+          }`}
           disabled={selectedQuestions.length === 0}
           onClick={() => {
             onSelectQuestions(selectedQuestions)

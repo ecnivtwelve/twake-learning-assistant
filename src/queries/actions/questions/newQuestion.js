@@ -28,7 +28,6 @@ export const newQuestionsBatch = async (
   const questionsList = []
 
   for (const question of questions) {
-    console.log(question)
     const response = await client.save({
       _type: 'io.cozy.learnings.questions',
       label: question.label,
@@ -48,7 +47,6 @@ export const newQuestionsBatch = async (
         }
       }
     })
-    console.log(response)
     questionsList.push(response.data)
   }
 
