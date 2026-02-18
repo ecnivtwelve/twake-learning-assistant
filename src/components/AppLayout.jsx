@@ -18,7 +18,7 @@ const AppLayout = () => {
     if (location.pathname.includes('/item')) {
       return 'item-view'
     }
-    return 'tabs-view'
+    return 'tabs-view:' + location.pathname
   }
 
   return (
@@ -42,21 +42,26 @@ const AppLayout = () => {
             borderRadius: '1rem'
           }}
         >
-          <AnimatePresence mode="wait" initial={false}>
+          <AnimatePresence initial={false}>
             <motion.div
               key={getLayoutKey()}
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{
                 opacity: 1,
                 scale: 1,
-                transition: { duration: 0.4, ease: [0.3, 0, 0, 1] }
+                transition: { duration: 0.3, ease: [0.3, 0, 0, 1], delay: 0.1 }
               }}
               exit={{
                 opacity: 0,
-                scale: 1,
-                transition: { duration: 0.15, ease: 'easeInOut' }
+                scale: 0.99,
+                transition: { duration: 0.2, ease: 'easeInOut' }
               }}
-              style={{ width: '100%', height: '100%', display: 'flex' }}
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                position: 'absolute'
+              }}
             >
               <div
                 style={{

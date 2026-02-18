@@ -78,7 +78,6 @@ const SubjectDropdown = ({ ...props }) => {
                 y: -10,
                 transition: { duration: 0.2, ease: [0, 0, 1, 0] }
               }}
-              layout
               className="u-flex u-flex-items-center"
             >
               <Typography
