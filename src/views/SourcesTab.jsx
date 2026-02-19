@@ -71,7 +71,12 @@ const SourcesTab = () => {
           open={isFilePickerDialogOpen}
           onClose={() => setIsFileDialogOpen(false)}
           multiple={true}
-          fileTypes={['application/pdf', 'text/markdown', 'text/plain']}
+          fileTypes={[
+            'application/pdf',
+            'text/markdown',
+            'text/plain',
+            'text/vnd.cozy.note+markdown'
+          ]}
           existingFiles={existingFiles}
           onFilesSelected={async files => {
             setIsFileDialogOpen(false)
