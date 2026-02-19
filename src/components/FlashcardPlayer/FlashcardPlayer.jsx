@@ -58,7 +58,10 @@ export default function FlashcardPlayer({ flashcard }) {
                   color="textPrimary"
                   style={{
                     color: correct == choice.id ? 'white' : undefined,
-                    fontWeight: correct == choice.id ? 'bold' : undefined
+                    fontWeight: correct == choice.id ? 'bold' : undefined,
+                    width: '100%',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden'
                   }}
                 >
                   {choice.description}
