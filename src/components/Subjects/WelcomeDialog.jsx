@@ -185,7 +185,9 @@ const WelcomeCreateSubject = ({ setStep, onClose }) => {
           variant="primary"
           label={t('welcome.end')}
           endIcon={<Icon icon={NextIcon} className="u-ml-half" />}
+          disabled={!subjectName}
           onClick={() => {
+            if (!subjectName) return
             saveSubject()
           }}
           className="u-ml-half"

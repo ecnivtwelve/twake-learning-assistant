@@ -25,12 +25,16 @@ export const newSubject = async (client, title) => {
   const partitionName = 'subject-' + response.data._id
 
   // if 201
-  const partitionCreated = await createPartition(partitionName)
+  try {
+    const partitionCreated = await createPartition(partitionName)
 
-  if (partitionCreated.status !== 201) {
+    if (!partitionCreated.status || partitionCreated.status !== 201) {
+      await deleteSubject(client, response.data, true)
+      throw new Error('Failed to create partition')
+    }
+  } catch (e) {
     await deleteSubject(client, response.data, true)
-
-    throw new Error('Failed to create partition')
+    throw new Error('Failed to create partition : ' + e)
   }
 
   const response2 = await client.save({
@@ -39,6 +43,7 @@ export const newSubject = async (client, title) => {
   })
 
   if (!response2?.data) {
+    await deleteSubject(client, response.data, true)
     throw new Error('Failed to create subject')
   }
 

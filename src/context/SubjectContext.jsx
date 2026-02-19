@@ -2,8 +2,8 @@ import React, {
   createContext,
   useContext,
   useEffect,
-  useState,
-  useMemo
+  useMemo,
+  useState
 } from 'react'
 
 import { RealTimeQueries, useQuery } from 'cozy-client'
@@ -65,10 +65,19 @@ export const SubjectProvider = ({ children }) => {
   const [welcomeDialogOpen, setWelcomeDialogOpen] = useState(false)
 
   useEffect(() => {
-    if (subjects.fetchStatus === 'loading' && subjects.data.length > 0) {
+    if (welcomeDialogOpen) {
+      if (subjects.data && subjects.data.length !== 0) {
+        setWelcomeDialogOpen(false)
+      }
+    }
+    if (
+      subjects.fetchStatus !== 'loading' &&
+      subjects.data &&
+      subjects.data.length === 0
+    ) {
       setWelcomeDialogOpen(true)
     }
-  }, [subjects.fetchStatus, subjects.data])
+  }, [subjects.fetchStatus, subjects.data, welcomeDialogOpen])
 
   return (
     <>
