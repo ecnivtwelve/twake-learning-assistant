@@ -1,7 +1,6 @@
 import {
   AUTH_TOKEN,
   LUCIE_API_KEY,
-  LUCIE_MODEL,
   LUCIE_URL,
   OPENRAG_URL
 } from '@/consts/consts'
@@ -32,4 +31,4 @@ export const getRequestOptions = (method, headers, body = null) => {
   return options
 }
 
-export { LUCIE_URL, OPENRAG_URL, LUCIE_MODEL, LUCIE_API_KEY }
+export { LUCIE_URL, OPENRAG_URL, LUCIE_API_KEY }

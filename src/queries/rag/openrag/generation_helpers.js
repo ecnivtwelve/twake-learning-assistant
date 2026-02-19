@@ -2,7 +2,6 @@ import {
   getHeaders,
   getRequestOptions,
   LUCIE_API_KEY,
-  LUCIE_MODEL,
   LUCIE_URL
 } from './client'
 import { extractJSONObject } from './utils'
@@ -17,7 +16,7 @@ async function callLucie(prompt, maxTokens = 1000, temperature = 0.5) {
   )
 
   const raw = JSON.stringify({
-    model: LUCIE_MODEL,
+    model: 'Qwen2.5-VL-7B-Instruct',
     messages: [
       {
         role: 'user',
