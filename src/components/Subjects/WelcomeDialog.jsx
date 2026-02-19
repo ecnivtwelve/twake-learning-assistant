@@ -34,12 +34,12 @@ const WelcomeDialog = ({ open, onClose }) => {
         className="u-h-6 u-flex u-flex-column u-flex-items-center u-flex-justify-center"
         style={{ position: 'relative', overflow: 'hidden' }}
       >
-        <AnimatePresence initial={false}>
+        <AnimatePresence>
           <motion.div
             initial={{ opacity: 0, x: 150 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -150 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.4 }}
             key={'step:' + step}
             style={{ position: 'absolute' }}
           >
@@ -79,16 +79,19 @@ const WelcomeIntro = ({ setStep }) => {
           icon={CheckSquareIcon}
           title={t('welcome.item1.title')}
           description={t('welcome.item1.description')}
+          index={0}
         />
         <WelcomeDialogItem
           icon={NewIcon}
           title={t('welcome.item2.title')}
           description={t('welcome.item2.description')}
+          index={1}
         />
         <WelcomeDialogItem
           icon={FileIcon}
           title={t('welcome.item3.title')}
           description={t('welcome.item3.description')}
+          index={2}
         />
       </div>
 
@@ -197,9 +200,14 @@ const WelcomeCreateSubject = ({ setStep, onClose }) => {
   )
 }
 
-const WelcomeDialogItem = ({ icon, title, description }) => {
+const WelcomeDialogItem = ({ icon, title, description, index = 0 }) => {
   return (
-    <div className="u-w-100 u-m-half u-flex u-flex-column u-flex-items-center u-flex-justify-center">
+    <motion.div
+      className="u-w-100 u-m-half u-flex u-flex-column u-flex-items-center u-flex-justify-center"
+      initial={{ opacity: 0, scale: 0.9, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.3 + 0.3, ease: 'easeOut' }}
+    >
       <Icon
         color="var(--primaryColor)"
         size={32}
@@ -217,7 +225,7 @@ const WelcomeDialogItem = ({ icon, title, description }) => {
       >
         {description}
       </Typography>
-    </div>
+    </motion.div>
   )
 }
 
