@@ -9,7 +9,11 @@ const ItemFlashcardPreview = ({ openedQuestion }) => {
   return (
     <div
       className="u-p-2 u-flex u-flex-column u-flex-items-center"
-      style={{ width: '24rem', borderLeft: '1px solid #4242441f' }}
+      style={{
+        width: '24rem',
+        borderLeft: '1px solid #4242441f',
+        position: 'relative'
+      }}
     >
       <FlashcardPlayer flashcard={openedQuestion} />
     </div>

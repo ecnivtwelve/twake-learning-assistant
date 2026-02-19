@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { motion, AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import React, { useEffect } from 'react'
 
 import Paper from 'cozy-ui/transpiled/react/Paper'
@@ -26,7 +26,8 @@ export default function FlashcardPlayer({ flashcard }) {
           key={flashcard._id}
           style={{
             position: 'absolute',
-            padding: 20
+            padding: 20,
+            width: 'calc(100% - 40px)'
           }}
         >
           <Typography variant="h3" align="center" className="u-mb-2">
