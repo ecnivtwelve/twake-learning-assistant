@@ -28,6 +28,20 @@ export const newQuestionsBatch = async (
   const questionsList = []
 
   for (const question of questions) {
+    const relationships = {
+      subjects: {
+        data: [subject]
+      },
+      sources: {
+        data: sources
+      }
+    }
+    if (activity) {
+      relationships.activities = {
+        data: [activity]
+      }
+    }
+
     const response = await client.save({
       _type: 'io.cozy.learnings.questions',
       label: question.label,
@@ -35,23 +49,15 @@ export const newQuestionsBatch = async (
       choices: question.choices,
       correct: question.correct ?? 1,
       hint: question.hint,
-      relationships: {
-        activities: {
-          data: [activity]
-        },
-        subjects: {
-          data: [subject]
-        },
-        sources: {
-          data: sources
-        }
-      }
+      relationships
     })
     questionsList.push(response.data)
   }
 
-  await safeAddRelationship(client, activity, 'questions', questionsList)
-  await safeAddRelationship(client, subject, 'questions', questionsList)
+  if (activity)
+    await safeAddRelationship(client, activity, 'questions', questionsList)
+  if (subject)
+    await safeAddRelationship(client, subject, 'questions', questionsList)
 
   if (!questionsList || questionsList.length === 0) {
     throw new Error('Failed to create questions')

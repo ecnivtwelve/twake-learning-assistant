@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useI18n } from 'twake-i18n'
 
-import { RealTimeQueries, useQuery } from 'cozy-client'
+import { RealTimeQueries, useClient, useQuery } from 'cozy-client'
 import ActionsBar from 'cozy-ui/transpiled/react/ActionsBar'
 import Button from 'cozy-ui/transpiled/react/Buttons'
+import Checkbox from 'cozy-ui/transpiled/react/Checkbox'
 import Divider from 'cozy-ui/transpiled/react/Divider'
 import Empty from 'cozy-ui/transpiled/react/Empty'
 import Icon from 'cozy-ui/transpiled/react/Icon'
@@ -12,18 +13,21 @@ import ListIcon from 'cozy-ui/transpiled/react/Icons/List'
 import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
-import ListItemIcon from 'cozy-ui/transpiled/react/ListItemIcon'
 import Tab from 'cozy-ui/transpiled/react/Tab'
 import Tabs from 'cozy-ui/transpiled/react/Tabs'
+import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
 import QuestionIcon from '@/assets/icons/QuestionIcon'
 import PageLayout from '@/components/PageLayout/PageLayout'
 import EditQuestionDialog from '@/components/QuestionItem/EditQuestionDialog'
+import FlashcardGenerationDialog from '@/components/QuestionItem/FlashcardGenerationDialog'
 import QuestionItem from '@/components/QuestionItem/QuestionItem'
 import TableItemText from '@/components/TableItem/TableItemText'
 import { useSubject } from '@/context/SubjectContext'
 import { buildQuestionsBySubjectQuery } from '@/queries'
+import { newQuestionsBatch } from '@/queries/actions/questions/newQuestion'
 import { useQuestionActions } from '@/queries/hooks/useQuestionActions'
+import { runFlashcardPipeline } from '@/queries/rag/openrag'
 
 export const question_types = [
   {
@@ -39,6 +43,8 @@ export const question_types = [
 const QuestionsTab = () => {
   const { t } = useI18n()
   const navigate = useNavigate()
+  const client = useClient()
+  const { showAlert } = useAlert()
 
   const { selectedSubject } = useSubject()
   const questionsQuery = buildQuestionsBySubjectQuery(selectedSubject?._id)
@@ -53,10 +59,82 @@ const QuestionsTab = () => {
 
   const [selectedQuestionType, setSelectedQuestionType] = useState(0)
 
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [generationStatus, setGenerationStatus] = useState('')
+  const [generationResults, setGenerationResults] = useState([])
+  const [showRecapDialog, setShowRecapDialog] = useState(false)
+
   const filteredQuestions = questions?.filter(
     question =>
       question.interaction === question_types[selectedQuestionType].value
   )
+
+  const handleNewQuestion = async () => {
+    if (selectedSubject?.partition) {
+      setIsGenerating(true)
+      setGenerationStatus('Démarrage...')
+      setShowRecapDialog(true)
+      setGenerationResults([])
+      try {
+        const generatedCards = await runFlashcardPipeline(
+          selectedSubject.partition,
+          setGenerationStatus
+        )
+        setGenerationResults(generatedCards)
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('Flashcard pipeline failed', e)
+        showAlert({
+          message: t('questions.generate.error'),
+          severity: 'error'
+        })
+        setShowRecapDialog(false)
+      } finally {
+        setIsGenerating(false)
+      }
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn('No partition selected for current subject.')
+    }
+  }
+
+  const handleAddGeneratedCards = async selectedCards => {
+    try {
+      const allCards = selectedCards.map(card => ({
+        label: card.text,
+        choices: [
+          {
+            id: 1,
+            description: card.answer
+          }
+        ],
+        correct: 1,
+        hint: card.tip
+      }))
+
+      if (allCards.length === 0) return
+
+      await newQuestionsBatch(
+        client,
+        selectedSubject,
+        null,
+        allCards,
+        'flashcard'
+      )
+      showAlert({
+        message: `${allCards.length} flashcards ajoutées avec succès !`,
+        severity: 'success'
+      })
+      setShowRecapDialog(false)
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to add generated cards', e)
+      showAlert({
+        message: t('questions.alerts.error'),
+        severity: 'error'
+      })
+    }
+  }
 
   return (
     <PageLayout
@@ -84,6 +162,7 @@ const QuestionsTab = () => {
             label={t('new')}
             startIcon={<Icon icon={PlusIcon} />}
             className="u-ml-1"
+            onClick={handleNewQuestion}
           />
         </>
       }
@@ -101,10 +180,48 @@ const QuestionsTab = () => {
         onClose={() => setEditedQuestion(null)}
         question={editedQuestion}
       />
+      <FlashcardGenerationDialog
+        open={showRecapDialog}
+        onClose={() => setShowRecapDialog(false)}
+        loading={isGenerating}
+        status={generationStatus}
+        results={generationResults}
+        onAddAll={handleAddGeneratedCards}
+      />
 
       <List>
         <ListItem size="small" dense>
-          <ListItemIcon className="u-w-2-half"></ListItemIcon>
+          <Checkbox
+            checked={
+              filteredQuestions?.length > 0 &&
+              filteredQuestions.every(q => selectedQuestions.includes(q._id))
+            }
+            mixed={
+              filteredQuestions?.some(q => selectedQuestions.includes(q._id)) &&
+              !filteredQuestions?.every(q => selectedQuestions.includes(q._id))
+            }
+            onChange={() => {
+              if (
+                filteredQuestions?.every(q =>
+                  selectedQuestions.includes(q._id)
+                )
+              ) {
+                setSelectedQuestions(
+                  selectedQuestions.filter(
+                    id => !filteredQuestions.some(q => q._id === id)
+                  )
+                )
+              } else {
+                const newSelection = [
+                  ...new Set([
+                    ...selectedQuestions,
+                    ...filteredQuestions.map(q => q._id)
+                  ])
+                ]
+                setSelectedQuestions(newSelection)
+              }
+            }}
+          />
           <TableItemText
             value={t('questions.table.questions')}
             type="primary"

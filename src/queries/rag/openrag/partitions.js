@@ -28,3 +28,15 @@ export async function fetchPartition(partition) {
       throw new Error(error)
     })
 }
+
+export async function fetchPartitionChunks(partition) {
+  const myHeaders = getHeaders()
+  const requestOptions = getRequestOptions('GET', myHeaders)
+
+  return fetch(`${OPENRAG_URL}/partition/${partition}/chunks`, requestOptions)
+    .then(response => response.json())
+    .then(data => data.chunks || [])
+    .catch(error => {
+      throw new Error(error)
+    })
+}
