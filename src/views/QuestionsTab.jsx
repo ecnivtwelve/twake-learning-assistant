@@ -202,9 +202,7 @@ const QuestionsTab = () => {
             }
             onChange={() => {
               if (
-                filteredQuestions?.every(q =>
-                  selectedQuestions.includes(q._id)
-                )
+                filteredQuestions?.every(q => selectedQuestions.includes(q._id))
               ) {
                 setSelectedQuestions(
                   selectedQuestions.filter(
