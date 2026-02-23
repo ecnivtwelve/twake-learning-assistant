@@ -37,9 +37,9 @@ const AddSourceDialog = ({ open, onClose }) => {
     if (open) {
       setFile(null)
       setDescription('')
-      setAuthor('moi')
+      setAuthor(t('sources.add.default_author'))
     }
-  }, [open])
+  }, [open, t])
 
   const { dialogProps, dialogTitleProps, dividerProps, dialogActionsProps } =
     useCozyDialog({
@@ -84,7 +84,7 @@ const AddSourceDialog = ({ open, onClose }) => {
   return (
     <Dialog {...dialogProps}>
       <DialogCloseButton onClick={onClose} />
-      <DialogTitle {...dialogTitleProps}>Ajouter une source</DialogTitle>
+      <DialogTitle {...dialogTitleProps}>{t('sources.add.title')}</DialogTitle>
       <Divider {...dividerProps} />
       <DialogContent>
         <div className="u-flex u-flex-column u-g-1 u-mb-1-half">
@@ -96,7 +96,7 @@ const AddSourceDialog = ({ open, onClose }) => {
           <div className="u-flex u-flex-items-center">
             <Button
               variant="secondary"
-              label="Choisir un fichier"
+              label={t('sources.add.choose_file')}
               startIcon={<Icon icon={FileIcon} />}
               component="label"
               onClick={() => fileInputRef.current.click()}
@@ -112,7 +112,7 @@ const AddSourceDialog = ({ open, onClose }) => {
           </div>
 
           <TextField
-            label="Description"
+            label={t('sources.add.description')}
             variant="outlined"
             fullWidth
             value={description}
@@ -121,7 +121,7 @@ const AddSourceDialog = ({ open, onClose }) => {
           />
 
           <TextField
-            label="Auteur"
+            label={t('sources.add.author')}
             variant="outlined"
             fullWidth
             value={author}
@@ -140,7 +140,7 @@ const AddSourceDialog = ({ open, onClose }) => {
         />
         <Button
           variant="primary"
-          label="Ajouter"
+          label={t('add')}
           startIcon={<Icon icon={CloudUploadIcon} />}
           onClick={handleUpload}
           busy={uploading}

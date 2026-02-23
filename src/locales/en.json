@@ -1,6 +1,15 @@
 {
   "title": "Learning Assistant",
+  "delete": "Delete",
   "new": "New",
+  "generate": "Generate",
+  "add": "Add",
+  "cancel": "Cancel",
+  "detach": "Detach",
+  "import": "Import",
+  "save": "Save",
+  "edit": "Edit",
+  "back": "Back",
   "tags": {
     "subjects": "Subjects",
     "level": "Level",
@@ -14,36 +23,194 @@
   },
   "activity": {
     "title": "Activity",
-    "placeholder": "Give this activity a name"
+    "untitled": "Untitled",
+    "placeholder": "Give this activity a name",
+    "alerts": {
+      "rename": {
+        "error": "Could not rename activity"
+      }
+    },
+    "generating": {
+      "title": "Generating flashcards...",
+      "message": "This can take up to one minute, please wait."
+    },
+    "empty": {
+      "title": "No question",
+      "message": "Create your first question to get started",
+      "generate": "Generate questions",
+      "select": "Select questions"
+    },
+    "add": {
+      "add": "Add",
+      "select": "Select questions",
+      "select_description": "From your sources",
+      "generate": "Generate with AI",
+      "new": "New question"
+    }
   },
   "activities": {
     "title": "Activities",
+    "empty": {
+      "title": "No activity",
+      "message": "Create your first activity to get started",
+      "select": "Create an activity"
+    },
     "table": {
-      "activities": "Activity",
+      "activities": "Activities",
       "update": "Updated",
       "questions": "Questions",
       "classes": "Classes",
-      "level": "Level"
+      "level": "Mastery",
+      "empty": "None"
+    },
+    "alerts": {
+      "created": "Activity created",
+      "error": "Error while creating activity",
+      "deleted": "Activity deleted",
+      "updated": "Activity updated"
     }
   },
   "questions": {
     "title": "Questions",
+    "placeholder": "Give this question a name",
+    "edit": "Edit question",
+    "edit_sections": {
+      "information": "Information",
+      "answers": "Answers",
+      "hint": "Hint"
+    },
+    "noSource": "No source",
+    "types": {
+      "choice": "MCQ",
+      "flashcard": "Flashcards"
+    },
+    "import": {
+      "title": "Import questions",
+      "select_with_ai": "Select with AI"
+    },
+    "generation": {
+      "dialog_title": "Generate questions",
+      "count_label": "Number of questions",
+      "type_label": "Question type",
+      "count_option": "%{count} questions",
+      "overlay_title": "Generating questions",
+      "status": {
+        "starting": "Starting...",
+        "adding_answers": "Adding answers (%{status})",
+        "analyzing_documents": "Analyzing documents...",
+        "none": "None"
+      },
+      "summary": {
+        "loading_title": "Generation in progress...",
+        "title": "Generation summary",
+        "selected_count": "%{selected} / %{total} flashcards selected.",
+        "select_all": "Select all",
+        "cards_count": "%{count} cards",
+        "add_selected": "Add %{count} flashcards"
+      }
+    },
     "table": {
       "questions": "Questions",
       "source": "Source",
       "tags": "Tags",
-      "level": "Level"
+      "title": "Title",
+      "level": "Mastery",
+      "answer": "Answer",
+      "hint": "Hint"
+    },
+    "alerts": {
+      "created": "Question created",
+      "error": "Error while creating question",
+      "deleted": "Question deleted",
+      "detached": "Question removed from activity",
+      "added": "Question added to activity"
+    },
+    "generate": {
+      "success": "Questions generated",
+      "error": "Error while generating questions",
+      "added_success": "%{count} flashcards added successfully!"
+    },
+    "empty": {
+      "title": "No question",
+      "message": "Create your first activity to get started",
+      "select": "Open activities"
     }
   },
   "sources": {
     "title": "Sources",
     "table": {
       "name": "Name",
+      "filename": "File",
       "update": "Updated",
       "tags": "Tags"
+    },
+    "status": {
+      "chunking": "Indexing",
+      "serializing": "Processing",
+      "completed": "Done",
+      "failed": "Failed"
+    },
+    "import": {
+      "loading": "Loading file...",
+      "error": "Error while importing",
+      "success": "Source imported"
+    },
+    "add": {
+      "title": "Add source",
+      "choose_file": "Choose a file",
+      "description": "Description",
+      "author": "Author",
+      "default_author": "Me",
+      "error": "Error while adding source"
+    },
+    "empty": {
+      "title": "No source",
+      "message": "Add your first source to get started",
+      "select": "Add a source"
     }
   },
   "insights": {
     "title": "Analytics"
+  },
+  "subjects": {
+    "title": "Subjects",
+    "select": "Select a subject",
+    "new": "New subject",
+    "delete": {
+      "title": "Delete subject",
+      "confirm": "Are you sure you want to delete this subject?"
+    },
+    "input": {
+      "name": {
+        "label": "Subject name",
+        "placeholder": "History"
+      }
+    },
+    "alerts": {
+      "created": "Subject created",
+      "error": "Error while creating subject"
+    }
+  },
+  "welcome": {
+    "title": "Welcome to ",
+    "message": "Twake Workplace learning content creation tool",
+    "item1": {
+      "title": "Activity creation",
+      "description": "Easily create learning activities for your students"
+    },
+    "item2": {
+      "title": "AI question generation",
+      "description": "Import your documents and let AI generate questions"
+    },
+    "item3": {
+      "title": "Content organization",
+      "description": "Organize your activities by subjects and source documents"
+    },
+    "start": "Start",
+    "createSubject": {
+      "title": "Create your first subject",
+      "message": "A subject groups activities and sources"
+    },
+    "end": "Finish"
   }
 }

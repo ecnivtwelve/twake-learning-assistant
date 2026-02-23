@@ -21,7 +21,7 @@ import QuestionItem from './QuestionItem'
 
 import { useSubject } from '@/context/SubjectContext'
 import { buildQuestionsBySubjectQuery } from '@/queries'
-import { question_types } from '@/views/QuestionsTab'
+import { getQuestionTypes } from '@/views/QuestionsTab'
 
 const ItemImportDialog = ({
   open,
@@ -30,6 +30,7 @@ const ItemImportDialog = ({
   currentQuestions
 }) => {
   const { t } = useI18n()
+  const questionTypes = getQuestionTypes(t)
   const [searchTerm, setSearchTerm] = useState('')
 
   React.useEffect(() => {
@@ -57,7 +58,7 @@ const ItemImportDialog = ({
   const filteredQuestions = questions.data?.filter(
     question =>
       question.label?.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      question.interaction === question_types[selectedQuestionType].value
+      question.interaction === questionTypes[selectedQuestionType].value
   )
 
   const currentQuestionsIds = currentQuestions.map(question => question._id)
@@ -96,12 +97,12 @@ const ItemImportDialog = ({
     <Dialog {...dialogProps}>
       <DialogCloseButton onClick={onClose} />
       <div className="u-flex u-flex-items-center u-flex-justify-between u-p-2 u-pr-4 u-h-1">
-        <Typography variant="h4">Importer des questions</Typography>
+        <Typography variant="h4">{t('questions.import.title')}</Typography>
         <div className="u-mr-3">
           <Button
             variant="secondary"
             startIcon={<Icon icon={NewIcon} />}
-            label="Sélectionner par IA"
+            label={t('questions.import.select_with_ai')}
             onClick={autoSelect}
             endIcon={isAutoSelecting ? <CircularProgress size={16} /> : null}
           />
@@ -117,7 +118,7 @@ const ItemImportDialog = ({
             onChange={(event, value) => setSelectedQuestionType(value)}
             variant="fullWidth"
           >
-            {question_types.map(question_type => (
+            {questionTypes.map(question_type => (
               <Tab
                 className="u-miw-3"
                 key={question_type.value}

@@ -49,12 +49,14 @@ const ItemQuestionList = ({
 
   const getTranslatedStatus = status => {
     if (status.startsWith('LUCIE')) {
-      return 'Ajout des réponses (' + status.split('LUCIE ')[1] + ')'
+      return t('questions.generation.status.adding_answers', {
+        status: status.split('LUCIE ')[1]
+      })
     }
     if (status.startsWith('OPENRAG')) {
-      return 'Analyse des documents en cours...'
+      return t('questions.generation.status.analyzing_documents')
     }
-    return 'AUCUN'
+    return t('questions.generation.status.none')
   }
 
   return (
@@ -90,8 +92,14 @@ const ItemQuestionList = ({
                 }
               }}
             />
-            <TableItemText value="Question" type="primary" />
-            <TableItemText value="Réponse" type="secondary" />
+            <TableItemText
+              value={t('questions.table.questions')}
+              type="primary"
+            />
+            <TableItemText
+              value={t('questions.table.answer')}
+              type="secondary"
+            />
             <div className="u-w-2-half u-p-1" />
           </ListItem>
 
@@ -110,7 +118,7 @@ const ItemQuestionList = ({
             >
               <Empty
                 icon={<CircularProgress />}
-                title="Génération des questions"
+                title={t('questions.generation.overlay_title')}
                 text={
                   <div className="u-w-100" style={{ position: 'relative' }}>
                     <AnimatePresence>

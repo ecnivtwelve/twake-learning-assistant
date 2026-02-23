@@ -48,8 +48,8 @@ const ActivitiesTab = () => {
       <List>
         <ListItem dense size="small">
           <ListItemIcon className="u-w-2-half" />
-          <ListItemText primary="Nom" />
-          <ListItemText secondary="Date" />
+          <ListItemText primary={t('activities.table.activities')} />
+          <ListItemText secondary={t('activities.table.update')} />
           <div className="u-w-3 u-mr-half" />
         </ListItem>
         <Divider />

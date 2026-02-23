@@ -88,7 +88,9 @@ const FlashcardGenerationDialog = ({
     <Dialog {...dialogProps}>
       {!loading && <DialogCloseButton onClick={onClose} />}
       <DialogTitle {...dialogTitleProps}>
-        {loading ? 'Génération en cours...' : 'Récapitulatif de la génération'}
+        {loading
+          ? t('questions.generation.summary.loading_title')
+          : t('questions.generation.summary.title')}
       </DialogTitle>
       <Divider {...dividerProps} />
       <div>
@@ -110,8 +112,10 @@ const FlashcardGenerationDialog = ({
             <Paper className="u-m-half">
               <div className="u-flex u-flex-justify-between u-flex-items-center u-ph-1">
                 <Typography variant="h6">
-                  {selectedCards.length} / {allCards.length} flashcards
-                  sélectionnées.
+                  {t('questions.generation.summary.selected_count', {
+                    selected: selectedCards.length,
+                    total: allCards.length
+                  })}
                 </Typography>
                 <div
                   className="u-flex u-flex-items-center"
@@ -129,7 +133,7 @@ const FlashcardGenerationDialog = ({
                     }
                   />
                   <Typography variant="body2" className="u-ml-half">
-                    Tout sélectionner
+                    {t('questions.generation.summary.select_all')}
                   </Typography>
                 </div>
               </div>
@@ -141,7 +145,9 @@ const FlashcardGenerationDialog = ({
                   <ListItem divider>
                     <ListItemText
                       primary={res.filename}
-                      secondary={`${res.cards?.length || 0} cartes`}
+                      secondary={t('questions.generation.summary.cards_count', {
+                        count: res.cards?.length || 0
+                      })}
                     />
                   </ListItem>
                   <List>
@@ -176,7 +182,9 @@ const FlashcardGenerationDialog = ({
         <Button variant="secondary" label={t('cancel')} onClick={onClose} />
         <Button
           variant="primary"
-          label={`Ajouter ${selectedCards.length} flashcards`}
+          label={t('questions.generation.summary.add_selected', {
+            count: selectedCards.length
+          })}
           endIcon={isAdding && <CircularProgress color="white" size={20} />}
           disabled={selectedCards.length === 0}
           onClick={handleAdd}

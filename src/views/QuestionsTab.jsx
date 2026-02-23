@@ -29,13 +29,13 @@ import { newQuestionsBatch } from '@/queries/actions/questions/newQuestion'
 import { useQuestionActions } from '@/queries/hooks/useQuestionActions'
 import { runFlashcardPipeline } from '@/queries/rag/openrag'
 
-export const question_types = [
+export const getQuestionTypes = t => [
   {
-    label: 'QCM',
+    label: t('questions.types.choice'),
     value: 'choice'
   },
   {
-    label: 'Flashcards',
+    label: t('questions.types.flashcard'),
     value: 'flashcard'
   }
 ]
@@ -63,16 +63,17 @@ const QuestionsTab = () => {
   const [generationStatus, setGenerationStatus] = useState('')
   const [generationResults, setGenerationResults] = useState([])
   const [showRecapDialog, setShowRecapDialog] = useState(false)
+  const questionTypes = getQuestionTypes(t)
 
   const filteredQuestions = questions?.filter(
     question =>
-      question.interaction === question_types[selectedQuestionType].value
+      question.interaction === questionTypes[selectedQuestionType].value
   )
 
   const handleNewQuestion = async () => {
     if (selectedSubject?.partition) {
       setIsGenerating(true)
-      setGenerationStatus('Démarrage...')
+      setGenerationStatus(t('questions.generation.status.starting'))
       setShowRecapDialog(true)
       setGenerationResults([])
       try {
@@ -122,7 +123,9 @@ const QuestionsTab = () => {
         'flashcard'
       )
       showAlert({
-        message: `${allCards.length} flashcards ajoutées avec succès !`,
+        message: t('questions.generate.added_success', {
+          count: allCards.length
+        }),
         severity: 'success'
       })
       setShowRecapDialog(false)
@@ -148,7 +151,7 @@ const QuestionsTab = () => {
               onChange={(event, value) => setSelectedQuestionType(value)}
               variant="fullWidth"
             >
-              {question_types.map(question_type => (
+              {questionTypes.map(question_type => (
                 <Tab
                   className="u-miw-3"
                   key={question_type.value}

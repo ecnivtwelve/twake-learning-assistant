@@ -16,7 +16,7 @@ import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
 import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
 import TextField from 'cozy-ui/transpiled/react/TextField'
 
-import { question_types } from '@/views/QuestionsTab'
+import { getQuestionTypes } from '@/views/QuestionsTab'
 
 const ItemGenerationDialog = ({
   open,
@@ -27,11 +27,21 @@ const ItemGenerationDialog = ({
   setNumberOfQuestions
 }) => {
   const { t } = useI18n()
+  const modes = getQuestionTypes(t)
   const numberOfQuestionsOptions = [
-    { value: 5, label: '5 questions' },
-    { value: 10, label: '10 questions' },
-    { value: 15, label: '15 questions' },
-    { value: 20, label: '20 questions' }
+    { value: 5, label: t('questions.generation.count_option', { count: 5 }) },
+    {
+      value: 10,
+      label: t('questions.generation.count_option', { count: 10 })
+    },
+    {
+      value: 15,
+      label: t('questions.generation.count_option', { count: 15 })
+    },
+    {
+      value: 20,
+      label: t('questions.generation.count_option', { count: 20 })
+    }
   ]
 
   const { dialogProps, dialogTitleProps, dividerProps, dialogActionsProps } =
@@ -42,13 +52,14 @@ const ItemGenerationDialog = ({
       disableEnforceFocus: true
     })
 
-  const modes = question_types
   const [mode, setMode] = useState('choice')
 
   return (
     <Dialog {...dialogProps}>
       <DialogCloseButton onClick={onClose} />
-      <DialogTitle {...dialogTitleProps}>Générer des questions</DialogTitle>
+      <DialogTitle {...dialogTitleProps}>
+        {t('questions.generation.dialog_title')}
+      </DialogTitle>
       <Divider {...dividerProps} />
       <div className="u-m-1">
         <TextField
@@ -56,7 +67,7 @@ const ItemGenerationDialog = ({
           options={numberOfQuestionsOptions}
           value={numberOfQuestions}
           onChange={e => setNumberOfQuestions(e.target.value)}
-          label="Nombre de questions"
+          label={t('questions.generation.count_label')}
           variant="outlined"
           fullWidth
         >
@@ -71,7 +82,7 @@ const ItemGenerationDialog = ({
           options={modes}
           value={mode}
           onChange={e => setMode(e.target.value)}
-          label="Type de questions"
+          label={t('questions.generation.type_label')}
           variant="outlined"
           fullWidth
           className="u-mt-1"
@@ -92,7 +103,7 @@ const ItemGenerationDialog = ({
           startIcon={<Icon icon={NewIcon} />}
           onClick={() => {
             onClose()
-            if (mode === 'flashcards') {
+            if (mode === 'flashcard') {
               onGenerateFlashcards()
             } else {
               onGenerateMCQs()

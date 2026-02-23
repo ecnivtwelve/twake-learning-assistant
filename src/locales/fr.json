@@ -24,10 +24,10 @@
   "activity": {
     "title": "Entraînement",
     "untitled": "Sans titre",
-    "placeholder": "Donner un nom à l’entrainement",
+    "placeholder": "Donner un nom à l’entraînement",
     "alerts": {
       "rename": {
-        "error": "Impossible de modifier le nom de l'entrainement"
+        "error": "Impossible de modifier le nom de l'entraînement"
       }
     },
     "generating": {
@@ -65,7 +65,7 @@
     },
     "alerts": {
       "created": "Entraînement créé",
-      "error": "Erreur lors de la création de l'entrainement",
+      "error": "Erreur lors de la création de l'entraînement",
       "deleted": "Entraînement supprimé",
       "updated": "Entraînement mis à jour"
     }
@@ -74,7 +74,41 @@
     "title": "Questions",
     "placeholder": "Donner un nom à la question",
     "edit": "Modifier la question",
+    "edit_sections": {
+      "information": "Informations",
+      "answers": "Réponses",
+      "hint": "Indice"
+    },
     "noSource": "Aucune source",
+    "types": {
+      "choice": "QCM",
+      "flashcard": "Flashcards"
+    },
+    "import": {
+      "title": "Importer des questions",
+      "select_with_ai": "Sélectionner par IA"
+    },
+    "generation": {
+      "dialog_title": "Générer des questions",
+      "count_label": "Nombre de questions",
+      "type_label": "Type de questions",
+      "count_option": "%{count} questions",
+      "overlay_title": "Génération des questions",
+      "status": {
+        "starting": "Démarrage...",
+        "adding_answers": "Ajout des réponses (%{status})",
+        "analyzing_documents": "Analyse des documents en cours...",
+        "none": "Aucun"
+      },
+      "summary": {
+        "loading_title": "Génération en cours...",
+        "title": "Récapitulatif de la génération",
+        "selected_count": "%{selected} / %{total} flashcards sélectionnées.",
+        "select_all": "Tout sélectionner",
+        "cards_count": "%{count} cartes",
+        "add_selected": "Ajouter %{count} flashcards"
+      }
+    },
     "table": {
       "questions": "Questions",
       "source": "Source",
@@ -93,12 +127,13 @@
     },
     "generate": {
       "success": "Questions générées",
-      "error": "Erreur lors de la génération des questions"
+      "error": "Erreur lors de la génération des questions",
+      "added_success": "%{count} flashcards ajoutées avec succès !"
     },
     "empty": {
       "title": "Aucune question",
       "message": "Créez votre première activité pour commencer",
-      "select": "Ouvir les activités"
+      "select": "Ouvrir les activités"
     }
   },
   "sources": {
@@ -119,6 +154,14 @@
       "loading": "Chargement du fichier...",
       "error": "Erreur lors de l'importation",
       "success": "Source importée"
+    },
+    "add": {
+      "title": "Ajouter une source",
+      "choose_file": "Choisir un fichier",
+      "description": "Description",
+      "author": "Auteur",
+      "default_author": "Moi",
+      "error": "Erreur lors de l'ajout de la source"
     },
     "empty": {
       "title": "Aucune source",

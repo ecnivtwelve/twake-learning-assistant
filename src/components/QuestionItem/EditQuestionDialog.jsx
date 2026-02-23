@@ -124,7 +124,7 @@ const EditQuestionDialog = ({ open, onClose, question }) => {
       <DialogTitle {...dialogTitleProps}>{t('questions.edit')}</DialogTitle>
       <Divider {...dividerProps} />
 
-      <ListSubheader>Informations</ListSubheader>
+      <ListSubheader>{t('questions.edit_sections.information')}</ListSubheader>
       <List>
         <ListItem>
           <TextField
@@ -137,7 +137,7 @@ const EditQuestionDialog = ({ open, onClose, question }) => {
         </ListItem>
       </List>
 
-      <ListSubheader>Réponses</ListSubheader>
+      <ListSubheader>{t('questions.edit_sections.answers')}</ListSubheader>
       <List
         component={Reorder.Group}
         axis="y"
@@ -158,7 +158,7 @@ const EditQuestionDialog = ({ open, onClose, question }) => {
         ))}
       </List>
 
-      <ListSubheader>Indice</ListSubheader>
+      <ListSubheader>{t('questions.edit_sections.hint')}</ListSubheader>
       <List>
         <ListItem>
           <TextField
