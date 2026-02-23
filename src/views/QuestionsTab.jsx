@@ -54,7 +54,11 @@ const QuestionsTab = () => {
   const [generationResults, setGenerationResults] = useState([])
   const [showRecapDialog, setShowRecapDialog] = useState(false)
   const [hasStartedGeneration, setHasStartedGeneration] = useState(false)
+  
   const questionTypes = getQuestionTypes(t)
+  const flashcardTabIndex = questionTypes.findIndex(
+    questionType => questionType.value === 'flashcard'
+  )
 
   const filteredQuestions = questions?.filter(
     question =>
@@ -136,6 +140,9 @@ const QuestionsTab = () => {
         }),
         severity: 'success'
       })
+      if (flashcardTabIndex >= 0) {
+        setSelectedQuestionType(flashcardTabIndex)
+      }
       setShowRecapDialog(false)
     } catch (e) {
       // eslint-disable-next-line no-console
