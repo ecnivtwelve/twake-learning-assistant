@@ -29,6 +29,9 @@ coverage/
 ehthumbs.db
 Thumbs.db
 desktop.ini
+*.log
+.idea
+.vscode
 
 # Mobile
 targets/mobile/hooks
