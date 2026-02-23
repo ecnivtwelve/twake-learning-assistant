@@ -16,8 +16,8 @@ import ListItemSkeleton from 'cozy-ui/transpiled/react/Skeletons/ListItemSkeleto
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import ActivityIcon from '@/assets/icons/ActivityIcon'
-import EditQuestionDialog from '@/components/QuestionItem/EditQuestionDialog'
-import QuestionItem from '@/components/QuestionItem/QuestionItem'
+import EditQuestionDialog from '@/components/Dialogs/EditQuestionDialog/EditQuestionDialog'
+import QuestionItem from '@/components/QuestionItem/QuestionItem/QuestionItem'
 import TableItemText from '@/components/TableItem/TableItemText'
 
 const ItemQuestionList = ({

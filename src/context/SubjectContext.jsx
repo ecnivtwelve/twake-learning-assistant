@@ -8,7 +8,7 @@ import React, {
 
 import { RealTimeQueries, useQuery } from 'cozy-client'
 
-import WelcomeDialog from '@/components/Subjects/WelcomeDialog'
+import WelcomeDialog from '@/components/Dialogs/WelcomeDialog/WelcomeDialog'
 import { buildSubjectsQuery } from '@/queries'
 
 const SubjectContext = createContext()

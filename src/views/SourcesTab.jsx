@@ -17,7 +17,6 @@ import Viewer from 'cozy-viewer'
 import SourceIcon from '@/assets/icons/SourceIcon'
 import PageLayout from '@/components/PageLayout/PageLayout'
 import SourceItem from '@/components/SourceItem/SourceItem'
-import AddSourceDialog from '@/components/Sources/AddSourceDialog'
 import TableItemText from '@/components/TableItem/TableItemText'
 import { useSubject } from '@/context/SubjectContext'
 import { useSourceImport } from '@/hooks/useSourceImport'
@@ -31,7 +30,6 @@ const SourcesTab = () => {
   const { selectedSubject } = useSubject()
   const sources = selectedSubject?.sources.data || []
 
-  const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false)
   const [isFilePickerDialogOpen, setIsFileDialogOpen] = React.useState(false)
 
   const { handleFilesSelected } = useSourceImport(client, selectedSubject)
@@ -100,12 +98,6 @@ const SourcesTab = () => {
               })
             }
           }}
-        />
-
-        <AddSourceDialog
-          open={isAddDialogOpen}
-          onClose={() => setIsAddDialogOpen(false)}
-          subject={selectedSubject}
         />
 
         <List>

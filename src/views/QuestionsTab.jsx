@@ -10,7 +10,7 @@ import Divider from 'cozy-ui/transpiled/react/Divider'
 import Empty from 'cozy-ui/transpiled/react/Empty'
 import Icon from 'cozy-ui/transpiled/react/Icon'
 import ListIcon from 'cozy-ui/transpiled/react/Icons/List'
-import PlusIcon from 'cozy-ui/transpiled/react/Icons/Plus'
+import NewIcon from 'cozy-ui/transpiled/react/Icons/New'
 import List from 'cozy-ui/transpiled/react/List'
 import ListItem from 'cozy-ui/transpiled/react/ListItem'
 import Tab from 'cozy-ui/transpiled/react/Tab'
@@ -19,26 +19,16 @@ import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
 import QuestionIcon from '@/assets/icons/QuestionIcon'
 import PageLayout from '@/components/PageLayout/PageLayout'
-import EditQuestionDialog from '@/components/QuestionItem/EditQuestionDialog'
-import FlashcardGenerationDialog from '@/components/QuestionItem/FlashcardGenerationDialog'
-import QuestionItem from '@/components/QuestionItem/QuestionItem'
+import EditQuestionDialog from '@/components/Dialogs/EditQuestionDialog/EditQuestionDialog'
+import FlashcardGenerationDialog from '@/components/Dialogs/FlashcardGenerationDialog/FlashcardGenerationDialog'
+import QuestionItem from '@/components/QuestionItem/QuestionItem/QuestionItem'
+import { getQuestionTypes } from '@/consts/questionTypes'
 import TableItemText from '@/components/TableItem/TableItemText'
 import { useSubject } from '@/context/SubjectContext'
 import { buildQuestionsBySubjectQuery } from '@/queries'
 import { newQuestionsBatch } from '@/queries/actions/questions/newQuestion'
 import { useQuestionActions } from '@/queries/hooks/useQuestionActions'
 import { runFlashcardPipeline } from '@/queries/rag/openrag'
-
-export const getQuestionTypes = t => [
-  {
-    label: t('questions.types.choice'),
-    value: 'choice'
-  },
-  {
-    label: t('questions.types.flashcard'),
-    value: 'flashcard'
-  }
-]
 
 const QuestionsTab = () => {
   const { t } = useI18n()
@@ -63,6 +53,7 @@ const QuestionsTab = () => {
   const [generationStatus, setGenerationStatus] = useState('')
   const [generationResults, setGenerationResults] = useState([])
   const [showRecapDialog, setShowRecapDialog] = useState(false)
+  const [hasStartedGeneration, setHasStartedGeneration] = useState(false)
   const questionTypes = getQuestionTypes(t)
 
   const filteredQuestions = questions?.filter(
@@ -70,32 +61,49 @@ const QuestionsTab = () => {
       question.interaction === questionTypes[selectedQuestionType].value
   )
 
-  const handleNewQuestion = async () => {
+  const handleCloseGenerationDialog = () => {
+    setShowRecapDialog(false)
+    setIsGenerating(false)
+    setGenerationStatus('')
+    setGenerationResults([])
+    setHasStartedGeneration(false)
+  }
+
+  const handleNewQuestion = () => {
     if (selectedSubject?.partition) {
-      setIsGenerating(true)
-      setGenerationStatus(t('questions.generation.status.starting'))
-      setShowRecapDialog(true)
       setGenerationResults([])
-      try {
-        const generatedCards = await runFlashcardPipeline(
-          selectedSubject.partition,
-          setGenerationStatus
-        )
-        setGenerationResults(generatedCards)
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('Flashcard pipeline failed', e)
-        showAlert({
-          message: t('questions.generate.error'),
-          severity: 'error'
-        })
-        setShowRecapDialog(false)
-      } finally {
-        setIsGenerating(false)
-      }
+      setGenerationStatus('')
+      setHasStartedGeneration(false)
+      setShowRecapDialog(true)
     } else {
       // eslint-disable-next-line no-console
       console.warn('No partition selected for current subject.')
+    }
+  }
+
+  const handleConfirmGeneration = async () => {
+    if (!selectedSubject?.partition) return
+
+    setHasStartedGeneration(true)
+    setIsGenerating(true)
+    setGenerationStatus(t('questions.generation.status.starting'))
+    setGenerationResults([])
+    try {
+      const generatedCards = await runFlashcardPipeline(
+        selectedSubject.partition,
+        setGenerationStatus
+      )
+      setGenerationResults(generatedCards)
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Flashcard pipeline failed', e)
+      showAlert({
+        message: t('questions.generate.error'),
+        severity: 'error'
+      })
+      handleCloseGenerationDialog()
+    } finally {
+      setIsGenerating(false)
     }
   }
 
@@ -162,8 +170,8 @@ const QuestionsTab = () => {
           </div>
           <Button
             variant="primary"
-            label={t('new')}
-            startIcon={<Icon icon={PlusIcon} />}
+            label={t('generate')}
+            startIcon={<Icon icon={NewIcon} />}
             className="u-ml-1"
             onClick={handleNewQuestion}
           />
@@ -185,10 +193,12 @@ const QuestionsTab = () => {
       />
       <FlashcardGenerationDialog
         open={showRecapDialog}
-        onClose={() => setShowRecapDialog(false)}
+        onClose={handleCloseGenerationDialog}
         loading={isGenerating}
         status={generationStatus}
         results={generationResults}
+        hasStartedGeneration={hasStartedGeneration}
+        onConfirmGeneration={handleConfirmGeneration}
         onAddAll={handleAddGeneratedCards}
       />
 

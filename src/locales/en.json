@@ -102,11 +102,24 @@
       },
       "summary": {
         "loading_title": "Generation in progress...",
+        "confirm_title": "Generate flashcards",
+        "confirm_description": "Generate flashcards from your subject sources? You can review and select cards before adding them.",
+        "confirm_button": "Start generation",
         "title": "Generation summary",
+        "no_results": "No flashcards were generated from the available sources.",
         "selected_count": "%{selected} / %{total} flashcards selected.",
         "select_all": "Select all",
         "cards_count": "%{count} cards",
-        "add_selected": "Add %{count} flashcards"
+        "add_selected": "Add %{count} flashcards",
+        "status": {
+          "starting": "Starting generation...",
+          "fetching_sources": "Reading source documents...",
+          "extracting_notions": "Analyzing %{filename} (%{current}/%{total})...",
+          "generating_flashcards": "Generating flashcards for %{filename} (%{current}/%{total}, section %{group}/%{groupTotal})...",
+          "finalizing": "Finalizing generated flashcards...",
+          "no_chunks": "No source content was found for this subject.",
+          "processing": "Generating flashcards..."
+        }
       }
     },
     "table": {

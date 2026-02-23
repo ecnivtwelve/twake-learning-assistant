@@ -102,11 +102,24 @@
       },
       "summary": {
         "loading_title": "Génération en cours...",
+        "confirm_title": "Générer des flashcards à partir des sources ?",
+        "confirm_description": "Générer des flashcards à partir des sources de la matière ? Vous pourrez les relire et les sélectionner avant de les ajouter.",
+        "confirm_button": "Démarrer la génération",
         "title": "Récapitulatif de la génération",
+        "no_results": "Aucune flashcard n'a pu être générée à partir des sources disponibles.",
         "selected_count": "%{selected} / %{total} flashcards sélectionnées.",
         "select_all": "Tout sélectionner",
         "cards_count": "%{count} cartes",
-        "add_selected": "Ajouter %{count} flashcards"
+        "add_selected": "Ajouter %{count} flashcards",
+        "status": {
+          "starting": "Démarrage de la génération...",
+          "fetching_sources": "Lecture des documents sources...",
+          "extracting_notions": "Analyse de %{filename} (%{current}/%{total})...",
+          "generating_flashcards": "Génération des flashcards pour %{filename} (%{current}/%{total}, section %{group}/%{groupTotal})...",
+          "finalizing": "Finalisation des flashcards générées...",
+          "no_chunks": "Aucun contenu source n'a été trouvé pour cette matière.",
+          "processing": "Génération des flashcards..."
+        }
       }
     },
     "table": {

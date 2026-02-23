@@ -17,11 +17,11 @@ import Tab from 'cozy-ui/transpiled/react/Tab'
 import Tabs from 'cozy-ui/transpiled/react/Tabs'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
-import QuestionItem from './QuestionItem'
+import QuestionItem from '@/components/QuestionItem/QuestionItem/QuestionItem'
+import { getQuestionTypes } from '@/consts/questionTypes'
 
 import { useSubject } from '@/context/SubjectContext'
 import { buildQuestionsBySubjectQuery } from '@/queries'
-import { getQuestionTypes } from '@/views/QuestionsTab'
 
 const ItemImportDialog = ({
   open,

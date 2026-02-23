@@ -19,7 +19,7 @@ import Menu from 'cozy-ui/transpiled/react/Menu'
 import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
 import Typography from 'cozy-ui/transpiled/react/Typography'
 
-import NewSubjectDialog from './NewSubjectDialog'
+import NewSubjectDialog from '@/components/Dialogs/NewSubjectDialog/NewSubjectDialog'
 
 import { useSubject } from '@/context/SubjectContext'
 import { deleteSubject } from '@/queries/actions/subjects/deleteSubject'
