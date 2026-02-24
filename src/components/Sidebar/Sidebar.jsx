@@ -32,8 +32,7 @@ const NavLink = genNavLink(ExampleRouterNavLink)
 const NAV_ITEMS = [
   { path: 'activities', icon: ListIcon, enabled: ['activities', 'item'] },
   { path: 'questions', icon: CommentIcon, enabled: ['questions'] },
-  { path: 'sources', icon: LibraryIcon, enabled: ['sources'] },
-  { path: 'insights', icon: StatsIcon, enabled: ['insights'] }
+  { path: 'sources', icon: LibraryIcon, enabled: ['sources'] }
 ]
 
 const SidebarComponent = () => {
