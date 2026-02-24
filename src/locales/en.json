@@ -201,7 +201,9 @@
     },
     "alerts": {
       "created": "Subject created",
-      "error": "Error while creating subject"
+      "error": "Error while creating subject",
+      "deleted": "Subject deleted",
+      "delete_error": "Error while deleting subject"
     }
   },
   "welcome": {

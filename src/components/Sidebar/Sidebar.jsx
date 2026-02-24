@@ -6,7 +6,6 @@ import { useI18n } from 'twake-i18n'
 import CommentIcon from 'cozy-ui/transpiled/react/Icons/Comment'
 import LibraryIcon from 'cozy-ui/transpiled/react/Icons/Library'
 import ListIcon from 'cozy-ui/transpiled/react/Icons/List'
-import StatsIcon from 'cozy-ui/transpiled/react/Icons/Stats'
 import Nav, {
   NavIcon,
   NavItem,

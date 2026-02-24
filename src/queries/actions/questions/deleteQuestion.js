@@ -11,7 +11,7 @@ export const deleteQuestion = async (client, question) => {
 }
 
 export const deleteQuestions = async (client, questions) => {
-  questions.forEach(question => {
-    deleteQuestion(client, question)
-  })
+  return Promise.all(
+    questions.map(question => deleteQuestion(client, question))
+  )
 }

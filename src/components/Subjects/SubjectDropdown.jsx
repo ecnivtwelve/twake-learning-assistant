@@ -18,21 +18,39 @@ import ListItemText from 'cozy-ui/transpiled/react/ListItemText'
 import Menu from 'cozy-ui/transpiled/react/Menu'
 import MenuItem from 'cozy-ui/transpiled/react/MenuItem'
 import Typography from 'cozy-ui/transpiled/react/Typography'
+import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
 import NewSubjectDialog from '@/components/Dialogs/NewSubjectDialog/NewSubjectDialog'
-
 import { useSubject } from '@/context/SubjectContext'
 import { deleteSubject } from '@/queries/actions/subjects/deleteSubject'
 
 const SubjectDropdown = ({ ...props }) => {
   const { t } = useI18n()
   const client = useClient()
+  const { showAlert } = useAlert()
   const { selectedSubject, setSelectedSubject, subjects } = useSubject()
 
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [newSubjectDialogOpen, setNewSubjectDialogOpen] = React.useState(false)
 
   const [aboutToDelete, setAboutToDelete] = React.useState(null)
+
+  const handleDeleteSubject = async () => {
+    if (!aboutToDelete) return
+    try {
+      await deleteSubject(client, aboutToDelete)
+      showAlert({
+        message: t('subjects.alerts.deleted'),
+        severity: 'success'
+      })
+      setAboutToDelete(null)
+    } catch {
+      showAlert({
+        message: t('subjects.alerts.delete_error'),
+        severity: 'error'
+      })
+    }
+  }
 
   const ConfirmDialogActions = () => {
     return (
@@ -45,10 +63,7 @@ const SubjectDropdown = ({ ...props }) => {
         <Button
           color="error"
           label={t('delete')}
-          onClick={() => {
-            deleteSubject(client, aboutToDelete)
-            setAboutToDelete(null)
-          }}
+          onClick={handleDeleteSubject}
         />
       </>
     )

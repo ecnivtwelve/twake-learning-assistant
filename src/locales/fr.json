@@ -201,7 +201,9 @@
     },
     "alerts": {
       "created": "Matière créée",
-      "error": "Erreur lors de la création de la matière"
+      "error": "Erreur lors de la création de la matière",
+      "deleted": "Matière supprimée",
+      "delete_error": "Erreur lors de la suppression de la matière"
     }
   },
   "welcome": {

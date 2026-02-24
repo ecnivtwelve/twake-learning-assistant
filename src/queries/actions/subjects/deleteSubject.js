@@ -8,10 +8,11 @@ export const deleteSubject = async (
   skipPartitionDeletion = false
 ) => {
   const partitionId = subject.partition ?? ''
-
-  subject.activities.data.forEach(activity => {
-    deleteActivity(client, activity)
-  })
+  await Promise.all(
+    (subject.activities?.data || []).map(activity =>
+      deleteActivity(client, activity)
+    )
+  )
 
   if (!skipPartitionDeletion && partitionId) {
     const partitionDeleted = await deletePartition(partitionId)

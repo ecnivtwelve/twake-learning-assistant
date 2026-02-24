@@ -19,7 +19,6 @@ import Typography from 'cozy-ui/transpiled/react/Typography'
 
 import QuestionItem from '@/components/QuestionItem/QuestionItem/QuestionItem'
 import { getQuestionTypes } from '@/consts/questionTypes'
-
 import { useSubject } from '@/context/SubjectContext'
 import { buildQuestionsBySubjectQuery } from '@/queries'
 
@@ -70,7 +69,7 @@ const ItemImportDialog = ({
       const availableQuestions = filteredQuestions?.filter(
         question => !currentQuestionsIds.includes(question._id)
       )
-      const randomQuestions = availableQuestions
+      const randomQuestions = [...(availableQuestions || [])]
         ?.sort(() => Math.random() - 0.5)
         .slice(0, 5)
 
@@ -141,7 +140,7 @@ const ItemImportDialog = ({
       <div className="u-h-6" style={{ overflowY: 'scroll' }}>
         <div
           style={
-            searchTerm.length == 0
+            searchTerm.length === 0
               ? {
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
@@ -154,7 +153,7 @@ const ItemImportDialog = ({
           {filteredQuestions?.map(question => (
             <QuestionItem
               id={`question-${question._id}`}
-              card={searchTerm.length == 0}
+              card={searchTerm.length === 0}
               key={question._id}
               question={question}
               selectedQuestions={selectedQuestions}

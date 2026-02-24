@@ -7,10 +7,10 @@ import { useAlert } from 'cozy-ui/transpiled/react/providers/Alert'
 
 import { renameActivity } from '../../queries/actions/activities/renameActivity'
 
-import ItemFlashcardPreview from '@/components/QuestionItem/ItemFlashcardPreview/ItemFlashcardPreview'
 import ItemGenerationDialog from '@/components/Dialogs/ItemGenerationDialog/ItemGenerationDialog'
-import ItemHeader from '@/components/QuestionItem/ItemHeader/ItemHeader'
 import ItemImportDialog from '@/components/Dialogs/ItemImportDialog/ItemImportDialog'
+import ItemFlashcardPreview from '@/components/QuestionItem/ItemFlashcardPreview/ItemFlashcardPreview'
+import ItemHeader from '@/components/QuestionItem/ItemHeader/ItemHeader'
 import ItemQuestionList from '@/components/QuestionItem/ItemQuestionList/ItemQuestionList'
 import { useSubject } from '@/context/SubjectContext'
 import { buildActivityItemQuery } from '@/queries'
