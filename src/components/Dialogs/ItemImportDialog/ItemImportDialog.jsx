@@ -116,6 +116,7 @@ const ItemImportDialog = ({
             label={t('questions.import.select_with_ai')}
             onClick={autoSelect}
             endIcon={isAutoSelecting ? <CircularProgress size={16} /> : null}
+            disabled={selectedQuestionType == 0 || isAutoSelecting}
           />
         </div>
       </div>
