@@ -24,6 +24,15 @@ const SourceItem = ({ source, deleteSource, onOpen }) => {
   const menuButtonRef = React.useRef(null)
 
   const processed = useTaskStatus(source)
+  const updatedAt = source.cozyMetadata?.updatedAt || source.meta?.updatedAt
+  const parsedUpdatedAt = updatedAt ? new Date(updatedAt) : null
+  const formattedAddedAt =
+    parsedUpdatedAt && !Number.isNaN(parsedUpdatedAt.getTime())
+      ? new Intl.DateTimeFormat(undefined, {
+          dateStyle: 'medium',
+          timeStyle: 'short'
+        }).format(parsedUpdatedAt)
+      : ''
 
   return (
     <>
@@ -41,20 +50,7 @@ const SourceItem = ({ source, deleteSource, onOpen }) => {
           )}
         </ListItemIcon>
         <TableItemText value={source.name} type="primary" />
-        <TableItemText
-          value={
-            source.partitionFileId || source.metadata?.partitionFileId || ''
-          }
-          type="secondary"
-        />
-        <TableItemText
-          value={source.cozyMetadata?.updatedAt || source.meta?.updatedAt || ''}
-          type="secondary"
-        />
-        <TableItemText
-          value={source.partition || source.metadata?.partition || ''}
-          type="secondary"
-        />
+        <TableItemText value={formattedAddedAt} type="secondary" />
         <ListItemSecondaryAction className="u-pr-1">
           <IconButton
             ref={menuButtonRef}

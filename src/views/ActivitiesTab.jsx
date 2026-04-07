@@ -50,7 +50,7 @@ const ActivitiesTab = () => {
           <ListItemIcon className="u-w-2-half" />
           <ListItemText primary={t('activities.table.activities')} />
           <ListItemText secondary={t('activities.table.update')} />
-          <div className="u-w-3 u-mr-half" />
+          <div className="u-w-3 u-mr-2-half" />
         </ListItem>
         <Divider />
         <div>

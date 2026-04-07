@@ -153,9 +153,7 @@
     "title": "Sources",
     "table": {
       "name": "Nom",
-      "filename": "Fichier",
-      "update": "Mise à jour",
-      "tags": "Tags"
+      "addedAt": "Date d'ajout"
     },
     "status": {
       "chunking": "Indexation",

@@ -27,9 +27,7 @@ const SourcesList = ({
       <ListItem size="small" dense>
         <ListItemIcon className="u-w-2-half"></ListItemIcon>
         <TableItemText value={t('sources.table.name')} type="primary" />
-        <TableItemText value={t('sources.table.filename')} type="secondary" />
-        <TableItemText value={t('sources.table.update')} type="secondary" />
-        <TableItemText value={t('sources.table.tags')} type="secondary" />
+        <TableItemText value={t('sources.table.addedAt')} type="secondary" />
         <div className="u-w-1-half" />
       </ListItem>
 
