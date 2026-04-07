@@ -157,6 +157,9 @@ const ItemView = () => {
         onClose={() => setCustomizeImportDialog(false)}
         onSelectQuestions={attachQuestion}
         currentQuestions={questions}
+        activityTitle={activityTitle}
+        subject={selectedSubject}
+        numberOfQuestions={numberOfQuestions}
       />
 
       <ItemGenerationDialog
