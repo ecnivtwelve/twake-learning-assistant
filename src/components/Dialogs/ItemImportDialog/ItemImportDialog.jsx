@@ -39,6 +39,7 @@ const ItemImportDialog = ({
   React.useEffect(() => {
     setSearchTerm('')
     setSelectedQuestions([])
+    setAutoSelectedIds([])
   }, [open])
 
   const { selectedSubject } = useSubject()
@@ -56,6 +57,7 @@ const ItemImportDialog = ({
   })
 
   const [selectedQuestions, setSelectedQuestions] = useState([])
+  const [autoSelectedIds, setAutoSelectedIds] = useState([])
   const [selectedQuestionType, setSelectedQuestionType] = useState(0)
 
   const filteredQuestions = questions.data?.filter(
@@ -63,12 +65,27 @@ const ItemImportDialog = ({
       question.label?.toLowerCase().includes(searchTerm.toLowerCase()) &&
       question.interaction === questionTypes[selectedQuestionType].value
   )
+  const displayedQuestions = React.useMemo(() => {
+    if (!filteredQuestions || autoSelectedIds.length === 0) return filteredQuestions
+
+    const questionsById = new Map(filteredQuestions.map(question => [question._id, question]))
+    const selectedFirst = autoSelectedIds
+      .map(id => questionsById.get(id))
+      .filter(Boolean)
+    const selectedSet = new Set(selectedFirst.map(question => question._id))
+    const remaining = filteredQuestions.filter(
+      question => !selectedSet.has(question._id)
+    )
+
+    return [...selectedFirst, ...remaining]
+  }, [filteredQuestions, autoSelectedIds])
 
   const currentQuestionsIds = currentQuestions.map(question => question._id)
 
   const [isAutoSelecting, setIsAutoSelecting] = useState(false)
   const autoSelect = async () => {
     setIsAutoSelecting(true)
+    setAutoSelectedIds([])
     try {
       const availableQuestions = filteredQuestions?.filter(
         question => !currentQuestionsIds.includes(question._id)
@@ -85,6 +102,7 @@ const ItemImportDialog = ({
       const validIds = selectedIds.filter(id =>
         availableQuestions.some(q => q._id === id)
       )
+      setAutoSelectedIds(validIds)
       setSelectedQuestions(validIds)
 
       setTimeout(() => {
@@ -98,6 +116,7 @@ const ItemImportDialog = ({
         }
       }, 100)
     } catch {
+      setAutoSelectedIds([])
       // Silently fail — no selection if LLM is unavailable
     } finally {
       setIsAutoSelecting(false)
@@ -163,7 +182,7 @@ const ItemImportDialog = ({
               : {}
           }
         >
-          {filteredQuestions?.map(question => (
+          {displayedQuestions?.map(question => (
             <QuestionItem
               id={`question-${question._id}`}
               card={searchTerm.length === 0}
